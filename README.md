@@ -12,21 +12,21 @@ Arreglo is a FigJam plugin designed to help music producers visualize and arrang
 
 ### Usage
 
-	1.	Run the Plugin in FigJam:
-	•	Open a FigJam file.
-	•	Run the “Arreglo” plugin from the plugin menu.
-	2.	Specify Your Arrangement:
-	•	Choose a genre from the dropdown menu.
-	•	Input instrument patterns, song length, and tempo.
-	•	Specify how many bars each pattern should last and what instrument it represents.
-	•	Click “Create Layout” to generate your song structure on the canvas.
-	3.	AI-Driven Suggestions:
-	•	Receive automatic suggestions for transitions like risers, buildups, and swells that fit your selected genre.
+1. Run the Plugin in FigJam:
+* Open a FigJam file.
+* Run the “Arreglo” plugin from the plugin menu.
+2. Specify Your Arrangement:
+- Choose a genre from the dropdown menu.
+- Input instrument patterns, song length, and tempo.
+- Specify how many bars each pattern should last and what instrument it represents.
+- Click “Create Layout” to generate your song structure on the canvas.
+3. AI-Driven Suggestions:
+- Receive automatic suggestions for transitions like risers, buildups, and swells that fit your selected genre.
 
 *Example Workflow*
 
-	1.	Select Genre: Choose “EDM” from the genre dropdown.
-	2.	Set Song Length and Tempo: Specify a length of 128 bars and a tempo of 128 BPM.
-	3.	Define Patterns: Input patterns for kicks, hi-hats, bass, and melodies, specifying the number of bars each pattern should last.
-	4.	Generate Layout: Click “Create Layout” to visualize the song structure on the canvas.
-	5.	Incorporate Transitions: Review and apply AI-suggested transitions to enhance your arrangement.
+1. Select Genre: Choose “EDM” from the genre dropdown.
+2. Set Song Length and Tempo: Specify a length of 128 bars and a tempo of 128 BPM.
+3. Define Patterns: Input patterns for kicks, hi-hats, bass, and melodies, specifying the number of bars each pattern should last.
+4. Generate Layout: Click “Create Layout” to visualize the song structure on the canvas.
+5. Incorporate Transitions: Review and apply AI-suggested transitions to enhance your arrangement.
