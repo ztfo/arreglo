@@ -4,8 +4,8 @@
   "main": "script.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-      "build": "tsc",
-      "watch": "tsc --watch"
+    "build": "tsc",
+    "watch": "tsc --watch"
   },
   "keywords": [],
   "author": "ztfo",
@@ -13,6 +13,11 @@
   "description": "a simple figjam plugin to help me arrange songs faster",
   "devDependencies": {
     "@figma/plugin-typings": "^1.97.0",
+    "@types/node": "^22.2.0",
     "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "axios": "^1.7.3",
+    "dotenv": "^16.4.5"
   }
 }

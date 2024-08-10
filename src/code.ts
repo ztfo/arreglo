@@ -1,3 +1,5 @@
+import { generateArrangement } from './openai';
+
 figma.showUI(__html__);
 
 figma.ui.onmessage = msg => {
@@ -6,51 +8,52 @@ figma.ui.onmessage = msg => {
   }
 };
 
-async function createSongLayout(data: { genre: string, patterns: any }) {
-    const { genre, patterns } = data;
+function parseInstrumentPatterns(input: string) {
+    const patterns = input.split(',').map(pattern => {
+        const [instrument, bars] = pattern.trim().split(':').map(str => str.trim());
+        return { instrument, bars: parseInt(bars, 10) };
+    });
+
+    return patterns;
+}
+
+async function createSongLayout(data: { genre: string, length: number, tempo: number, instrumentPatterns: string }) {
+    const { genre, length, tempo, instrumentPatterns } = data;
 
     await figma.loadFontAsync({ family: "Inter", style: "Medium" });
 
-    // dimensions and spacing
-    const patternHeight = 50;
-    const patternWidth = 200;
+    const patterns = parseInstrumentPatterns(instrumentPatterns);
+
+    const shapeHeight = 50;
+    const shapeWidth = 200;
     const spacing = 20;
 
     let xPos = 0;
     let yPos = 0;
 
-    // frame to contain the layout
-    const frame = figma.createFrame();
-    frame.resizeWithoutConstraints(800, 600);
-    frame.name = `${genre} Arrangement`;
+    for (const { instrument, bars } of patterns) {
+        const shape = figma.createNodeFromSvg(`
+            <svg width="${shapeWidth}" height="${shapeHeight}" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100%" height="100%" fill="#4CAF50" />
+            </svg>
+        `);
 
-    // instrument pattern
-    for (const [instrument, pattern] of Object.entries(patterns)) {
-        const rect = figma.createRectangle();
-        rect.resize(patternWidth, patternHeight);
-        rect.fills = [{ type: 'SOLID', color: { r: 0.8, g: 0.2, b: 0.2 } }];
-
-        rect.x = xPos;
-        rect.y = yPos;
-
-        frame.appendChild(rect);
+        shape.x = xPos;
+        shape.y = yPos;
 
         const text = figma.createText();
-        text.characters = instrument;
+        text.characters = `${instrument} (${bars} bars)`;
         text.fontSize = 12;
-        text.x = xPos + 5; 
+        text.x = xPos + 5;
         text.y = yPos + 5;
 
-        frame.appendChild(text);
+        shape.appendChild(text);
+        figma.currentPage.appendChild(shape);
 
-        yPos += patternHeight + spacing;
+        yPos += shapeHeight + spacing;
     }
 
-    frame.x = (figma.viewport.bounds.width - frame.width) / 2;
-    frame.y = (figma.viewport.bounds.height - frame.height) / 2;
+    figma.viewport.scrollAndZoomIntoView(figma.currentPage.children);
 
-    figma.currentPage.selection = [frame];
-    figma.viewport.scrollAndZoomIntoView([frame]);
-
-    figma.notify("Song layout created!");
+    figma.notify("Detailed layout created!");
 }

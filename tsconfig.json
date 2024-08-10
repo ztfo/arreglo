@@ -8,7 +8,7 @@
       "strict": true,
       "esModuleInterop": true,
       "skipLibCheck": true,
-      "types": ["@figma/plugin-typings"]
+      "types": ["@figma/plugin-typings", "node"]
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules"]

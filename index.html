@@ -23,15 +23,26 @@
     <label for="patterns">Instrument Patterns (comma-separated for kicks, hi-hats, bass, melodies):</label>
     <input type="text" id="patterns" placeholder="e.g., kicks,hi-hats,bass,melodies" />
 
+    <label for="length">Song Length (bars):</label>
+    <input type="number" id="length" placeholder="e.g., 128" />
+    
+    <label for="tempo">Tempo (BPM):</label>
+    <input type="number" id="tempo" placeholder="e.g., 128" />
+    
     <button id="create-layout">Create Layout</button>
-
+    
+    <label for="instrument-patterns">Instrument Patterns:</label>
+    <textarea id="instrument-patterns" placeholder="e.g., Kick: 4 bars, Hi-hats: 8 bars, Bass: 16 bars"></textarea>
+    
     <script>
-        document.getElementById('create-layout').onclick = () => {
-            const genre = document.getElementById('genre').value;
-            const patterns = document.getElementById('patterns').value.split(',');
-
-            parent.postMessage({ pluginMessage: { type: 'create-layout', data: { genre, patterns } } }, '*');
-        };
+    document.getElementById('create-layout').onclick = () => {
+        const genre = document.getElementById('genre').value;
+        const length = parseInt(document.getElementById('length').value, 10);
+        const tempo = parseInt(document.getElementById('tempo').value, 10);
+        const instrumentPatterns = document.getElementById('instrument-patterns').value;
+    
+        parent.postMessage({ pluginMessage: { type: 'create-layout', data: { genre, length, tempo, instrumentPatterns } } }, '*');
+    };
     </script>
 </body>
 </html>
