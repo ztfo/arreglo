@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arreglo Plugin</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        label { display: block; margin-bottom: 8px; }
+        input, select { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Arreglo Plugin</h1>
+    <label for="genre">Genre:</label>
+    <select id="genre">
+        <option value="House">House</option>
+        <option value="Deep House">Deep House</option>
+        <option value="Techno">Techno</option>
+        <option value="Hip-Hop">Hip-Hop</option>
+    </select>
+
+    <label for="patterns">Instrument Patterns (comma-separated for kicks, hi-hats, bass, melodies):</label>
+    <input type="text" id="patterns" placeholder="e.g., kicks,hi-hats,bass,melodies" />
+
+    <button id="create-layout">Create Layout</button>
+
+    <script>
+        document.getElementById('create-layout').onclick = () => {
+            const genre = document.getElementById('genre').value;
+            const patterns = document.getElementById('patterns').value.split(',');
+
+            parent.postMessage({ pluginMessage: { type: 'create-layout', data: { genre, patterns } } }, '*');
+        };
+    </script>
+</body>
+</html>
