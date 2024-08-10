@@ -4,11 +4,11 @@ Arreglo is a FigJam plugin designed to help music producers visualize and arrang
 
 ### Features
 
-	•	Flowchart-Based Song Arrangements: Visualize your song structure with flowchart shapes representing different instrument patterns.
-	•	AI-Powered Arrangements: Automatically generate full song arrangements using OpenAI’s ChatGPT based on the genre, song length, and tempo.
-	•	Customizable Patterns: Specify the genre, instrument patterns, length, and tempo to create layouts that reflect your musical ideas.
-	•	Detailed Instrument Pattern Control: Define how many bars each instrument pattern should last and specify the instrument type.
-	•	Dynamic Transition Suggestions: Receive AI-driven suggestions for transitions like risers, buildups, and swells that fit the selected genre.
+- Flowchart-Based Song Arrangements: Visualize your song structure with flowchart shapes representing different instrument patterns.
+- AI-Powered Arrangements: Automatically generate full song arrangements using OpenAI’s ChatGPT based on the genre, song length, and tempo.
+- Customizable Patterns: Specify the genre, instrument patterns, length, and tempo to create layouts that reflect your musical ideas.
+- Detailed Instrument Pattern Control: Define how many bars each instrument pattern should last and specify the instrument type.
+- Dynamic Transition Suggestions: Receive AI-driven suggestions for transitions like risers, buildups, and swells that fit the selected genre.
 
 ### Usage
 
