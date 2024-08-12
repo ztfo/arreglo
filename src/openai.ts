@@ -1,7 +1,4 @@
 import axios from 'axios';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 

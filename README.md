@@ -25,8 +25,12 @@ Arreglo is a FigJam plugin designed to help music producers visualize and arrang
 
 *Example Workflow*
 
-1. Select Genre: Choose “EDM” from the genre dropdown.
+1. Select Genre: Choose “House” from the genre dropdown.
 2. Set Song Length and Tempo: Specify a length of 128 bars and a tempo of 128 BPM.
 3. Define Patterns: Input patterns for kicks, hi-hats, bass, and melodies, specifying the number of bars each pattern should last.
 4. Generate Layout: Click “Create Layout” to visualize the song structure on the canvas.
 5. Incorporate Transitions: Review and apply AI-suggested transitions to enhance your arrangement.
+
+### Future
+
+- VST Port to test arrangements directly in your DAW

@@ -12,37 +12,33 @@
 </head>
 <body>
     <h1>Arreglo Plugin</h1>
-    <label for="genre">Genre:</label>
-    <select id="genre">
-        <option value="House">House</option>
-        <option value="Deep House">Deep House</option>
-        <option value="Techno">Techno</option>
-        <option value="Hip-Hop">Hip-Hop</option>
-    </select>
-
-    <label for="patterns">Instrument Patterns (comma-separated for kicks, hi-hats, bass, melodies):</label>
-    <input type="text" id="patterns" placeholder="e.g., kicks,hi-hats,bass,melodies" />
-
-    <label for="length">Song Length (bars):</label>
-    <input type="number" id="length" placeholder="e.g., 128" />
+    <form id="songForm">
+      <label for="genre">Genre:</label>
+      <input type="text" id="genre" required><br>
     
-    <label for="tempo">Tempo (BPM):</label>
-    <input type="number" id="tempo" placeholder="e.g., 128" />
+      <label for="length">Song Length (seconds):</label>
+      <input type="number" id="length" required><br>
     
-    <button id="create-layout">Create Layout</button>
+      <label for="tempo">Tempo (BPM):</label>
+      <input type="number" id="tempo" required><br>
     
-    <label for="instrument-patterns">Instrument Patterns:</label>
-    <textarea id="instrument-patterns" placeholder="e.g., Kick: 4 bars, Hi-hats: 8 bars, Bass: 16 bars"></textarea>
+      <label for="instruments">Instruments (comma-separated):</label>
+      <input type="text" id="instruments" required><br>
+    
+      <button type="submit">Generate Arrangement</button>
+    </form>
     
     <script>
-    document.getElementById('create-layout').onclick = () => {
-        const genre = document.getElementById('genre').value;
-        const length = parseInt(document.getElementById('length').value, 10);
-        const tempo = parseInt(document.getElementById('tempo').value, 10);
-        const instrumentPatterns = document.getElementById('instrument-patterns').value;
-    
-        parent.postMessage({ pluginMessage: { type: 'create-layout', data: { genre, length, tempo, instrumentPatterns } } }, '*');
-    };
+      document.getElementById('songForm').onsubmit = (event) => {
+        event.preventDefault();
+        const songData = {
+          genre: document.getElementById('genre').value,
+          length: document.getElementById('length').value,
+          tempo: document.getElementById('tempo').value,
+          instruments: document.getElementById('instruments').value.split(',').map(i => i.trim())
+        };
+        parent.postMessage({ pluginMessage: { type: 'generate-arrangement', songData } }, '*');
+      };
     </script>
 </body>
 </html>
