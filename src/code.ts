@@ -111,82 +111,115 @@ function parseArrangement(response: string) {
     return { patterns, transitions };
 }
 
-async function createVisualArrangement(arrangement: { patterns: Record<string, string>, transitions: string[] }) {
-    const mainFrame = figma.createFrame();
-    mainFrame.name = "Song Arrangement";
-    mainFrame.resize(800, 600);
-    mainFrame.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
+async function createVisualArrangement(arrangement: any) {
+    try {
+        await figma.loadFontAsync({ family: "Inter", style: "Regular" });
+        await figma.loadFontAsync({ family: "Inter", style: "Medium" });
+        await figma.loadFontAsync({ family: "Inter", style: "Bold" });
 
-    let yOffset = 40;
-    const xPadding = 40;
+        const mainFrame = figma.createFrame();
+        mainFrame.name = "Song Arrangement";
+        mainFrame.layoutMode = "VERTICAL";
+        mainFrame.counterAxisSizingMode = "AUTO";
+        mainFrame.itemSpacing = 24;
+        mainFrame.paddingTop = 32;
+        mainFrame.paddingBottom = 32;
+        mainFrame.paddingLeft = 32;
+        mainFrame.paddingRight = 32;
+        mainFrame.fills = [{type: 'SOLID', color: {r: 1, g: 1, b: 1}}];
 
-    // Create pattern blocks
-    for (const [instrument, pattern] of Object.entries(arrangement.patterns)) {
-        const block = figma.createFrame();
-        block.name = instrument;
-        block.resize(720, 80);
-        block.x = xPadding;
-        block.y = yOffset;
-        block.fills = [{ type: 'SOLID', color: { r: 0.95, g: 0.95, b: 1 } }];
-        block.cornerRadius = 8;
+        // Create patterns section
+        const patternsFrame = figma.createFrame();
+        patternsFrame.name = "Patterns";
+        patternsFrame.layoutMode = "VERTICAL";
+        patternsFrame.counterAxisSizingMode = "AUTO";
+        patternsFrame.itemSpacing = 16;
+        patternsFrame.fills = [];
 
-        const label = figma.createText();
-        label.characters = instrument;
-        label.x = 16;
-        label.y = 16;
-        label.fontSize = 16;
+        const patternsTitle = figma.createText();
+        patternsTitle.characters = "Patterns";
+        patternsTitle.fontSize = 20;
+        patternsTitle.fontName = { family: "Inter", style: "Bold" };
+        patternsFrame.appendChild(patternsTitle);
 
-        const patternText = figma.createText();
-        patternText.characters = pattern;
-        patternText.x = 16;
-        patternText.y = 40;
-        patternText.fontSize = 14;
+        for (const [instrument, pattern] of Object.entries(arrangement.patterns)) {
+            const block = figma.createFrame();
+            block.name = `${instrument} Pattern`;
+            block.layoutMode = "VERTICAL";
+            block.counterAxisSizingMode = "AUTO";
+            block.fills = [{type: 'SOLID', color: {r: 0.95, g: 0.95, b: 0.95}}];
+            block.cornerRadius = 8;
+            block.paddingTop = 16;
+            block.paddingBottom = 16;
+            block.paddingLeft = 16;
+            block.paddingRight = 16;
 
-        block.appendChild(label);
-        block.appendChild(patternText);
-        mainFrame.appendChild(block);
+            const label = figma.createText();
+            label.characters = instrument;
+            label.fontSize = 16;
+            label.fontName = { family: "Inter", style: "Medium" };
 
-        yOffset += 100;
+            const patternText = figma.createText();
+            patternText.characters = pattern.toString();
+            patternText.fontSize = 14;
+            patternText.fontName = { family: "Inter", style: "Regular" };
+
+            block.appendChild(label);
+            block.appendChild(patternText);
+            patternsFrame.appendChild(block);
+        }
+
+        mainFrame.appendChild(patternsFrame);
+
+        // Create transitions section if there are transitions
+        if (arrangement.transitions && arrangement.transitions.length > 0) {
+            const transitionsFrame = figma.createFrame();
+            transitionsFrame.name = "Transitions";
+            transitionsFrame.layoutMode = "VERTICAL";
+            transitionsFrame.counterAxisSizingMode = "AUTO";
+            transitionsFrame.itemSpacing = 16;
+            transitionsFrame.fills = [];
+
+            const transitionsTitle = figma.createText();
+            transitionsTitle.characters = "Transitions";
+            transitionsTitle.fontSize = 20;
+            transitionsTitle.fontName = { family: "Inter", style: "Bold" };
+            transitionsFrame.appendChild(transitionsTitle);
+
+            for (const transition of arrangement.transitions) {
+                const block = figma.createFrame();
+                block.name = "Transition";
+                block.layoutMode = "VERTICAL";
+                block.counterAxisSizingMode = "AUTO";
+                block.fills = [{type: 'SOLID', color: {r: 0.95, g: 0.9, b: 1}}];
+                block.cornerRadius = 8;
+                block.paddingTop = 16;
+                block.paddingBottom = 16;
+                block.paddingLeft = 16;
+                block.paddingRight = 16;
+
+                const transitionText = figma.createText();
+                transitionText.characters = transition;
+                transitionText.fontSize = 14;
+                transitionText.fontName = { family: "Inter", style: "Regular" };
+
+                block.appendChild(transitionText);
+                transitionsFrame.appendChild(block);
+            }
+
+            mainFrame.appendChild(transitionsFrame);
+        }
+
+        mainFrame.resize(800, mainFrame.height);
+        mainFrame.x = figma.viewport.center.x - mainFrame.width / 2;
+        mainFrame.y = figma.viewport.center.y - mainFrame.height / 2;
+
+        figma.currentPage.appendChild(mainFrame);
+        figma.viewport.scrollAndZoomIntoView([mainFrame]);
+    } catch (error) {
+        console.error('Error in createVisualArrangement:', error);
+        throw error;
     }
-
-    // Add transitions if any
-    if (arrangement.transitions.length > 0) {
-        const transitionBlock = figma.createFrame();
-        transitionBlock.name = "Transitions";
-        transitionBlock.resize(720, 100);
-        transitionBlock.x = xPadding;
-        transitionBlock.y = yOffset;
-        transitionBlock.fills = [{ type: 'SOLID', color: { r: 1, g: 0.95, b: 0.95 } }];
-        transitionBlock.cornerRadius = 8;
-
-        const label = figma.createText();
-        label.characters = "Transitions";
-        label.x = 16;
-        label.y = 16;
-        label.fontSize = 16;
-
-        const transText = figma.createText();
-        transText.characters = arrangement.transitions.join("\n");
-        transText.x = 16;
-        transText.y = 40;
-        transText.fontSize = 14;
-
-        transitionBlock.appendChild(label);
-        transitionBlock.appendChild(transText);
-        mainFrame.appendChild(transitionBlock);
-    }
-
-    // Adjust main frame height
-    mainFrame.resize(800, yOffset + 140);
-
-    // Center in viewport
-    mainFrame.x = figma.viewport.center.x - mainFrame.width / 2;
-    mainFrame.y = figma.viewport.center.y - mainFrame.height / 2;
-
-    figma.currentPage.appendChild(mainFrame);
-    figma.viewport.scrollAndZoomIntoView([mainFrame]);
-    
-    return mainFrame;
 }
 
 // Handle messages from the UI
