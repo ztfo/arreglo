@@ -1,5 +1,17 @@
 import { getConfig, setConfig, ApiConfig } from './config';
 
+interface Arrangement {
+    patterns: Record<string, string>;
+    transitions: string[];
+}
+
+interface SongData {
+    genre: string;
+    length: string;
+    tempo: string;
+    instruments: string[];
+}
+
 // Show UI for plugin mode
 figma.showUI(__html__, { width: 400, height: 600 });
 
@@ -111,7 +123,7 @@ function parseArrangement(response: string) {
     return { patterns, transitions };
 }
 
-async function createVisualArrangement(arrangement: any) {
+async function createVisualArrangement(arrangement: Arrangement) {
     try {
         await figma.loadFontAsync({ family: "Inter", style: "Regular" });
         await figma.loadFontAsync({ family: "Inter", style: "Medium" });
