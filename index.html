@@ -5,9 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arreglo Plugin</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        label { display: block; margin-bottom: 8px; }
-        input, select { 
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        input, select {
             width: 100%;
             padding: 8px;
             margin-bottom: 10px;
@@ -45,6 +51,29 @@
             margin-bottom: 10px;
             display: none;
         }
+        .error-container {
+            margin: 10px 0;
+            display: none;
+        }
+        #error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            user-select: text;
+        }
+        .clear-error {
+            background: #c62828;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .clear-error:hover {
+            background: #b71c1c;
+        }
     </style>
 </head>
 <body>
@@ -52,7 +81,10 @@
     
     <div class="settings-toggle" onclick="toggleSettings()">⚙️ Settings</div>
     
-    <div id="error" class="error"></div>
+    <div id="error-container" class="error-container">
+        <div id="error"></div>
+        <button class="clear-error" onclick="clearError()">Clear Error</button>
+    </div>
     
     <div id="settings" class="settings">
         <h3>API Configuration</h3>
@@ -87,6 +119,11 @@
         <button type="submit">Generate Arrangement</button>
     </form>
     
+    <div id="loading" style="display: none; margin: 20px 0; text-align: center;">
+        <div style="margin-bottom: 10px;">Generating arrangement...</div>
+        <div style="color: #666; font-size: 12px;">This may take a few moments</div>
+    </div>
+    
     <script>
         // Load settings when the plugin starts
         parent.postMessage({ pluginMessage: { type: 'load-settings' } }, '*');
@@ -107,12 +144,17 @@
         }
         
         function showError(message) {
+            const errorContainer = document.getElementById('error-container');
             const error = document.getElementById('error');
             error.textContent = message;
-            error.style.display = 'block';
-            setTimeout(() => {
-                error.style.display = 'none';
-            }, 5000);
+            errorContainer.style.display = 'block';
+            
+            // Also log to console for debugging
+            console.error('Plugin Error:', message);
+        }
+        
+        function clearError() {
+            document.getElementById('error-container').style.display = 'none';
         }
         
         // Listen for messages from the plugin code
@@ -131,12 +173,15 @@
 
         document.getElementById('songForm').onsubmit = async (event) => {
             event.preventDefault();
+            document.getElementById('loading').style.display = 'block';
+            
             const songData = {
                 genre: document.getElementById('genre').value,
                 length: document.getElementById('length').value,
                 tempo: document.getElementById('tempo').value,
                 instruments: document.getElementById('instruments').value.split(',').map(i => i.trim())
             };
+            
             parent.postMessage({ pluginMessage: { type: 'generate-arrangement', songData } }, '*');
         };
     </script>

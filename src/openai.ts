@@ -4,15 +4,27 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 export async function generateArrangement(genre: string, length: number, tempo: number) {
     const prompt = `
-    Generate a ${genre} song arrangement with a length of ${length} bars and a tempo of ${tempo} BPM. 
-    Include the following elements: kicks, hi-hats, bass, melodies. Also, suggest transition elements like risers, buildups, and swells at appropriate points in the arrangement.`;
+    Generate a ${genre} song arrangement with a length of ${length} bars and a tempo of ${tempo} BPM.
+    Format the response exactly like this example:
+
+    Kick: 4-on-floor pattern for 16 bars
+    Hi-hat: Open hat on offbeats for 8 bars
+    Bass: Rolling bassline with quarter notes for 16 bars
+    Melody: Atmospheric pad progression for 32 bars
+    Transition: Rising white noise sweep at bar 24
+    Transition: Filter cutoff buildup at bar 48
+
+    Include patterns for these instruments: kicks, hi-hats, bass, melodies. 
+    Add transition elements like risers, buildups, and swells at appropriate points.`;
 
     try {
         const response = await axios.post(
-            'https://api.openai.com/v1/engines/davinci-codex/completions',
+            'https://api.openai.com/v1/chat/completions',
             {
-                prompt,
-                max_tokens: 200,
+                model: 'gpt-4o',
+                messages: [{ role: 'user', content: prompt }],
+                temperature: 0.7,
+                max_tokens: 500
             },
             {
                 headers: {
@@ -22,30 +34,9 @@ export async function generateArrangement(genre: string, length: number, tempo: 
             }
         );
 
-        const data = response.data.choices[0].text;
-        return parseArrangement(data);
+        return response.data.choices[0].message.content;
     } catch (error) {
         console.error('Error generating arrangement:', error);
         throw error;
     }
-}
-
-function parseArrangement(data: string) {
-    const patterns: any = {};
-    const transitions: string[] = [];
-    
-    const lines = data.split('\n');
-    for (const line of lines) {
-        if (line.startsWith("Transitions:")) {
-            const trans = line.replace("Transitions:", "").trim();
-            transitions.push(...trans.split(',').map(t => t.trim()));
-        } else {
-            const [instrument, pattern] = line.split(':');
-            if (instrument && pattern) {
-                patterns[instrument.trim()] = pattern.trim();
-            }
-        }
-    }
-
-    return { patterns, transitions };
 }

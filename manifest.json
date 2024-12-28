@@ -6,6 +6,9 @@
     "ui": "index.html",
     "editorType": ["figjam"],
     "networkAccess": {
-        "allowedDomains": ["api.openai.com", "api.anthropic.com"]
+        "allowedDomains": [
+            "https://api.openai.com",
+            "https://api.anthropic.com"
+        ]
     }
 }

@@ -4,4 +4,6 @@ dist/
 *.log
 *.envconfig.ts
 envconfig.ts
+*.js
+!webpack.config.js
 .env
