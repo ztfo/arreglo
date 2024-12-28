@@ -4,5 +4,8 @@
     "api": "1.0.0",
     "main": "dist/code.js",
     "ui": "index.html",
-    "editorType": ["figma", "figjam"]
-  }
+    "editorType": ["figjam"],
+    "networkAccess": {
+        "allowedDomains": ["api.openai.com", "api.anthropic.com"]
+    }
+}

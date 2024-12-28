@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
+  mode: 'production',
   entry: './src/code.ts',
   module: {
     rules: [
@@ -16,13 +17,10 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
   },
   output: {
-    filename: 'bundle.js',
+    filename: 'code.js',
     path: path.resolve(__dirname, 'dist'),
-    libraryTarget: 'commonjs2',
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env.OPENAI_API_KEY': JSON.stringify(process.env.OPENAI_API_KEY),
-    }),
-  ],
+  optimization: {
+    minimize: false
+  }
 };

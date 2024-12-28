@@ -1,203 +1,103 @@
-import { Anthropic } from '@anthropic-ai/sdk';
-import { OpenAI } from 'openai';
-import { CONFIG } from './config';
+import { getConfig, setConfig, ApiConfig } from './config';
 
-figma.showUI(__html__);
+// Show UI for plugin mode
+figma.showUI(__html__, { width: 400, height: 600 });
 
-interface ApiKeys {
-  anthropic: string;
-  openai: string;
-  preferred: 'anthropic' | 'openai';
+// Function to validate API configuration
+async function validateConfig(config: ApiConfig): Promise<boolean> {
+    return config.OPENAI_API_KEY !== '' || config.ANTHROPIC_API_KEY !== '';
 }
 
-async function getApiKeys(): Promise<ApiKeys> {
-  if (figma.clientStorage) {
-    const anthropicKey = await figma.clientStorage.getAsync('anthropic_api_key') || CONFIG.ANTHROPIC_API_KEY;
-    const openaiKey = await figma.clientStorage.getAsync('openai_api_key') || CONFIG.OPENAI_API_KEY;
-    const preferred = (await figma.clientStorage.getAsync('preferred_api') as 'anthropic' | 'openai') || CONFIG.PREFERRED_API;
-    return { anthropic: anthropicKey, openai: openaiKey, preferred };
-  }
-  // fallback for development
-  return {
-    anthropic: CONFIG.ANTHROPIC_API_KEY,
-    openai: CONFIG.OPENAI_API_KEY,
-    preferred: CONFIG.PREFERRED_API
-  };
-}
-
-figma.ui.onmessage = async (msg) => {
-    if (msg.type === 'create-layout') {
-        await createSongLayout(msg.data);
-    }
-};
-
-function parseInstrumentPatterns(input: string) {
-    const patterns = input.split(',').map(pattern => {
-        const [instrument, bars] = pattern.trim().split(':').map(str => str.trim());
-        return { instrument, bars: parseInt(bars, 10) };
+// Function to make OpenAI API calls
+async function callOpenAI(apiKey: string, prompt: string) {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+            model: 'gpt-4',
+            messages: [{ role: 'user', content: prompt }],
+            temperature: 0.7
+        })
     });
 
-    return patterns;
+    if (!response.ok) {
+        throw new Error(`OpenAI API error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.choices[0].message.content;
 }
 
-interface Arrangement {
-    patterns: Record<string, string>;
-    transitions: string[];
-    structure: { name: string; start: number; end: number }[];
+// Function to make Anthropic API calls
+async function callAnthropic(apiKey: string, prompt: string) {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+            model: 'claude-2.1',
+            max_tokens: 1000,
+            messages: [{ role: 'user', content: prompt }]
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error(`Anthropic API error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.content[0].text;
 }
 
-async function generateArrangement(genre: string, length: number, tempo: number): Promise<Arrangement> {
-    const keys = await getApiKeys();
-    let aiResponse: string;
-  
-    const prompt = `Generate a detailed song arrangement for a ${genre} song that is ${length} seconds long with a tempo of ${tempo} BPM. Please provide:
-  
-  1. Overall song structure with timestamps (in seconds)
-  2. Instrument patterns (which instruments play and for how many bars)
-  3. Transition elements with timestamps (in seconds)
-  
-  Format the response as follows:
-  Structure:
-  [Section Name]: [Start Time] - [End Time]
-  
-  Patterns:
-  [Instrument]: [Pattern Description]
-  
-  Transitions:
-  [Transition Type]: [Timestamp]`;
-  
-    if (keys.preferred === 'anthropic') {
-      const anthropic = new Anthropic({ apiKey: keys.anthropic });
-      const completion = await anthropic.completions.create({
-        model: "claude-2.1",
-        prompt: prompt,
-        max_tokens_to_sample: 1000,
-      });
-      aiResponse = completion.completion;
-    } else {
-      const openai = new OpenAI({ apiKey: keys.openai });
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o",
-        messages: [{ role: "user", content: prompt }],
-      });
-      aiResponse = response.choices[0].message.content || '';
+// Handle messages from the UI
+figma.ui.onmessage = async (msg) => {
+    if (msg.type === 'load-settings') {
+        const config = await getConfig();
+        figma.ui.postMessage({ type: 'settings-loaded', config });
     }
-  
-    const sections = aiResponse.split('\n\n');
-    const arrangement: Arrangement = {
-      patterns: {},
-      transitions: [],
-      structure: []
-    };
-  
-    for (const section of sections) {
-      if (section.startsWith('Structure:')) {
-        const structureLines = section.split('\n').slice(1);
-        for (const line of structureLines) {
-          const [name, times] = line.split(': ');
-          const [start, end] = times.split(' - ').map(t => parseInt(t, 10));
-          arrangement.structure.push({ name, start, end });
-        }
-      } else if (section.startsWith('Patterns:')) {
-        const patternLines = section.split('\n').slice(1);
-        for (const line of patternLines) {
-          const [instrument, pattern] = line.split(': ');
-          arrangement.patterns[instrument] = pattern;
-        }
-      } else if (section.startsWith('Transitions:')) {
-        const transitionLines = section.split('\n').slice(1);
-        arrangement.transitions = transitionLines.map(line => line.trim());
-      }
+    else if (msg.type === 'save-settings') {
+        await setConfig(msg.config);
+        figma.ui.postMessage({ type: 'settings-saved' });
     }
-  
-    return arrangement;
-  }
+    else if (msg.type === 'generate-arrangement') {
+        const config = await getConfig();
+        
+        // Validate that we have at least one API key
+        if (!await validateConfig(config)) {
+            figma.ui.postMessage({ 
+                type: 'error', 
+                message: 'Please configure at least one API key in settings first!' 
+            });
+            return;
+        }
 
-  async function createSongLayout(data: { genre: string, length: number, tempo: number, instrumentPatterns: string }) {
-    const { genre, length, tempo, instrumentPatterns } = data;
-  
-    try {
-      await figma.loadFontAsync({ family: "Inter", style: "Medium" });
-    } catch (error) {
-      console.error("Failed to load font:", error);
-      figma.notify("Error: Could not load font. Please try again.");
-      return;
+        try {
+            const songData = msg.songData;
+            const prompt = `Generate a detailed song arrangement for a ${songData.genre} song that is ${songData.length} seconds long with a tempo of ${songData.tempo} BPM. Include patterns for these instruments: ${songData.instruments.join(', ')}`;
+            
+            let response;
+            if (config.PREFERRED_API === 'openai' && config.OPENAI_API_KEY) {
+                response = await callOpenAI(config.OPENAI_API_KEY, prompt);
+            } else if (config.PREFERRED_API === 'anthropic' && config.ANTHROPIC_API_KEY) {
+                response = await callAnthropic(config.ANTHROPIC_API_KEY, prompt);
+            } else {
+                throw new Error('No valid API configuration found');
+            }
+
+            // TODO: Parse the response and create the visual arrangement
+            console.log('AI Response:', response);
+            
+        } catch (error: any) {
+            figma.ui.postMessage({ 
+                type: 'error', 
+                message: 'Error generating arrangement: ' + error.message 
+            });
+        }
     }
-  
-    const arrangement = await generateArrangement(genre, length, tempo);
-  
-    const shapeHeight = 50;
-    const shapeWidth = 200;
-    const spacing = 20;
-  
-    let xPos = 0;
-    let yPos = 0;
-  
-    // song structure
-    for (const section of arrangement.structure) {
-      const sectionWidth = (section.end - section.start) * 2; // 2 pixels per second
-      const shape = figma.createRectangle();
-      shape.resize(sectionWidth, shapeHeight);
-      shape.x = xPos;
-      shape.y = yPos;
-      shape.fills = [{ type: 'SOLID', color: { r: 0.8, g: 0.8, b: 0.8 } }];
-  
-      const text = figma.createText();
-      text.characters = `${section.name} (${section.start}s - ${section.end}s)`;
-      text.fontSize = 12;
-      text.x = xPos + 5;
-      text.y = yPos + 5;
-  
-      figma.currentPage.appendChild(shape);
-      figma.currentPage.appendChild(text);
-  
-      xPos += sectionWidth + spacing;
-    }
-  
-    yPos += shapeHeight + spacing;
-    xPos = 0;
-  
-    // instrument patterns
-    for (const [instrument, pattern] of Object.entries(arrangement.patterns)) {
-      const shape = figma.createRectangle();
-      shape.resize(shapeWidth, shapeHeight);
-      shape.x = xPos;
-      shape.y = yPos;
-      shape.fills = [{ type: 'SOLID', color: { r: 0.3, g: 0.8, b: 0.3 } }];
-  
-      const text = figma.createText();
-      text.characters = `${instrument}: ${pattern}`;
-      text.fontSize = 12;
-      text.x = xPos + 5;
-      text.y = yPos + 5;
-  
-      figma.currentPage.appendChild(shape);
-      figma.currentPage.appendChild(text);
-  
-      yPos += shapeHeight + spacing;
-    }
-  
-    // transition elements
-    for (const transition of arrangement.transitions) {
-      const transitionShape = figma.createEllipse();
-      transitionShape.resize(shapeHeight, shapeHeight);
-      transitionShape.x = xPos;
-      transitionShape.y = yPos;
-      transitionShape.fills = [{ type: 'SOLID', color: { r: 1, g: 0.34, b: 0.2 } }];
-  
-      const transitionText = figma.createText();
-      transitionText.characters = transition;
-      transitionText.fontSize = 12;
-      transitionText.x = xPos + shapeHeight + 5;
-      transitionText.y = yPos + shapeHeight / 2 - 6;
-  
-      figma.currentPage.appendChild(transitionShape);
-      figma.currentPage.appendChild(transitionText);
-  
-      yPos += shapeHeight + spacing;
-    }
-  
-    figma.viewport.scrollAndZoomIntoView(figma.currentPage.children);
-  
-    figma.notify("AI-powered layout with transitions created!");
-  }
+};

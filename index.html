@@ -7,38 +7,138 @@
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; }
         label { display: block; margin-bottom: 8px; }
-        input, select { margin-bottom: 10px; }
+        input, select { 
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #18A0FB;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0D8DE3;
+        }
+        .settings-toggle {
+            margin-bottom: 20px;
+            color: #18A0FB;
+            cursor: pointer;
+        }
+        .settings {
+            display: none;
+            background-color: #f5f5f5;
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .settings.visible {
+            display: block;
+        }
+        .error {
+            color: red;
+            margin-bottom: 10px;
+            display: none;
+        }
     </style>
 </head>
 <body>
     <h1>Arreglo Plugin</h1>
+    
+    <div class="settings-toggle" onclick="toggleSettings()">⚙️ Settings</div>
+    
+    <div id="error" class="error"></div>
+    
+    <div id="settings" class="settings">
+        <h3>API Configuration</h3>
+        <label for="openaiKey">OpenAI API Key:</label>
+        <input type="password" id="openaiKey"><br>
+        
+        <label for="anthropicKey">Anthropic API Key:</label>
+        <input type="password" id="anthropicKey"><br>
+        
+        <label for="preferredApi">Preferred API:</label>
+        <select id="preferredApi">
+            <option value="openai">OpenAI</option>
+            <option value="anthropic">Anthropic</option>
+        </select><br>
+        
+        <button onclick="saveSettings()">Save Settings</button>
+    </div>
+
     <form id="songForm">
-      <label for="genre">Genre:</label>
-      <input type="text" id="genre" required><br>
-    
-      <label for="length">Song Length (seconds):</label>
-      <input type="number" id="length" required><br>
-    
-      <label for="tempo">Tempo (BPM):</label>
-      <input type="number" id="tempo" required><br>
-    
-      <label for="instruments">Instruments (comma-separated):</label>
-      <input type="text" id="instruments" required><br>
-    
-      <button type="submit">Generate Arrangement</button>
+        <label for="genre">Genre:</label>
+        <input type="text" id="genre" required><br>
+        
+        <label for="length">Song Length (seconds):</label>
+        <input type="number" id="length" required><br>
+        
+        <label for="tempo">Tempo (BPM):</label>
+        <input type="number" id="tempo" required><br>
+        
+        <label for="instruments">Instruments (comma-separated):</label>
+        <input type="text" id="instruments" required><br>
+        
+        <button type="submit">Generate Arrangement</button>
     </form>
     
     <script>
-      document.getElementById('songForm').onsubmit = (event) => {
-        event.preventDefault();
-        const songData = {
-          genre: document.getElementById('genre').value,
-          length: document.getElementById('length').value,
-          tempo: document.getElementById('tempo').value,
-          instruments: document.getElementById('instruments').value.split(',').map(i => i.trim())
+        // Load settings when the plugin starts
+        parent.postMessage({ pluginMessage: { type: 'load-settings' } }, '*');
+        
+        function toggleSettings() {
+            const settings = document.getElementById('settings');
+            settings.classList.toggle('visible');
+        }
+        
+        function saveSettings() {
+            const config = {
+                OPENAI_API_KEY: document.getElementById('openaiKey').value,
+                ANTHROPIC_API_KEY: document.getElementById('anthropicKey').value,
+                PREFERRED_API: document.getElementById('preferredApi').value
+            };
+            
+            parent.postMessage({ pluginMessage: { type: 'save-settings', config } }, '*');
+        }
+        
+        function showError(message) {
+            const error = document.getElementById('error');
+            error.textContent = message;
+            error.style.display = 'block';
+            setTimeout(() => {
+                error.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Listen for messages from the plugin code
+        window.onmessage = async (event) => {
+            const msg = event.data.pluginMessage;
+            if (msg.type === 'settings-loaded') {
+                document.getElementById('openaiKey').value = msg.config.OPENAI_API_KEY;
+                document.getElementById('anthropicKey').value = msg.config.ANTHROPIC_API_KEY;
+                document.getElementById('preferredApi').value = msg.config.PREFERRED_API;
+            } else if (msg.type === 'settings-saved') {
+                showError('Settings saved successfully!');
+            } else if (msg.type === 'error') {
+                showError(msg.message);
+            }
         };
-        parent.postMessage({ pluginMessage: { type: 'generate-arrangement', songData } }, '*');
-      };
+
+        document.getElementById('songForm').onsubmit = async (event) => {
+            event.preventDefault();
+            const songData = {
+                genre: document.getElementById('genre').value,
+                length: document.getElementById('length').value,
+                tempo: document.getElementById('tempo').value,
+                instruments: document.getElementById('instruments').value.split(',').map(i => i.trim())
+            };
+            parent.postMessage({ pluginMessage: { type: 'generate-arrangement', songData } }, '*');
+        };
     </script>
 </body>
 </html>

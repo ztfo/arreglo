@@ -1,16 +1,16 @@
 {
     "compilerOptions": {
-      "target": "es6",
-      "module": "esnext",
-      "lib": ["es2017", "dom"],
-      "moduleResolution": "node",
-      "outDir": "./dist",
-      "rootDir": "./src",
-      "strict": true,
-      "esModuleInterop": true,
-      "skipLibCheck": true,
-      "types": ["@figma/plugin-typings", "node"]
+        "target": "es6",
+        "module": "commonjs",
+        "lib": ["es6", "dom"],
+        "jsx": "react",
+        "strict": true,
+        "typeRoots": ["./node_modules/@types", "./node_modules/@figma"],
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true
     },
-    "include": ["src/**/*.ts"],
+    "include": ["src/**/*"],
     "exclude": ["node_modules"]
-  }
+}
