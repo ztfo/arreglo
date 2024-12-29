@@ -32,6 +32,11 @@ export class App {
             if (!msg) return;
 
             switch (msg.type) {
+                case 'settings-loaded':
+                    if (msg.config) {
+                        this.settings.updateSettings(msg.config);
+                    }
+                    break;
                 case 'settings-saved':
                     this.errorDisplay.show('Settings saved successfully!');
                     break;
