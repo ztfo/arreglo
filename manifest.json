@@ -3,7 +3,7 @@
     "id": "arreglo-plugin",
     "api": "1.0.0",
     "main": "dist/code.js",
-    "ui": "index.html",
+    "ui": "dist/ui.html",
     "editorType": ["figjam"],
     "networkAccess": {
         "allowedDomains": [

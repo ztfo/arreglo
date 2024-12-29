@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Arreglo</title>
+</head>
+<body>
+    <div class="container" role="main" aria-live="polite">
+        <button id="settingsButton">Settings</button>
+        
+        <div id="settings" class="settings-panel">
+            <div class="form-group">
+                <label for="openaiKey">OpenAI API Key:</label>
+                <input type="password" id="openaiKey">
+            </div>
+            <div class="form-group">
+                <label for="anthropicKey">Anthropic API Key:</label>
+                <input type="password" id="anthropicKey">
+            </div>
+            <div class="form-group">
+                <label for="preferredApi">Preferred API:</label>
+                <select id="preferredApi">
+                    <option value="openai">OpenAI</option>
+                    <option value="anthropic">Anthropic</option>
+                </select>
+            </div>
+            <button id="saveSettings">Save Settings</button>
+        </div>
+        
+        <form id="songForm">
+            <div class="form-group">
+                <label for="title">Song Title:</label>
+                <input type="text" id="title" required>
+            </div>
+            <div class="form-group">
+                <label for="genre">Genre:</label>
+                <select id="genre" required>
+                    <option value="House">House</option>
+                    <option value="Techno">Techno</option>
+                    <option value="Trance">Trance</option>
+                    <option value="DnB">Drum & Bass</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="length">Length (bars):</label>
+                <input type="number" id="length" required min="16" max="256" value="128">
+            </div>
+            <div class="form-group">
+                <label for="tempo">Tempo (BPM):</label>
+                <input type="number" id="tempo" required min="60" max="200" value="128">
+            </div>
+            <div class="form-group">
+                <label for="instruments">Instruments (comma-separated):</label>
+                <input type="text" id="instruments" required value="kick, hihat, bass, melody">
+            </div>
+            <button type="submit">Generate Arrangement</button>
+        </form>
+
+        <div id="error" class="error-container">
+            <div id="errorMessage"></div>
+            <button id="clearError">Clear</button>
+        </div>
+
+        <div id="loading" class="loading">
+            <div>Generating arrangement...</div>
+            <div class="loading-subtitle">This may take a few moments</div>
+        </div>
+    </div>
+</body>
+</html>

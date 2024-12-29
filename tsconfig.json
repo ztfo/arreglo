@@ -3,14 +3,25 @@
         "target": "es6",
         "module": "commonjs",
         "lib": ["es6", "dom"],
-        "jsx": "react",
         "strict": true,
-        "typeRoots": ["./node_modules/@types", "./node_modules/@figma"],
-        "moduleResolution": "node",
         "esModuleInterop": true,
         "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "dist",
+        "rootDir": "src",
+        "typeRoots": [
+            "./node_modules/@types",
+            "./node_modules/@figma"
+        ],
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "allowJs": true
     },
-    "include": ["src/**/*"],
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.d.ts",
+        "src/**/*.tsx",
+        "src/**/*.css"
+    ],
     "exclude": ["node_modules"]
 }

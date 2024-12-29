@@ -1,26 +1,31 @@
-const path = require('path');
-const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
 
 module.exports = {
-  mode: 'production',
-  entry: './src/code.ts',
+  mode: 'development',
+  entry: {
+    ui: './src/ui/main.ts',
+    code: './src/code.ts',
+  },
   module: {
     rules: [
-      {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
-      },
+      { test: /\.tsx?$/, use: 'ts-loader', exclude: /node_modules/ },
+      { test: /\.css$/, use: ['style-loader', 'css-loader'] },
     ],
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
   output: {
-    filename: 'code.js',
-    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].js',
   },
-  optimization: {
-    minimize: false
-  }
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/ui/index.html',
+      filename: 'ui.html',
+      chunks: ['ui'],
+      inject: 'body'
+    }),
+    new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/ui/])
+  ]
 };
