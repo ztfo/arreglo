@@ -32,7 +32,6 @@ export class Settings {
   }
 
   public async loadSettings() {
-    // Instead of directly accessing figma.clientStorage, send a message to the plugin code
     parent.postMessage({ 
         pluginMessage: { 
             type: 'load-settings' 
