@@ -229,6 +229,7 @@ figma.ui.onmessage = async (msg) => {
             );
 
             const response = await generateArrangement(config, prompt);
+            console.log('Generated Arrangement Response:', response);
             const arrangement = parseArrangement(response, songData.title);
             await createVisualArrangement(arrangement);
             figma.ui.postMessage({ type: 'success', message: 'Arrangement created!' });

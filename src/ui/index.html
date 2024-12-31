@@ -2,11 +2,39 @@
 <html>
 <head>
     <title>Arreglo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <div class="container" role="main" aria-live="polite">
-        <button id="settingsButton">Settings</button>
-        
+        <nav>
+            <div class="nav-logo">
+                <i class="fa-solid fa-music"></i>
+                <span>Arreglo</span>
+            </div>
+            <div class="nav-right">
+                <div class="nav-item">
+                    <i class="fa-solid fa-circle-info"></i>
+                </div>
+                <div class="nav-item">
+                    <button id="settingsButton">
+                        <i class="fa-solid fa-gear"></i>
+                        Settings
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <div class="alert-tray">
+            <div id="error" class="error-container">
+                <div id="errorMessage"></div>
+                <button id="clearError">Clear</button>
+            </div>
+    
+            <div id="loading" class="loading">
+                <div>Generating arrangement...</div>
+                <div class="loading-subtitle">This may take a few moments</div>
+            </div>
+        </div>
+
         <div id="settings" class="settings-panel">
             <div class="form-group">
                 <label for="openaiKey">OpenAI API Key:</label>
@@ -25,45 +53,49 @@
             </div>
             <button id="saveSettings">Save Settings</button>
         </div>
-        
-        <form id="songForm">
-            <div class="form-group">
-                <label for="title">Song Title:</label>
-                <input type="text" id="title" required>
-            </div>
-            <div class="form-group">
-                <label for="genre">Genre:</label>
-                <select id="genre" required>
-                    <option value="House">House</option>
-                    <option value="Techno">Techno</option>
-                    <option value="Trance">Trance</option>
-                    <option value="DnB">Drum & Bass</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="length">Length (bars):</label>
-                <input type="number" id="length" required min="16" max="256" value="128">
-            </div>
-            <div class="form-group">
-                <label for="tempo">Tempo (BPM):</label>
-                <input type="number" id="tempo" required min="60" max="200" value="128">
-            </div>
-            <div class="form-group">
-                <label for="instruments">Instruments (comma-separated):</label>
-                <input type="text" id="instruments" required value="kick, hihat, bass, melody">
-            </div>
-            <button type="submit">Generate Arrangement</button>
-        </form>
 
-        <div id="error" class="error-container">
-            <div id="errorMessage"></div>
-            <button id="clearError">Clear</button>
+        <div class="inner-container">
+            <form id="songForm">
+                <div class="form-group">
+                    <label for="title">Song Title:</label>
+                    <input type="text" id="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="genre">Genre:</label>
+                    <select id="genre" required>
+                        <option value="House">House</option>
+                        <option value="Techno">Techno</option>
+                        <option value="Trance">Trance</option>
+                        <option value="DnB">Drum & Bass</option>
+                        <option value="Pop">Pop</option>
+                        <option value="Rock">Rock</option>
+                        <option value="Jazz">Jazz</option>
+                        <option value="Classical">Classical</option>
+                        <option value="Hip Hop">Hip Hop</option>
+                        <option value="R&B">R&B</option>
+                        <option value="Country">Country</option>
+                        <option value="Electronic">Electronic</option>
+                        <option value="Folk">Folk</option>
+                        <option value="Metal">Metal</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="length">Length (bars):</label>
+                    <input type="number" id="length" required min="16" max="256" value="128">
+                </div>
+                <div class="form-group">
+                    <label for="tempo">Tempo (BPM):</label>
+                    <input type="number" id="tempo" required min="60" max="200" value="128">
+                </div>
+                <div class="form-group">
+                    <label for="instruments">Instruments (comma-separated):</label>
+                    <input type="text" id="instruments" required value="kick, hihat, bass, melody">
+                </div>
+                <button type="submit">Create Arrangement</button>
+            </form>
         </div>
 
-        <div id="loading" class="loading">
-            <div>Generating arrangement...</div>
-            <div class="loading-subtitle">This may take a few moments</div>
-        </div>
     </div>
+
 </body>
 </html>

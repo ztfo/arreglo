@@ -3,6 +3,8 @@ export async function callOpenAI(apiKey: string, prompt: string) {
     let retryCount = 0;
     const baseDelay = 2000;
     
+    console.log('Sending prompt to OpenAI:', prompt);
+    
     while (retryCount < maxRetries) {
         try {
             const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -19,21 +21,15 @@ export async function callOpenAI(apiKey: string, prompt: string) {
                 })
             });
 
-            if (response.status === 429) {
-                const retryAfter = response.headers.get('Retry-After');
-                const delay = retryAfter ? parseInt(retryAfter) * 1000 : baseDelay * Math.pow(2, retryCount);
-                await new Promise(resolve => setTimeout(resolve, delay));
-                retryCount++;
-                continue;
-            }
-
             if (!response.ok) {
                 throw new Error(`OpenAI API error: ${response.statusText}`);
             }
 
             const data = await response.json();
+            console.log('OpenAI Response:', data.choices[0].message.content);
             return data.choices[0].message.content;
         } catch (error: any) {
+            console.error('OpenAI API Error:', error);
             if (retryCount === maxRetries - 1) throw error;
             retryCount++;
         }

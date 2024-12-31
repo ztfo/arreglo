@@ -4,11 +4,13 @@
     "api": "1.0.0",
     "main": "dist/code.js",
     "ui": "dist/ui.html",
-    "editorType": ["figjam"],
+    "editorType": ["figjam", "figma"],
     "networkAccess": {
         "allowedDomains": [
             "https://api.openai.com",
-            "https://api.anthropic.com"
+            "https://api.anthropic.com",
+            "https://cdnjs.cloudflare.com",
+            "https://ka-f.fontawesome.com"
         ]
     }
 }
