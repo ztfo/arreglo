@@ -26,11 +26,13 @@ body {
 }
 
 .settings-panel {
+    display: none;
     visibility: hidden;
     opacity: 0;
     transition: opacity 0.2s ease;
 }
 .settings-panel.visible {
+    display: block;
     visibility: visible;
     opacity: 1;
 }
