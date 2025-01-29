@@ -17,7 +17,7 @@ export async function callOpenAI(apiKey: string, prompt: string) {
                     model: 'gpt-4',
                     messages: [{ role: 'user', content: prompt }],
                     temperature: 0.7,
-                    max_tokens: 500
+                    max_tokens: 2000
                 })
             });
 

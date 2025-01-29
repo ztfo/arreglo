@@ -5,7 +5,7 @@ import { ApiConfig, SongData, ArrangementData } from './core/types';
 import { createArrangementPrompt } from './core/prompts';
 
 figma.showUI(__html__, { 
-    width: 400, 
+    width: 500, 
     height: 600,
     themeColors: true 
 });
@@ -110,11 +110,11 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         const mainFrame = figma.createFrame();
         mainFrame.name = arrangement.title || "Song Arrangement";
         mainFrame.layoutMode = "VERTICAL";
-        mainFrame.itemSpacing = 16;
-        mainFrame.paddingTop = 24;
-        mainFrame.paddingBottom = 24;
-        mainFrame.paddingLeft = 24;
-        mainFrame.paddingRight = 24;
+        mainFrame.itemSpacing = 24;
+        mainFrame.paddingTop = 32;
+        mainFrame.paddingBottom = 32;
+        mainFrame.paddingLeft = 32;
+        mainFrame.paddingRight = 32;
         mainFrame.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
 
         // Create title section
@@ -122,10 +122,14 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         titleFrame.layoutMode = "HORIZONTAL";
         titleFrame.fills = [];
         titleFrame.name = "Title Section";
+        titleFrame.primaryAxisSizingMode = "AUTO";
+        titleFrame.counterAxisSizingMode = "AUTO";
+        titleFrame.layoutAlign = "STRETCH";
+        titleFrame.primaryAxisAlignItems = "CENTER";
 
         const titleText = figma.createText();
         titleText.characters = arrangement.title || "Song Arrangement";
-        titleText.fontSize = 20;
+        titleText.fontSize = 24;
         titleText.fontName = { family: "Inter", style: "Bold" };
         titleFrame.appendChild(titleText);
         mainFrame.appendChild(titleFrame);
@@ -134,26 +138,44 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         const gridContainer = figma.createFrame();
         gridContainer.name = "Grid Container";
         gridContainer.layoutMode = "HORIZONTAL";
+        gridContainer.counterAxisSizingMode = "AUTO";
         gridContainer.fills = [{ type: 'SOLID', color: { r: 0.95, g: 0.95, b: 0.95 } }];
-        gridContainer.cornerRadius = 8;
-        gridContainer.paddingTop = 16;
-        gridContainer.paddingBottom = 16;
-        gridContainer.paddingLeft = 16;
-        gridContainer.paddingRight = 16;
+        gridContainer.cornerRadius = 12;
+        gridContainer.paddingTop = 24;
+        gridContainer.paddingBottom = 24;
+        gridContainer.paddingLeft = 24;
+        gridContainer.paddingRight = 24;
+        gridContainer.counterAxisSizingMode = "AUTO";
 
         // Create instruments column
         const instrumentsColumn = figma.createFrame();
         instrumentsColumn.name = "Instruments";
         instrumentsColumn.layoutMode = "VERTICAL";
-        instrumentsColumn.itemSpacing = 8;
+        instrumentsColumn.itemSpacing = 12;
         instrumentsColumn.fills = [];
+        instrumentsColumn.minWidth = 160;
+        instrumentsColumn.maxWidth = 280;
+        instrumentsColumn.counterAxisSizingMode = "AUTO";
+        instrumentsColumn.primaryAxisSizingMode = "AUTO";
+        const columnWidth = 160;
+        instrumentsColumn.resize(columnWidth, instrumentsColumn.height);
 
-        const instrumentLabel = figma.createText();
-        instrumentLabel.characters = "Instrument\nPatterns";
-        instrumentLabel.fontSize = 14;
-        instrumentLabel.fontName = { family: "Inter", style: "Medium" };
-        instrumentLabel.textAlignHorizontal = "CENTER";
-        instrumentsColumn.appendChild(instrumentLabel);
+        // Add spacer frame to align with bar numbers
+        const spacerFrame = figma.createFrame();
+        spacerFrame.name = "Spacer";
+        spacerFrame.layoutMode = "HORIZONTAL";
+        spacerFrame.resize(columnWidth, 32);
+        spacerFrame.fills = [];
+        instrumentsColumn.appendChild(spacerFrame);
+
+        // Create instruments grid container
+        const instrumentsGridContainer = figma.createFrame();
+        instrumentsGridContainer.name = "Instruments Grid";
+        instrumentsGridContainer.layoutMode = "VERTICAL";
+        instrumentsGridContainer.itemSpacing = 0;
+        instrumentsGridContainer.fills = [];
+        instrumentsGridContainer.counterAxisSizingMode = "AUTO";
+        instrumentsGridContainer.resize(columnWidth, instrumentsGridContainer.height);
 
         // Get unique instruments
         const instruments = Array.from(new Set(
@@ -164,23 +186,21 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         instruments.forEach(instrument => {
             const instrumentFrame = figma.createFrame();
             instrumentFrame.name = instrument;
-            instrumentFrame.layoutMode = "VERTICAL";
+            instrumentFrame.layoutMode = "HORIZONTAL";
             instrumentFrame.fills = [{ type: 'SOLID', color: { r: 0.9, g: 0.9, b: 0.9 } }];
-            instrumentFrame.cornerRadius = 4;
-            instrumentFrame.paddingTop = 8;
-            instrumentFrame.paddingBottom = 8;
-            instrumentFrame.paddingLeft = 12;
-            instrumentFrame.paddingRight = 12;
+            instrumentFrame.primaryAxisAlignItems = "CENTER";
+            instrumentFrame.counterAxisAlignItems = "CENTER";
+            instrumentFrame.resize(columnWidth, 50);
 
             const label = figma.createText();
             label.characters = instrument;
             label.fontSize = 14;
             label.fontName = { family: "Inter", style: "Medium" };
             instrumentFrame.appendChild(label);
-            instrumentsColumn.appendChild(instrumentFrame);
+            instrumentsGridContainer.appendChild(instrumentFrame);
         });
 
-        gridContainer.appendChild(instrumentsColumn);
+        instrumentsColumn.appendChild(instrumentsGridContainer);
 
         // Create bars grid
         const totalBars = arrangement.sections.reduce((total, section) => total + section.duration, 0);
@@ -189,6 +209,7 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         barsContainer.layoutMode = "VERTICAL";
         barsContainer.itemSpacing = 8;
         barsContainer.fills = [];
+        barsContainer.counterAxisSizingMode = "AUTO";
 
         // Create bar numbers and grid lines
         const barNumbersFrame = figma.createFrame();
@@ -197,149 +218,177 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         barNumbersFrame.itemSpacing = 0;
         barNumbersFrame.fills = [];
         barNumbersFrame.counterAxisSizingMode = "AUTO";
-
-        // Create grid background
-        const gridBackground = figma.createFrame();
-        gridBackground.name = "Grid Background";
-        gridBackground.layoutMode = "HORIZONTAL";
-        gridBackground.itemSpacing = 0;
-        gridBackground.fills = [];
-        gridBackground.counterAxisSizingMode = "AUTO";
+        barNumbersFrame.resize(totalBars * 50, 24); // Fixed height for bar numbers
 
         for (let i = 1; i <= totalBars; i++) {
-            // Create bar number
             const barNumberContainer = figma.createFrame();
             barNumberContainer.name = `Bar ${i} Container`;
-            barNumberContainer.resize(40, 24);
+            barNumberContainer.resize(50, 32);
             barNumberContainer.fills = [];
             barNumberContainer.layoutMode = "HORIZONTAL";
             barNumberContainer.primaryAxisAlignItems = "CENTER";
             barNumberContainer.counterAxisAlignItems = "CENTER";
+            barNumberContainer.layoutSizingHorizontal = "FIXED";  // Keep fixed width
 
             const barNumber = figma.createText();
             barNumber.characters = i.toString();
-            barNumber.fontSize = 12;
+            barNumber.fontSize = 14;
             barNumber.fontName = { family: "Inter", style: "Regular" };
             barNumber.textAlignHorizontal = "CENTER";
             barNumberContainer.appendChild(barNumber);
             barNumbersFrame.appendChild(barNumberContainer);
-
-            // Create grid column
-            const gridColumn = figma.createFrame();
-            gridColumn.name = `Bar ${i} Grid`;
-            gridColumn.resize(40, 40 * (instruments.length + 1)); // +1 for the header
-            gridColumn.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
-            if (i % 2 === 0) {
-                gridColumn.fills = [{ type: 'SOLID', color: { r: 0.98, g: 0.98, b: 0.98 } }];
-            }
-            
-            // Add vertical grid line
-            const verticalLine = figma.createLine();
-            verticalLine.strokeWeight = 1;
-            verticalLine.strokeCap = "NONE";
-            verticalLine.strokes = [{ type: 'SOLID', color: { r: 0.9, g: 0.9, b: 0.9 } }];
-            verticalLine.x = gridColumn.width;
-            verticalLine.y = 0;
-            verticalLine.rotation = 90;
-            verticalLine.resize(gridColumn.height, 0);
-            gridColumn.appendChild(verticalLine);
-
-            gridBackground.appendChild(gridColumn);
         }
 
-        // Add horizontal grid lines
-        for (let i = 0; i <= instruments.length; i++) {
-            const horizontalLine = figma.createLine();
-            horizontalLine.strokeWeight = 1;
-            horizontalLine.strokeCap = "NONE";
-            horizontalLine.strokes = [{ type: 'SOLID', color: { r: 0.9, g: 0.9, b: 0.9 } }];
-            horizontalLine.x = 0;
-            horizontalLine.y = i * 40;
-            horizontalLine.resize(totalBars * 40, 0);
-            gridBackground.appendChild(horizontalLine);
-        }
+        // Create patterns container
+        const patternsContainer = figma.createFrame();
+        patternsContainer.name = "Patterns Container";
+        patternsContainer.layoutMode = "VERTICAL";
+        patternsContainer.itemSpacing = 0;
+        patternsContainer.fills = [];
+        patternsContainer.counterAxisSizingMode = "AUTO";
+        patternsContainer.resize(totalBars * 50, instruments.length * 50);
 
-        barsContainer.appendChild(barNumbersFrame);
-        barsContainer.appendChild(gridBackground);
-
-        // Create pattern blocks for each instrument
         instruments.forEach((instrument, instrumentIndex) => {
-            const patternRow = figma.createFrame();
-            patternRow.name = `${instrument} Patterns`;
-            patternRow.layoutMode = "HORIZONTAL";
-            patternRow.itemSpacing = 0;
-            patternRow.fills = [];
-            patternRow.counterAxisSizingMode = "AUTO";
+            const row = figma.createFrame();
+            row.name = `${instrument} Row`;
+            row.layoutMode = "HORIZONTAL";
+            row.itemSpacing = 0;
+            row.fills = [];
+            row.resize(totalBars * 50, 50);
 
-            let currentBar = 0;
+            // Track absolute bar position for the entire arrangement
+            let absoluteBarPosition = 0;
+
+            // Iterate through sections to create cells
             arrangement.sections.forEach(section => {
-                if (section.patterns[instrument]) {
-                    const pattern = figma.createFrame();
-                    pattern.name = `${instrument} ${section.name}`;
-                    pattern.resize(40 * section.duration, 40);
-                    pattern.fills = [{ type: 'SOLID', color: getColorForInstrument(instrument, instrumentIndex) }];
-                    pattern.cornerRadius = 4;
-                    pattern.opacity = 0.9;
+                // Get the bar numbers where this instrument plays in this section
+                const instrumentData = section.instruments?.[instrument];
+                const activeBars = instrumentData?.bars || [];
+                
+                // Create cells for this section
+                for (let barIndex = 0; barIndex < section.duration; barIndex++) {
+                    const cell = figma.createFrame();
+                    cell.name = `${instrument} ${section.name} Bar ${barIndex + 1}`;
+                    cell.resize(50, 50);
+                    
+                    // Check if this bar number is in the active bars list
+                    const isActive = activeBars.includes(barIndex + 1);
+                    
+                    // Set the fill color based on whether the instrument is active
+                    cell.fills = [{
+                        type: 'SOLID',
+                        color: isActive ? 
+                            getColorForInstrument(instrument, instrumentIndex) : 
+                            (absoluteBarPosition % 2 === 0 ? { r: 1, g: 1, b: 1 } : { r: 0.98, g: 0.98, b: 0.98 })
+                    }];
 
-                    const patternText = figma.createText();
-                    patternText.characters = section.patterns[instrument];
-                    patternText.fontSize = 12;
-                    patternText.fontName = { family: "Inter", style: "Regular" };
-                    patternText.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
-                    patternText.x = 8;
-                    patternText.y = (40 - patternText.height) / 2;
-                    pattern.appendChild(patternText);
+                    if (isActive) {
+                        cell.opacity = 0.9;
+                    }
 
-                    patternRow.appendChild(pattern);
-                } else {
-                    // Create empty space if no pattern
-                    const emptySpace = figma.createFrame();
-                    emptySpace.resize(40 * section.duration, 40);
-                    emptySpace.fills = [];
-                    patternRow.appendChild(emptySpace);
+                    row.appendChild(cell);
+                    absoluteBarPosition++;
                 }
-                currentBar += section.duration;
             });
 
-            barsContainer.appendChild(patternRow);
+            patternsContainer.appendChild(row);
         });
 
-        gridContainer.appendChild(barsContainer);
-        mainFrame.appendChild(gridContainer);
+        barsContainer.appendChild(barNumbersFrame);
+        barsContainer.appendChild(patternsContainer);
 
         // Create sections container
         const sectionsContainer = figma.createFrame();
         sectionsContainer.name = "Sections";
         sectionsContainer.layoutMode = "HORIZONTAL";
-        sectionsContainer.itemSpacing = 2;
+        sectionsContainer.itemSpacing = 0;
         sectionsContainer.fills = [];
+        sectionsContainer.resize(totalBars * 50, 50);
 
         let currentBar = 0;
         arrangement.sections.forEach(section => {
+            // Calculate section width based on duration
+            const sectionWidth = section.duration * 50;
+            
             const sectionFrame = figma.createFrame();
             sectionFrame.name = section.name;
-            sectionFrame.resize(40 * section.duration, 40);
+            sectionFrame.resize(sectionWidth, 50);
             sectionFrame.fills = [{ type: 'SOLID', color: { r: 0.9, g: 0.9, b: 0.9 } }];
             sectionFrame.cornerRadius = 4;
 
             const sectionText = figma.createText();
-            sectionText.characters = section.name;
-            sectionText.fontSize = 14;
+            sectionText.characters = `${section.name} (${section.duration} bars)`;  // Added bar count
+            sectionText.fontSize = 16;
             sectionText.fontName = { family: "Inter", style: "Medium" };
             sectionText.textAlignHorizontal = "CENTER";
             sectionText.x = (sectionFrame.width - sectionText.width) / 2;
-            sectionText.y = (40 - sectionText.height) / 2;
+            sectionText.y = (50 - sectionText.height) / 2;
             sectionFrame.appendChild(sectionText);
 
             sectionsContainer.appendChild(sectionFrame);
             currentBar += section.duration;
         });
 
-        mainFrame.appendChild(sectionsContainer);
+        // Add a spacer frame in instruments column to align with sections
+        const sectionSpacerFrame = figma.createFrame();
+        sectionSpacerFrame.name = "Section Spacer";
+        sectionSpacerFrame.layoutMode = "HORIZONTAL";
+        sectionSpacerFrame.resize(columnWidth, 50); // Same height as sections
+        sectionSpacerFrame.fills = [];
+        instrumentsColumn.appendChild(sectionSpacerFrame);
+
+        // Add sections to bars container
+        barsContainer.appendChild(sectionsContainer);
+
+        // Add grid lines
+        const gridLines = figma.createFrame();
+        gridLines.name = "Grid Lines";
+        gridLines.layoutMode = "VERTICAL";
+        gridLines.itemSpacing = 0;
+        gridLines.fills = [];
+        gridLines.resize(totalBars * 50, instruments.length * 50);
+
+        // Vertical lines
+        for (let i = 0; i <= totalBars; i++) {
+            const line = figma.createLine();
+            line.strokeWeight = 1;
+            line.strokeCap = "NONE";
+            line.strokes = [{ type: 'SOLID', color: { r: 0.9, g: 0.9, b: 0.9 } }];
+            line.x = i * 50;
+            line.rotation = 90;
+            line.resize(instruments.length * 50, 0);
+            gridLines.appendChild(line);
+        }
+
+        // Horizontal lines
+        for (let i = 0; i <= instruments.length; i++) {
+            const line = figma.createLine();
+            line.strokeWeight = 1;
+            line.strokeCap = "NONE";
+            line.strokes = [{ type: 'SOLID', color: { r: 0.9, g: 0.9, b: 0.9 } }];
+            line.y = i * 50;
+            line.resize(totalBars * 50, 0);
+            gridLines.appendChild(line);
+        }
+
+        patternsContainer.appendChild(gridLines);
+
+        // Assemble the layout
+        const contentContainer = figma.createFrame();
+        contentContainer.name = "Content Container";
+        contentContainer.layoutMode = "HORIZONTAL";
+        contentContainer.itemSpacing = 16;
+        contentContainer.fills = [];
+        contentContainer.counterAxisSizingMode = "AUTO";
+        contentContainer.appendChild(instrumentsColumn);
+        contentContainer.appendChild(barsContainer);
+
+        gridContainer.appendChild(contentContainer);
+        mainFrame.appendChild(gridContainer);
 
         // Position the main frame
         mainFrame.resize(
-            Math.max(800, totalBars * 40 + 200), // Minimum width of 800px
+            Math.max(800, totalBars * 50 + 200), // Minimum width of 800px
             mainFrame.height
         );
         mainFrame.x = figma.viewport.center.x - mainFrame.width / 2;
@@ -376,9 +425,10 @@ figma.ui.onmessage = async (msg) => {
 
             const songData = msg.songData as SongData;
             const prompt = createArrangementPrompt(
+                songData.title,
                 songData.genre,
-                songData.length.toString(),
-                songData.tempo.toString(),
+                undefined, // style is optional
+                undefined, // no custom sections
                 songData.instruments
             );
 
