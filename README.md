@@ -1,36 +1,45 @@
-## Arreglo - FigJam Plugin
+## Arreglo - Figma Plugin
 
-Arreglo is a FigJam plugin designed to help music producers visualize and arrange song structures using flowchart shapes. The plugin leverages AI to create full arrangements, suggest transitions, and allows for detailed control over song length, tempo, and instrument patterns—all directly on the FigJam canvas.
+Arreglo is a Figma plugin that helps music producers visualize song arrangements. Using AI, it generates and visualizes song structures based on your input, making it easy to plan and understand song arrangements.
+
+### Current Example Output
+
+![Example of an Arreglo arrangement visualization](images/current-example.jpg)
+
+This example shows a generated House arrangement with:
+- Intro section (8 bars)
+- Verse section (16 bars)
+- Chorus section (16 bars)
+
+Each row represents an instrument (kick, hihat, bass, melody), and the colored cells indicate when each instrument is active in the arrangement.
 
 ### Features
 
-- Flowchart-Based Song Arrangements: Visualize your song structure with flowchart shapes representing different instrument patterns.
-- AI-Powered Arrangements: Automatically generate full song arrangements using OpenAI’s ChatGPT based on the genre, song length, and tempo.
-- Customizable Patterns: Specify the genre, instrument patterns, length, and tempo to create layouts that reflect your musical ideas.
-- Detailed Instrument Pattern Control: Define how many bars each instrument pattern should last and specify the instrument type.
-- Dynamic Transition Suggestions: Receive AI-driven suggestions for transitions like risers, buildups, and swells that fit the selected genre.
+- AI-Generated Arrangements: Get complete song arrangements based on your genre and title
+- Visual Grid Layout: See exactly when each instrument plays throughout the song
+- Section-Based Structure: Clearly visualize different song sections (Intro, Verse, Chorus, etc.)
+- Instrument Patterns: View detailed patterns for each instrument across the arrangement
 
 ### Usage
 
-1. Run the Plugin in FigJam:
-* Open a FigJam file.
-* Run the “Arreglo” plugin from the plugin menu.
-2. Specify Your Arrangement:
-- Choose a genre from the dropdown menu.
-- Input instrument patterns, song length, and tempo.
-- Specify how many bars each pattern should last and what instrument it represents.
-- Click “Create Layout” to generate your song structure on the canvas.
-3. AI-Driven Suggestions:
-- Receive automatic suggestions for transitions like risers, buildups, and swells that fit your selected genre.
+1. Install and Run:
+   * Open Figma
+   * Run the "Arreglo" plugin
 
-*Example Workflow*
+2. Create an Arrangement:
+   * Enter a song title
+   * Choose a genre
+   * Click "Generate" to create your arrangement
 
-1. Select Genre: Choose “House” from the genre dropdown.
-2. Set Song Length and Tempo: Specify a length of 128 bars and a tempo of 128 BPM.
-3. Define Patterns: Input patterns for kicks, hi-hats, bass, and melodies, specifying the number of bars each pattern should last.
-4. Generate Layout: Click “Create Layout” to visualize the song structure on the canvas.
-5. Incorporate Transitions: Review and apply AI-suggested transitions to enhance your arrangement.
+3. View Your Arrangement:
+   * See a grid showing when each instrument plays
+   * Each row represents an instrument
+   * Colored cells show active bars for each instrument
+   * Section labels show the structure of your song
 
-### Future
+### Future Plans
 
-- VST Port to test arrangements directly in your DAW
+- Export arrangements to MIDI
+- More genre-specific patterns
+- Custom section definitions
+- Integration with DAWs
