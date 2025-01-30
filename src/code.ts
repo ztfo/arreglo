@@ -207,7 +207,7 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         const barsContainer = figma.createFrame();
         barsContainer.name = "Bars Container";
         barsContainer.layoutMode = "VERTICAL";
-        barsContainer.itemSpacing = 8;
+        barsContainer.itemSpacing = 12;
         barsContainer.fills = [];
         barsContainer.counterAxisSizingMode = "AUTO";
 
@@ -218,7 +218,7 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         barNumbersFrame.itemSpacing = 0;
         barNumbersFrame.fills = [];
         barNumbersFrame.counterAxisSizingMode = "AUTO";
-        barNumbersFrame.resize(totalBars * 50, 24); // Fixed height for bar numbers
+        barNumbersFrame.resize(totalBars * 50, barNumbersFrame.height); 
 
         for (let i = 1; i <= totalBars; i++) {
             const barNumberContainer = figma.createFrame();
@@ -228,7 +228,7 @@ async function createVisualArrangement(arrangement: ArrangementData) {
             barNumberContainer.layoutMode = "HORIZONTAL";
             barNumberContainer.primaryAxisAlignItems = "CENTER";
             barNumberContainer.counterAxisAlignItems = "CENTER";
-            barNumberContainer.layoutSizingHorizontal = "FIXED";  // Keep fixed width
+            barNumberContainer.layoutSizingHorizontal = "FIXED";  
 
             const barNumber = figma.createText();
             barNumber.characters = i.toString();
