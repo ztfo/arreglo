@@ -95,48 +95,54 @@
                 <!-- Pattern Input Section -->
                 <div class="form-section">
                     <h3>Patterns</h3>
-                    <div class="pattern-input-methods">
-                        <div class="pattern-input">
-                            <input type="text" id="patternInput" maxlength="20" placeholder="Pattern name (e.g., Four on floor kick)">
-                            <button type="button" id="addPattern">Add</button>
+                    <div class="form-section-content">
+                        <div class="pattern-input-methods">
+                            <div class="pattern-input">
+                                <input type="text" id="patternInput" maxlength="20" placeholder="Pattern name (e.g., Four on floor kick)">
+                                <button type="button" id="addPattern">Add</button>
+                            </div>
+                            <div class="pattern-upload">
+                                <label for="daw-screenshot" class="upload-button">
+                                    <i class="fa-solid fa-upload"></i>
+                                    Upload Screenshot
+                                </label>
+                                <input type="file" id="daw-screenshot" accept="image/*" style="display: none;">
+                            </div>
                         </div>
-                        <div class="pattern-upload">
-                            <label for="daw-screenshot" class="upload-button">
-                                <i class="fa-solid fa-upload"></i>
-                                Upload Screenshot
-                            </label>
-                            <input type="file" id="daw-screenshot" accept="image/*" style="display: none;">
-                        </div>
+                        <div id="patternsList" class="patterns-list"></div>
                     </div>
-                    <div id="patternsList" class="patterns-list"></div>
                 </div>
 
                 <!-- Sections Selection -->
                 <div class="form-section">
                     <h3>Sections</h3>
-                    <div class="sections-grid">
-                        <label><input type="checkbox" name="sections" value="Intro"> Intro</label>
-                        <label><input type="checkbox" name="sections" value="Verse 1"> Verse 1</label>
-                        <label><input type="checkbox" name="sections" value="Chorus 1"> Chorus 1</label>
-                        <label><input type="checkbox" name="sections" value="Verse 2"> Verse 2</label>
-                        <label><input type="checkbox" name="sections" value="Chorus 2"> Chorus 2</label>
-                        <label><input type="checkbox" name="sections" value="Bridge"> Bridge</label>
-                        <label><input type="checkbox" name="sections" value="Build-up"> Build-up</label>
-                        <label><input type="checkbox" name="sections" value="Drop"> Drop</label>
-                        <label><input type="checkbox" name="sections" value="Outro"> Outro</label>
+                    <div class="form-section-content">
+                        <div class="sections-grid">
+                            <label><input type="checkbox" name="sections" value="Intro"> Intro</label>
+                            <label><input type="checkbox" name="sections" value="Verse 1"> Verse 1</label>
+                            <label><input type="checkbox" name="sections" value="Chorus 1"> Chorus 1</label>
+                            <label><input type="checkbox" name="sections" value="Verse 2"> Verse 2</label>
+                            <label><input type="checkbox" name="sections" value="Chorus 2"> Chorus 2</label>
+                            <label><input type="checkbox" name="sections" value="Bridge"> Bridge</label>
+                            <label><input type="checkbox" name="sections" value="Build-up"> Build-up</label>
+                            <label><input type="checkbox" name="sections" value="Drop"> Drop</label>
+                            <label><input type="checkbox" name="sections" value="Outro"> Outro</label>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Creativity Level -->
                 <div class="form-section">
                     <h3>Creativity</h3>
-                    <div class="creativity-input">
-                        <input type="range" id="creativity" min="0" max="5" value="2" step="1">
-                        <div class="creativity-labels">
-                            <span>Traditional</span>
-                            <span>Experimental</span>
+                    <div class="form-section-content">
+                        <div class="creativity-input">
+                            <input type="range" id="creativity" min="0" max="5" value="2" step="1">
+                            <div class="creativity-labels">
+                                <span>Traditional</span>
+                                <span>Experimental</span>
+                            </div>
+                            <div id="creativityValue" class="creativity-value">2</div>
                         </div>
-                        <div id="creativityValue" class="creativity-value">2</div>
                     </div>
                 </div>
             </form>
@@ -408,6 +414,14 @@
             document.getElementById('generateArrangement').addEventListener('click', function(e) {
                 e.preventDefault();
                 document.getElementById('songForm').dispatchEvent(new Event('submit'));
+            });
+
+            // Accordion functionality
+            document.querySelectorAll('.form-section h3').forEach(header => {
+                header.addEventListener('click', () => {
+                    const section = header.parentElement;
+                    section.classList.toggle('collapsed');
+                });
             });
         </script>
     </div>

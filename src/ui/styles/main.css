@@ -40,15 +40,12 @@ body {
     padding-top: calc(var(--nav-height) + 16px);
     background: var(--panel-dark);
     border: 1px solid var(--border-color);
-    border-radius: 24px;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 10px 30px var(--shadow);
+    border-radius: 0;
 }
 
 h1, h2 {
     background: var(--accent-gradient);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 3px;
@@ -73,8 +70,8 @@ label {
     margin-bottom: 24px;
     padding: 16px;
     background: rgba(0, 0, 0, 0.3);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
+    border: none;
 }
 
 .form-group {
@@ -96,15 +93,14 @@ input[type="text"],
 input[type="number"],
 select {
     width: 100%;
-    padding: 8px 12px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
+    padding: 8px 0;
+    background: transparent;
+    border: none;
     color: var(--text-primary);
-    font-size: 16px;
+    font-size: 24px;
     font-weight: 400;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    height: 36px;
+    height: 40px;
 }
 
 input[type="number"] {
@@ -131,20 +127,52 @@ select {
 
 /* Form sections with glass effect */
 .form-section {
-    margin: 16px 0;
-    padding: 16px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-section:last-child {
+    border-bottom: none;
 }
 
 .form-section h3 {
-    margin: 0 0 16px 0;
+    margin: 0;
+    padding: 16px;
     color: #2dd4bf;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-size: 11px;
     font-weight: 400;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form-section h3::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid #2dd4bf;
+    border-bottom: 2px solid #2dd4bf;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+}
+
+.form-section.collapsed h3::after {
+    transform: rotate(-45deg);
+}
+
+.form-section-content {
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.form-section.collapsed .form-section-content {
+    display: none;
 }
 
 /* Pattern input styling */
@@ -162,6 +190,8 @@ select {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 6px;
     color: var(--text-primary);
+    font-size: 16px;
+    padding: 8px 12px;
 }
 
 /* Sections grid with glass effect */
@@ -169,7 +199,7 @@ select {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
-    padding: 12px;
+    padding: 0;
     background: transparent;
     border: none;
 }
@@ -350,20 +380,12 @@ button:hover {
 
 /* Upload button */
 .upload-button {
-    width: auto;
+    width: 100%;
     background: #2196f3;
     border: none;
     border-radius: 6px;
     color: var(--text-primary);
     padding: 8px 16px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.2s ease;
 }
 
 .upload-button:hover {
@@ -456,8 +478,8 @@ button:hover {
 
 /* Make upload button more compact */
 .pattern-upload {
-    padding-top: 12px;
-    margin: 0 8px;
+    padding: 16px 0;
+    margin: 0;
 }
 
 /* Add digital display background effect */
