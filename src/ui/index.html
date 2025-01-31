@@ -22,6 +22,7 @@
                         <i class="fa-solid fa-gear"></i>
                     </button>
                 </div>
+                <button type="button" id="generateArrangement">Generate Arrangement</button>
             </div>
         </nav>
         <div class="alert-tray">
@@ -57,50 +58,52 @@
 
         <div class="inner-container">
             <form id="songForm">
-                <div class="form-group">
-                    <label for="title">Song Title:</label>
-                    <input type="text" id="title" required>
-                </div>
-                <div class="form-group">
-                    <label for="genre">Genre:</label>
-                    <select id="genre" required>
-                        <option value="House">House</option>
-                        <option value="Techno">Techno</option>
-                        <option value="Trance">Trance</option>
-                        <option value="DnB">Drum & Bass</option>
-                        <option value="Pop">Pop</option>
-                        <option value="Rock">Rock</option>
-                        <option value="Jazz">Jazz</option>
-                        <option value="Classical">Classical</option>
-                        <option value="Hip Hop">Hip Hop</option>
-                        <option value="R&B">R&B</option>
-                        <option value="Country">Country</option>
-                        <option value="Electronic">Electronic</option>
-                        <option value="Folk">Folk</option>
-                        <option value="Metal">Metal</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="length">Length (bars):</label>
-                    <input type="number" id="length" required min="16" max="256" value="128">
-                </div>
-                <div class="form-group">
-                    <label for="tempo">Tempo (BPM):</label>
-                    <input type="number" id="tempo" required min="60" max="200" value="128">
+                <div class="basic-inputs">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Genre</label>
+                        <select id="genre" required>
+                            <option value="House">House</option>
+                            <option value="Techno">Techno</option>
+                            <option value="Trance">Trance</option>
+                            <option value="DnB">Drum & Bass</option>
+                            <option value="Pop">Pop</option>
+                            <option value="Rock">Rock</option>
+                            <option value="Jazz">Jazz</option>
+                            <option value="Classical">Classical</option>
+                            <option value="Hip Hop">Hip Hop</option>
+                            <option value="R&B">R&B</option>
+                            <option value="Country">Country</option>
+                            <option value="Electronic">Electronic</option>
+                            <option value="Folk">Folk</option>
+                            <option value="Metal">Metal</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Length</label>
+                        <input type="number" id="length" required min="16" max="256" value="128">
+                    </div>
+                    <div class="form-group">
+                        <label>BPM</label>
+                        <input type="number" id="tempo" required min="60" max="200" value="128">
+                    </div>
                 </div>
 
                 <!-- Pattern Input Section -->
                 <div class="form-section">
-                    <h3>Instrument/Track Patterns</h3>
+                    <h3>Patterns</h3>
                     <div class="pattern-input-methods">
                         <div class="pattern-input">
                             <input type="text" id="patternInput" maxlength="20" placeholder="Pattern name (e.g., Four on floor kick)">
-                            <button type="button" id="addPattern">Add Pattern</button>
+                            <button type="button" id="addPattern">Add</button>
                         </div>
                         <div class="pattern-upload">
                             <label for="daw-screenshot" class="upload-button">
                                 <i class="fa-solid fa-upload"></i>
-                                Upload DAW Screenshot
+                                Upload Screenshot
                             </label>
                             <input type="file" id="daw-screenshot" accept="image/*" style="display: none;">
                         </div>
@@ -110,7 +113,7 @@
 
                 <!-- Sections Selection -->
                 <div class="form-section">
-                    <h3>Song Sections</h3>
+                    <h3>Sections</h3>
                     <div class="sections-grid">
                         <label><input type="checkbox" name="sections" value="Intro"> Intro</label>
                         <label><input type="checkbox" name="sections" value="Verse 1"> Verse 1</label>
@@ -126,7 +129,7 @@
 
                 <!-- Creativity Level -->
                 <div class="form-section">
-                    <h3>Creativity Level</h3>
+                    <h3>Creativity</h3>
                     <div class="creativity-input">
                         <input type="range" id="creativity" min="0" max="5" value="2" step="1">
                         <div class="creativity-labels">
@@ -136,120 +139,262 @@
                         <div id="creativityValue" class="creativity-value">2</div>
                     </div>
                 </div>
-
-                <button type="submit">Create Arrangement</button>
             </form>
         </div>
 
         <style>
             .form-section {
                 margin: 20px 0;
-                padding: 15px;
-                background: #f5f5f5;
+                padding: 20px;
+                background: var(--panel-dark);
+                border: 1px solid var(--border-color);
                 border-radius: 8px;
             }
 
             .form-section h3 {
                 margin-top: 0;
-                margin-bottom: 15px;
-                color: #333;
+                margin-bottom: 20px;
+                background: var(--accent-gradient);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                font-size: 16px;
+                text-align: center;
             }
 
             .pattern-input-methods {
                 display: flex;
                 flex-direction: column;
-                gap: 15px;
+                gap: 20px;
             }
 
             .pattern-input {
                 display: grid;
                 grid-template-columns: 1fr auto;
-                gap: 10px;
+                gap: 15px;
+                background: var(--input-bg);
+                padding: 15px;
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
             }
 
             .pattern-upload {
-                border-top: 1px solid #ddd;
-                padding-top: 15px;
+                border-top: 1px solid var(--border-color);
+                padding-top: 20px;
                 text-align: center;
             }
 
             .upload-button {
                 display: inline-flex;
                 align-items: center;
-                gap: 8px;
-                padding: 8px 16px;
-                background: #f0f0f0;
-                border: 1px solid #ddd;
-                border-radius: 4px;
+                gap: 10px;
+                padding: 12px 24px;
+                background: var(--input-bg);
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                color: var(--text-primary);
                 cursor: pointer;
-                transition: background 0.2s;
+                transition: all 0.3s ease;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                font-size: 14px;
             }
 
             .upload-button:hover {
-                background: #e8e8e8;
+                background: var(--accent-blue);
+                color: var(--text-primary);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 8px var(--shadow);
             }
 
             .sections-grid {
                 display: grid;
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 10px;
+                gap: 15px;
+                padding: 15px;
+                background: var(--input-bg);
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
             }
 
             .sections-grid label {
                 display: flex;
                 align-items: center;
-                gap: 5px;
+                gap: 10px;
+                color: var(--text-primary);
+                font-size: 14px;
+                cursor: pointer;
+            }
+
+            .sections-grid input[type="checkbox"] {
+                width: 20px;
+                height: 20px;
+                border: 1px solid var(--border-color);
+                border-radius: 4px;
+                cursor: pointer;
+                background: var(--input-bg);
+            }
+
+            .sections-grid input[type="checkbox"]:checked {
+                background: var(--accent-blue);
+                border-color: var(--accent-blue);
             }
 
             .creativity-input {
                 display: flex;
                 flex-direction: column;
-                gap: 5px;
+                gap: 15px;
+                padding: 20px;
+                background: var(--input-bg);
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
             }
 
             .creativity-labels {
                 display: flex;
                 justify-content: space-between;
-                font-size: 0.9em;
-                color: #666;
+                font-size: 12px;
+                color: var(--text-secondary);
+                text-transform: uppercase;
+                letter-spacing: 1px;
             }
 
             .creativity-value {
                 text-align: center;
                 font-weight: bold;
-                color: #333;
+                background: var(--accent-gradient);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-size: 24px;
             }
 
-            input[type="range"] {
-                width: 100%;
+            /* Pattern list styling */
+            .patterns-list {
+                margin-top: 20px;
+                background: var(--input-bg);
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
+                overflow: hidden;
+            }
+
+            .pattern-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px 15px;
+                border-bottom: 1px solid var(--border-color);
+                background: var(--input-bg);
+            }
+
+            .pattern-item:last-child {
+                border-bottom: none;
+            }
+
+            .pattern-item span {
+                color: var(--text-primary);
+                font-size: 14px;
+            }
+
+            .remove-pattern {
+                background: none;
+                border: none;
+                color: var(--accent-blue);
+                font-size: 20px;
+                cursor: pointer;
+                padding: 0 8px;
+                transition: all 0.3s ease;
+            }
+
+            .remove-pattern:hover {
+                opacity: 0.8;
+                transform: scale(1.2);
             }
 
             /* Loading state styles */
             .loading {
                 display: none;
                 position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                text-align: center;
-                background: white;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(15, 17, 21, 0.9);
+                backdrop-filter: blur(5px);
                 z-index: 1000;
             }
 
             .loading.active {
-                display: block;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .loading-content {
+                background: var(--panel-dark);
+                padding: 30px;
+                border-radius: 12px;
+                border: 1px solid var(--border-color);
+                text-align: center;
+                box-shadow: 0 10px 30px var(--shadow);
             }
 
             .loading.active ~ .inner-container {
                 opacity: 0.5;
                 pointer-events: none;
+                filter: blur(2px);
             }
 
-            .loading.active ~ .inner-container form {
-                filter: blur(2px);
+            /* Form group spacing */
+            .form-group {
+                margin-bottom: 25px;
+            }
+
+            .form-group label {
+                color: var(--text-secondary);
+                font-size: 14px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 8px;
+                display: block;
+            }
+
+            .form-group input,
+            .form-group select {
+                width: 100%;
+                padding: 12px;
+                background: var(--input-bg);
+                border: 1px solid var(--border-color);
+                border-radius: 6px;
+                color: var(--text-primary);
+                font-size: 16px;
+                transition: all 0.3s ease;
+            }
+
+            .form-group input:focus,
+            .form-group select:focus {
+                outline: none;
+                border-color: var(--accent-blue);
+                box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+            }
+
+            /* Submit button special styling */
+            button[type="submit"] {
+                width: 100%;
+                margin-top: 30px;
+                padding: 15px;
+                font-size: 16px;
+                background: var(--accent-gradient);
+                border: none;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                transition: all 0.3s ease;
+            }
+
+            button[type="submit"]:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 12px var(--shadow);
+                opacity: 0.9;
             }
         </style>
 
@@ -257,6 +402,12 @@
             // Update creativity value display
             document.getElementById('creativity').addEventListener('input', function(e) {
                 document.getElementById('creativityValue').textContent = e.target.value;
+            });
+
+            // Handle form submission via nav button
+            document.getElementById('generateArrangement').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('songForm').dispatchEvent(new Event('submit'));
             });
         </script>
     </div>
