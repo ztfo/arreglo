@@ -409,6 +409,48 @@ async function validateConfig(config: ApiConfig): Promise<boolean> {
     return config.OPENAI_API_KEY !== '' || config.ANTHROPIC_API_KEY !== '';
 }
 
+async function analyzeImage(imageBase64: string): Promise<string[]> {
+    const config = await getConfig();
+    
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${config.OPENAI_API_KEY}`
+        },
+        body: JSON.stringify({
+            model: "gpt-4o-mini",
+            messages: [
+                {
+                    role: "user",
+                    content: [
+                        {
+                            type: "text",
+                            text: "Please analyze this DAW screenshot and extract all track/instrument names. Return them as a comma-separated list."
+                        },
+                        {
+                            type: "image_url",
+                            image_url: {
+                                url: `data:image/png;base64,${imageBase64}`
+                            }
+                        }
+                    ]
+                }
+            ],
+            max_tokens: 1000
+        })
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(`Failed to analyze image: ${response.statusText}${errorData ? ' - ' + JSON.stringify(errorData) : ''}`);
+    }
+
+    const data = await response.json();
+    const extractedText = data.choices[0].message.content;
+    return extractedText.split(',').map((name: string) => name.trim());
+}
+
 figma.ui.onmessage = async (msg) => {
     try {
         if (msg.type === 'load-settings') {
@@ -417,6 +459,16 @@ figma.ui.onmessage = async (msg) => {
         } else if (msg.type === 'save-settings') {
             await setConfig(msg.config);
             figma.ui.postMessage({ type: 'settings-saved' });
+        } else if (msg.type === 'analyze-image') {
+            const config = await getConfig();
+            if (!config.OPENAI_API_KEY) {
+                throw new Error('OpenAI API key not configured');
+            }
+            const trackNames = await analyzeImage(msg.base64Image);
+            figma.ui.postMessage({ 
+                type: 'image-analyzed',
+                trackNames
+            });
         } else if (msg.type === 'generate-arrangement') {
             const config = await getConfig();
             if (!await validateConfig(config)) {
@@ -428,8 +480,9 @@ figma.ui.onmessage = async (msg) => {
                 songData.title,
                 songData.genre,
                 undefined, // style is optional
-                undefined, // no custom sections
-                songData.instruments
+                songData.selectedSections,
+                songData.patterns.map(p => p.name),
+                songData.creativity
             );
 
             const response = await generateArrangement(config, prompt);

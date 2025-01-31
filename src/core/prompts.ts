@@ -2,20 +2,29 @@ export function createArrangementPrompt(
     title: string,
     genre?: string,
     style?: string,
-    customSections?: string,
-    instruments?: string[]
+    selectedSections?: string[],
+    instruments?: string[],
+    creativity: number = 2
 ): string {
     const defaultInstruments = ['drums', 'bass', 'guitar', 'keys'];
     const usedInstruments = instruments || defaultInstruments;
 
-    return `As a music arrangement expert, create a detailed arrangement for a song with these details:
+    // Adjust the temperature based on creativity level (0-5)
+    const creativityDescription = creativity <= 1 ? 'traditional'
+        : creativity <= 2 ? 'balanced'
+        : creativity <= 3 ? 'modern'
+        : creativity <= 4 ? 'innovative'
+        : 'experimental';
+
+    return `As a music arrangement expert, create a ${creativityDescription} arrangement for a song with these details:
 
 Title: ${title}
 ${genre ? `Genre: ${genre}` : 'Genre: Modern'}
 ${style ? `Style: ${style}` : ''}
+Creativity Level: ${creativityDescription} (${creativity}/5)
 
-${customSections 
-    ? `Use these sections: ${customSections}`
+${selectedSections && selectedSections.length > 0
+    ? `Use these sections in order: ${selectedSections.join(', ')}`
     : 'Recommend appropriate sections based on the genre and style'}
 
 For each section:
@@ -45,42 +54,11 @@ Format your response as a JSON object like this:
   ]
 }
 
-Example of a complete arrangement:
-{
-  "sections": [
-    {
-      "name": "Intro",
-      "duration": 4,
-      "instruments": {
-        "drums": {
-          "pattern": "basic beat",
-          "bars": [3, 4] // Only plays in last 2 bars
-        },
-        "bass": {
-          "pattern": "simple root notes",
-          "bars": [1, 2, 3, 4] // Plays throughout
-        }
-      }
-    },
-    {
-      "name": "Verse",
-      "duration": 8,
-      "instruments": {
-        "drums": {
-          "pattern": "full beat",
-          "bars": [1, 2, 3, 4, 5, 6, 7, 8] // Plays throughout
-        },
-        "bass": {
-          "pattern": "following chord progression",
-          "bars": [2, 4, 6, 8] // Plays every other bar
-        }
-      }
-    }
-  ]
-}
+Consider that this is a ${creativityDescription} arrangement for the ${genre || 'modern'} genre.
+${creativity >= 4 ? 'Feel free to use unconventional patterns and transitions.' : 
+  creativity >= 3 ? 'Balance between traditional and innovative elements.' :
+  'Stick to established genre conventions and patterns.'}
 
-Consider typical ${genre || 'modern'} arrangement practices and ensure smooth transitions between sections.
-For each instrument, specify exactly which bars it plays using bar numbers (starting from 1 for each section).
 Your response must be a valid JSON object with no comments or additional text.
 Do not include any trailing commas in arrays or objects.`;
 } 

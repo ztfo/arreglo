@@ -7,10 +7,10 @@
     "editorType": ["figjam", "figma"],
     "networkAccess": {
         "allowedDomains": [
-            "https://api.openai.com",
             "https://api.anthropic.com",
             "https://cdnjs.cloudflare.com",
-            "https://ka-f.fontawesome.com"
+            "https://ka-f.fontawesome.com",
+            "https://api.openai.com"
         ]
     }
 }

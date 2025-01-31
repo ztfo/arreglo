@@ -10,6 +10,12 @@ export interface SongData {
     length: number;
     tempo: number;
     instruments: string[];
+    patterns: Array<{
+        name: string;
+        bars: number;
+    }>;
+    creativity: number;
+    selectedSections: string[];
 }
 
 export interface SongSection {
