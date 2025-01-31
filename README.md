@@ -66,6 +66,7 @@ This example shows a generated arrangement with:
 
 ### Future Plans
 - Sexy looking UI
+- Sexier looking arrangements
 - Export arrangements to JSON and MIDI
 - DAW Trackname Extractions
 - Integration with DAWs
