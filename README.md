@@ -4,7 +4,9 @@ Arreglo is a Figma plugin that helps music producers visualize song arrangements
 
 ### Demo Video
 
-[![Watch the demo video](https://cdn.loom.com/sessions/thumbnails/226d00eb993b497b94f22806fbfcad95-with-play.gif)](https://www.loom.com/share/226d00eb993b497b94f22806fbfcad95?sid=be561512-b089-493f-9ebd-a0cb17b9262c)
+<div style="position: relative; padding-bottom: 56.25%; height: 0;"><iframe src="https://www.loom.com/embed/226d00eb993b497b94f22806fbfcad95?sid=be561512-b089-493f-9ebd-a0cb17b9262c" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+
+[Watch the demo video on Loom](https://www.loom.com/share/226d00eb993b497b94f22806fbfcad95?sid=be561512-b089-493f-9ebd-a0cb17b9262c)
 
 ### Current Example Output
 
