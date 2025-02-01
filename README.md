@@ -37,6 +37,7 @@ Arreglo is a Figma plugin that helps music producers visualize song arrangements
   - Tempo control (60-200 BPM)
   - Creativity slider to control arrangement style (Traditional to Experimental)
   - Multiple genre options (House, Techno, Trance, DnB, Pop, Rock, Jazz, etc.)
+  - Currently supports 4/4 time signature (common time) only
 
 - **Pattern Management**:
   - Add patterns with semantic meaning (e.g., "bassline - buildup", "hi-hat - offbeat")
@@ -71,6 +72,7 @@ Arreglo is a Figma plugin that helps music producers visualize song arrangements
    * Each row represents an instrument with its specific pattern type
    * Colored cells show active bars based on musical context
    * Section labels show the structure of your song
+   * Grid displays 4 beats per bar (4/4 time signature)
 
 ### Requirements
 
@@ -78,11 +80,14 @@ Arreglo is a Figma plugin that helps music producers visualize song arrangements
 - OpenAI or Anthropic API key for AI features
 
 ### Future Plans
+- Support for different time signatures (3/4, 6/8, etc.)
 - Sexier looking arrangements
 - Export arrangements to JSON and MIDI for DAW Import
 - Direct DAW integration for pattern controls (FL Studio Playlist & Pattern Editor)
 - Integration with other DAWs
 - More granular pattern control (note density, swing, etc.)
+- Custom time signature support with adjustable beat divisions
+- Visual beat markers and swing grid options
 
 ### Additional Screens
 

@@ -221,6 +221,35 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         patternsContainer.counterAxisSizingMode = "AUTO";
         patternsContainer.resize(totalBars * 50, instruments.length * 50);
 
+        // Create bar numbers (showing every bar)
+        const barNumbersFrame = figma.createFrame();
+        barNumbersFrame.name = "Bar Numbers";
+        barNumbersFrame.layoutMode = "HORIZONTAL";
+        barNumbersFrame.itemSpacing = 0;
+        barNumbersFrame.fills = [];
+        barNumbersFrame.counterAxisSizingMode = "AUTO";
+        barNumbersFrame.resize(totalBars * 50, 32);
+
+        for (let i = 0; i < totalBars; i++) {
+            const barNumberContainer = figma.createFrame();
+            barNumberContainer.name = `Bar ${i + 1} Container`;
+            barNumberContainer.resize(50, 32);
+            barNumberContainer.fills = [];
+            barNumberContainer.layoutMode = "HORIZONTAL";
+            barNumberContainer.primaryAxisAlignItems = "CENTER";
+            barNumberContainer.counterAxisAlignItems = "CENTER";
+
+            // Show number for every bar
+            const barNumber = figma.createText();
+            barNumber.characters = (i + 1).toString();
+            barNumber.fontSize = 10;
+            barNumber.fontName = { family: "Inter", style: "Regular" };
+            barNumber.textAlignHorizontal = "CENTER";
+            barNumberContainer.appendChild(barNumber);
+
+            barNumbersFrame.appendChild(barNumberContainer);
+        }
+
         // Create grid lines
         const gridLines = figma.createFrame();
         gridLines.name = "Grid Lines";
@@ -231,11 +260,12 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         gridLines.x = 0;
         gridLines.y = 0;
 
-        // Vertical lines for each bar
-        for (let i = 0; i <= totalBars; i++) {
+        // Vertical lines for each bar and beat
+        for (let i = 0; i <= totalBars * 4; i++) {
             const line = figma.createLine();
-            line.name = `Bar ${i + 1} Line`;
-            line.strokeWeight = i % 4 === 0 ? 1 : 0.5; // Thicker lines every 4 bars
+            const isBarLine = i % 4 === 0;
+            line.name = isBarLine ? `Bar ${i/4 + 1} Line` : `Beat ${(i % 4) + 1} Line`;
+            line.strokeWeight = isBarLine ? 1 : 0.5;
             line.strokeCap = "NONE";
             line.strokes = [{ 
                 type: 'SOLID', 
@@ -244,9 +274,9 @@ async function createVisualArrangement(arrangement: ArrangementData) {
                     g: 0.9, 
                     b: 0.9 
                 },
-                opacity: i % 4 === 0 ? 1 : 0.5 // More visible lines every 4 bars
+                opacity: isBarLine ? 1 : 0.3
             }];
-            line.x = i * 50;
+            line.x = (i * 12.5); // 50 pixels per bar divided by 4 beats = 12.5 pixels per beat
             line.rotation = 90;
             line.resize(instruments.length * 50, 0);
             gridLines.appendChild(line);
@@ -268,40 +298,6 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         patternsContainer.x = 0;
         patternsContainer.y = 0;
 
-        // Create bar numbers (showing every 4th bar)
-        const barNumbersFrame = figma.createFrame();
-        barNumbersFrame.name = "Bar Numbers";
-        barNumbersFrame.layoutMode = "HORIZONTAL";
-        barNumbersFrame.itemSpacing = 0;
-        barNumbersFrame.fills = [];
-        barNumbersFrame.counterAxisSizingMode = "AUTO";
-        barNumbersFrame.resize(totalBars * 50, 32);
-
-        for (let i = 0; i < totalBars; i++) {
-            const barNumberContainer = figma.createFrame();
-            barNumberContainer.name = `Bar ${i + 1} Container`;
-            barNumberContainer.resize(50, 32);
-            barNumberContainer.fills = [];
-            barNumberContainer.layoutMode = "HORIZONTAL";
-            barNumberContainer.primaryAxisAlignItems = "CENTER";
-            barNumberContainer.counterAxisAlignItems = "CENTER";
-
-            // Only show number for every 4th bar
-            if ((i + 1) % 4 === 0) {
-                const barNumber = figma.createText();
-                barNumber.characters = (i + 1).toString();
-                barNumber.fontSize = 12;
-                barNumber.fontName = { family: "Inter", style: "Regular" };
-                barNumber.textAlignHorizontal = "CENTER";
-                barNumberContainer.appendChild(barNumber);
-            }
-
-            barNumbersFrame.appendChild(barNumberContainer);
-        }
-
-        // Add grid lines first (will be underneath)
-        patternsContainer.appendChild(gridLines);
-
         // Now add pattern rows with absolute positioning
         instruments.forEach((instrument, instrumentIndex) => {
             const row = figma.createFrame();
@@ -311,7 +307,7 @@ async function createVisualArrangement(arrangement: ArrangementData) {
             row.fills = [];
             row.resize(totalBars * 50, 50);
             row.x = 0;
-            row.y = instrumentIndex * 50; // Position each row absolutely
+            row.y = instrumentIndex * 50;
 
             let currentBar = 0;
             arrangement.sections.forEach(section => {
@@ -322,15 +318,15 @@ async function createVisualArrangement(arrangement: ArrangementData) {
                     const barBlock = figma.createRectangle();
                     barBlock.name = `Bar ${currentBar + i + 1}`;
                     barBlock.x = (currentBar + i) * 50;
-                    barBlock.resize(48, 48); // Slightly smaller to show grid
-                    barBlock.y = 1; // Center in the row
+                    barBlock.resize(48, 48);
+                    barBlock.y = 1;
                     
                     // Check if this bar is active
                     const isActive = activeBars && activeBars.includes(i + 1);
                     barBlock.fills = [{ 
                         type: 'SOLID', 
                         color: getColorForInstrument(instrument, instrumentIndex),
-                        opacity: isActive ? 1 : 0.1 // Full opacity for active bars, faint for inactive
+                        opacity: isActive ? 1 : 0.1
                     }];
                     
                     row.appendChild(barBlock);
