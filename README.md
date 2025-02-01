@@ -32,7 +32,7 @@ Arreglo is a Figma plugin that helps music producers visualize song arrangements
 
 2. Configure (First Time Setup):
    * Open settings (gear icon)
-   * Add your OpenAI API key
+   * Add your preferred API key
    * Save settings
 
 3. Create an Arrangement:
@@ -58,11 +58,11 @@ Arreglo is a Figma plugin that helps music producers visualize song arrangements
 - OpenAI or Anthropic API key for AI features
 
 ### Future Plans
-- Sexy looking UI
 - Sexier looking arrangements
-- Export arrangements to JSON and MIDI
-- DAW Trackname Extractions
-- Integration with DAWs
+- Export arrangements to JSON and MIDI for DAW Import
+- Direct DAW integration for pattern controls (FL Studio Playlist & Pattern Editor)
+- Integration with other DAWs
+- More granular pattern control (note density, swing, etc.)
 
 ### Additional Screens
 
@@ -90,7 +90,7 @@ Arreglo is a Figma plugin that helps music producers visualize song arrangements
   <p>Clear error messages if something goes wrong.</p>
 </div>
 
-### Demo Video
+### Early Prototype Demo Video
 
 <div align="center">
   <a href="https://www.loom.com/share/226d00eb993b497b94f22806fbfcad95?sid=be561512-b089-493f-9ebd-a0cb17b9262c">

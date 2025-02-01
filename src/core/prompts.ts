@@ -29,6 +29,16 @@ ${selectedSections && selectedSections.length > 0
 
 Instruments: ${usedInstruments.join(', ')}
 
+Consider these pattern meanings when arranging:
+- Names ending in "4x" indicate four-on-the-floor patterns (steady beats on every quarter note)
+- "bassline - chords" follows chord progressions, ideal for verses and choruses
+- "bassline - melody" is more melodic, good for hooks and builds
+- "bassline - buildup" indicates ascending or intensifying patterns
+- Names with "offbeat" should emphasize off-beat rhythms
+- Names with "solo" indicate lead/featured moments
+- Names with "chords" should follow harmonic progressions
+- Names with "sample" can be used sparsely for impact
+
 For each section, provide the information in this format:
 SECTION: [section name]
 DURATION: [number of bars]
@@ -39,16 +49,24 @@ END_INSTRUMENT
 Example:
 SECTION: Intro
 DURATION: 8
-INSTRUMENT: kick
-BARS: 1,2,3,4,5,6,7,8
+INSTRUMENT: kick - 4x
+BARS: 1,2,3,4,5,6,7,8  # Steady four-on-the-floor pattern
 END_INSTRUMENT
-INSTRUMENT: bass
-BARS: 5,6,7,8
+INSTRUMENT: bassline - chords
+BARS: 5,6,7,8  # Entering later to build tension
 END_INSTRUMENT
 END_SECTION
 
+Arrange instruments based on their pattern types:
+- Use "4x" patterns consistently in dance sections
+- Introduce "chord" patterns gradually in verses
+- Feature "solo" instruments in bridges or breakdowns
+- Use "buildup" patterns in pre-chorus or build-up sections
+- Layer "offbeat" patterns with main beats for groove
+- Place "sample" patterns strategically for impact
+
 Separate each section with three dashes (---).
-${creativity >= 4 ? 'Feel free to use unconventional patterns and transitions.' : 
-  creativity >= 3 ? 'Balance between traditional and innovative elements.' :
-  'Stick to established genre conventions and patterns.'}`;
+${creativity >= 4 ? 'Feel free to use unconventional patterns and transitions while respecting instrument roles.' : 
+  creativity >= 3 ? 'Balance between traditional and innovative elements while maintaining pattern consistency.' :
+  'Stick to established genre conventions and pattern meanings.'}`;
 } 
