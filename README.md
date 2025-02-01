@@ -1,28 +1,47 @@
 ## Arreglo - Figma Plugin
 
-Arreglo is a Figma plugin that helps music producers visualize song arrangements. Using AI, it generates and visualizes song structures based on your input, making it easy to plan and understand song arrangements.
+Arreglo is a Figma plugin that helps music producers visualize song arrangements. Using AI with semantic pattern recognition, it generates musically intelligent arrangements based on your instrument patterns and track names, making it easy to plan and understand song structures.
 
 ### Main Interface
 
 <div align="center">
   <img src="images/ui-mocks/arreglo-main.png" alt="Main plugin interface">
-  <p>Create arrangements by setting song details, adding patterns, and selecting sections.</p>
+  <p>Create arrangements by setting song details, adding semantic patterns, and selecting sections.</p>
 </div>
 
 ### Features
 
-- **AI-Generated Arrangements**: Get complete song arrangements based on your inputs
-- **Visual Grid Layout**: See exactly when each instrument plays throughout the song
-- **Section-Based Structure**: Choose from various song sections (Intro, Verse, Chorus, Bridge, Build-up, Drop, Outro)
-- **Instrument Pattern Management**:
-  - Manually add custom patterns
-  - Upload DAW screenshots to automatically extract track names using AI
-  - View and edit patterns in real-time
+- **Intelligent AI Arrangement Generation**: 
+  - Understands pattern meanings from track names (e.g., "kick - 4x" for four-on-the-floor patterns)
+  - Recognizes and appropriately places different bassline types (chords, melody, buildup)
+  - Intelligently handles solo instruments and samples
+  - Respects musical conventions while maintaining creativity
+
+- **Smart Pattern Recognition**:
+  - Four-on-the-floor patterns (e.g., "kick - 4x")
+  - Chord-following basslines and instruments
+  - Melodic and buildup patterns
+  - Off-beat rhythmic elements
+  - Solo/featured instruments
+  - Strategic sample placement
+
+- **Context-Aware Section Arrangement**:
+  - Places patterns based on their musical role
+  - Gradually introduces chord patterns in verses
+  - Features solo instruments in bridges
+  - Uses buildup patterns in pre-chorus sections
+  - Maintains groove with layered off-beat patterns
+
 - **Customization Options**:
   - Adjustable song length (16-256 bars)
   - Tempo control (60-200 BPM)
   - Creativity slider to control arrangement style (Traditional to Experimental)
   - Multiple genre options (House, Techno, Trance, DnB, Pop, Rock, Jazz, etc.)
+
+- **Pattern Management**:
+  - Add patterns with semantic meaning (e.g., "bassline - buildup", "hi-hat - offbeat")
+  - Upload DAW screenshots to automatically extract track names
+  - View and edit patterns in real-time
 
 ### Usage
 
@@ -31,7 +50,7 @@ Arreglo is a Figma plugin that helps music producers visualize song arrangements
    * Run the "Arreglo" plugin
 
 2. Configure (First Time Setup):
-   * Open settings (gear icon)
+   * Open settings (bottom left icon)
    * Add your preferred API key
    * Save settings
 
@@ -39,17 +58,18 @@ Arreglo is a Figma plugin that helps music producers visualize song arrangements
    * Enter a song title
    * Choose a genre
    * Set desired length and tempo
-   * Add instrument patterns:
+   * Add semantic patterns:
+     - Use descriptive names (e.g., "kick - 4x", "bassline - melody")
      - Type manually and click "Add Pattern", or
      - Upload a DAW screenshot to extract track names
-   * Select desired song sections
+   * Select desired sections
    * Adjust creativity level
    * Click "Create Arrangement"
 
 4. View Your Arrangement:
    * See a grid showing when each instrument plays
-   * Each row represents an instrument
-   * Colored cells show active bars for each instrument
+   * Each row represents an instrument with its specific pattern type
+   * Colored cells show active bars based on musical context
    * Section labels show the structure of your song
 
 ### Requirements

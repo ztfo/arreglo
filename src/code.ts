@@ -210,155 +210,49 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         barsContainer.itemSpacing = 12;
         barsContainer.fills = [];
         barsContainer.counterAxisSizingMode = "AUTO";
-
-        // Create bar numbers and grid lines
-        const barNumbersFrame = figma.createFrame();
-        barNumbersFrame.name = "Bar Numbers";
-        barNumbersFrame.layoutMode = "HORIZONTAL";
-        barNumbersFrame.itemSpacing = 0;
-        barNumbersFrame.fills = [];
-        barNumbersFrame.counterAxisSizingMode = "AUTO";
-        barNumbersFrame.resize(totalBars * 50, barNumbersFrame.height); 
-
-        for (let i = 1; i <= totalBars; i++) {
-            const barNumberContainer = figma.createFrame();
-            barNumberContainer.name = `Bar ${i} Container`;
-            barNumberContainer.resize(50, 32);
-            barNumberContainer.fills = [];
-            barNumberContainer.layoutMode = "HORIZONTAL";
-            barNumberContainer.primaryAxisAlignItems = "CENTER";
-            barNumberContainer.counterAxisAlignItems = "CENTER";
-            barNumberContainer.layoutSizingHorizontal = "FIXED";  
-
-            const barNumber = figma.createText();
-            barNumber.characters = i.toString();
-            barNumber.fontSize = 14;
-            barNumber.fontName = { family: "Inter", style: "Regular" };
-            barNumber.textAlignHorizontal = "CENTER";
-            barNumberContainer.appendChild(barNumber);
-            barNumbersFrame.appendChild(barNumberContainer);
-        }
+        barsContainer.resize(totalBars * 50, barsContainer.height);
 
         // Create patterns container
         const patternsContainer = figma.createFrame();
         patternsContainer.name = "Patterns Container";
-        patternsContainer.layoutMode = "VERTICAL";
+        patternsContainer.layoutMode = "NONE";
         patternsContainer.itemSpacing = 0;
         patternsContainer.fills = [];
         patternsContainer.counterAxisSizingMode = "AUTO";
         patternsContainer.resize(totalBars * 50, instruments.length * 50);
 
-        instruments.forEach((instrument, instrumentIndex) => {
-            const row = figma.createFrame();
-            row.name = `${instrument} Row`;
-            row.layoutMode = "HORIZONTAL";
-            row.itemSpacing = 0;
-            row.fills = [];
-            row.resize(totalBars * 50, 50);
-
-            let currentBar = 0;
-            arrangement.sections.forEach(section => {
-                const activeBars = section.instruments[instrument];
-                
-                // Create base block for the section
-                const block = figma.createRectangle();
-                block.name = `${instrument} Pattern`;
-                block.x = currentBar * 50;
-                block.resize(section.duration * 50, 50);
-                block.fills = [{ 
-                    type: 'SOLID', 
-                    color: getColorForInstrument(instrument, instrumentIndex),
-                    opacity: 0.2 // Base opacity
-                }];
-                row.appendChild(block);
-
-                // Add active bars with full opacity
-                if (activeBars && activeBars.length > 0) {
-                    // Create a single rectangle for the active bars
-                    const activeBlock = figma.createRectangle();
-                    activeBlock.name = `${instrument} Active Pattern`;
-                    activeBlock.x = currentBar * 50;
-                    activeBlock.resize(section.duration * 50, 50);
-                    activeBlock.fills = [{ 
-                        type: 'SOLID', 
-                        color: getColorForInstrument(instrument, instrumentIndex)
-                    }];
-                    row.appendChild(activeBlock);
-                }
-
-                currentBar += section.duration;
-            });
-
-            patternsContainer.appendChild(row);
-        });
-
-        barsContainer.appendChild(barNumbersFrame);
-        barsContainer.appendChild(patternsContainer);
-
-        // Create sections container
-        const sectionsContainer = figma.createFrame();
-        sectionsContainer.name = "Sections";
-        sectionsContainer.layoutMode = "HORIZONTAL";
-        sectionsContainer.itemSpacing = 0;
-        sectionsContainer.fills = [];
-        sectionsContainer.resize(totalBars * 50, 50);
-
-        let currentBar = 0;
-        arrangement.sections.forEach(section => {
-            // Calculate section width based on duration
-            const sectionWidth = section.duration * 50;
-            
-            const sectionFrame = figma.createFrame();
-            sectionFrame.name = section.name;
-            sectionFrame.resize(sectionWidth, 50);
-            sectionFrame.fills = [{ type: 'SOLID', color: { r: 0.9, g: 0.9, b: 0.9 } }];
-            sectionFrame.cornerRadius = 4;
-
-            const sectionText = figma.createText();
-            sectionText.characters = `${section.name} (${section.duration} bars)`;  // Added bar count
-            sectionText.fontSize = 16;
-            sectionText.fontName = { family: "Inter", style: "Medium" };
-            sectionText.textAlignHorizontal = "CENTER";
-            sectionText.x = (sectionFrame.width - sectionText.width) / 2;
-            sectionText.y = (50 - sectionText.height) / 2;
-            sectionFrame.appendChild(sectionText);
-
-            sectionsContainer.appendChild(sectionFrame);
-            currentBar += section.duration;
-        });
-
-        // Add a spacer frame in instruments column to align with sections
-        const sectionSpacerFrame = figma.createFrame();
-        sectionSpacerFrame.name = "Section Spacer";
-        sectionSpacerFrame.layoutMode = "HORIZONTAL";
-        sectionSpacerFrame.resize(columnWidth, 50); // Same height as sections
-        sectionSpacerFrame.fills = [];
-        instrumentsColumn.appendChild(sectionSpacerFrame);
-
-        // Add sections to bars container
-        barsContainer.appendChild(sectionsContainer);
-
-        // Add grid lines
+        // Create grid lines
         const gridLines = figma.createFrame();
         gridLines.name = "Grid Lines";
-        gridLines.layoutMode = "VERTICAL";
-        gridLines.itemSpacing = 0;
+        gridLines.layoutMode = "NONE";
         gridLines.fills = [];
         gridLines.resize(totalBars * 50, instruments.length * 50);
+        gridLines.constraints = { horizontal: "STRETCH", vertical: "STRETCH" };
+        gridLines.x = 0;
+        gridLines.y = 0;
 
-        // Vertical lines
+        // Vertical lines for each bar
         for (let i = 0; i <= totalBars; i++) {
             const line = figma.createLine();
-            line.strokeWeight = 1;
+            line.name = `Bar ${i + 1} Line`;
+            line.strokeWeight = i % 4 === 0 ? 1 : 0.5; // Thicker lines every 4 bars
             line.strokeCap = "NONE";
-            line.strokes = [{ type: 'SOLID', color: { r: 0.9, g: 0.9, b: 0.9 } }];
+            line.strokes = [{ 
+                type: 'SOLID', 
+                color: { 
+                    r: 0.9, 
+                    g: 0.9, 
+                    b: 0.9 
+                },
+                opacity: i % 4 === 0 ? 1 : 0.5 // More visible lines every 4 bars
+            }];
             line.x = i * 50;
             line.rotation = 90;
             line.resize(instruments.length * 50, 0);
             gridLines.appendChild(line);
         }
 
-        // Horizontal lines
+        // Horizontal lines between instruments
         for (let i = 0; i <= instruments.length; i++) {
             const line = figma.createLine();
             line.strokeWeight = 1;
@@ -369,7 +263,88 @@ async function createVisualArrangement(arrangement: ArrangementData) {
             gridLines.appendChild(line);
         }
 
+        // Set patterns container to absolute positioning
+        patternsContainer.layoutMode = "NONE";
+        patternsContainer.x = 0;
+        patternsContainer.y = 0;
+
+        // Create bar numbers (showing every 4th bar)
+        const barNumbersFrame = figma.createFrame();
+        barNumbersFrame.name = "Bar Numbers";
+        barNumbersFrame.layoutMode = "HORIZONTAL";
+        barNumbersFrame.itemSpacing = 0;
+        barNumbersFrame.fills = [];
+        barNumbersFrame.counterAxisSizingMode = "AUTO";
+        barNumbersFrame.resize(totalBars * 50, 32);
+
+        for (let i = 0; i < totalBars; i++) {
+            const barNumberContainer = figma.createFrame();
+            barNumberContainer.name = `Bar ${i + 1} Container`;
+            barNumberContainer.resize(50, 32);
+            barNumberContainer.fills = [];
+            barNumberContainer.layoutMode = "HORIZONTAL";
+            barNumberContainer.primaryAxisAlignItems = "CENTER";
+            barNumberContainer.counterAxisAlignItems = "CENTER";
+
+            // Only show number for every 4th bar
+            if ((i + 1) % 4 === 0) {
+                const barNumber = figma.createText();
+                barNumber.characters = (i + 1).toString();
+                barNumber.fontSize = 12;
+                barNumber.fontName = { family: "Inter", style: "Regular" };
+                barNumber.textAlignHorizontal = "CENTER";
+                barNumberContainer.appendChild(barNumber);
+            }
+
+            barNumbersFrame.appendChild(barNumberContainer);
+        }
+
+        // Add grid lines first (will be underneath)
         patternsContainer.appendChild(gridLines);
+
+        // Now add pattern rows with absolute positioning
+        instruments.forEach((instrument, instrumentIndex) => {
+            const row = figma.createFrame();
+            row.name = `${instrument} Row`;
+            row.layoutMode = "HORIZONTAL";
+            row.itemSpacing = 0;
+            row.fills = [];
+            row.resize(totalBars * 50, 50);
+            row.x = 0;
+            row.y = instrumentIndex * 50; // Position each row absolutely
+
+            let currentBar = 0;
+            arrangement.sections.forEach(section => {
+                const activeBars = section.instruments[instrument];
+                
+                // Create bars for this section
+                for (let i = 0; i < section.duration; i++) {
+                    const barBlock = figma.createRectangle();
+                    barBlock.name = `Bar ${currentBar + i + 1}`;
+                    barBlock.x = (currentBar + i) * 50;
+                    barBlock.resize(48, 48); // Slightly smaller to show grid
+                    barBlock.y = 1; // Center in the row
+                    
+                    // Check if this bar is active
+                    const isActive = activeBars && activeBars.includes(i + 1);
+                    barBlock.fills = [{ 
+                        type: 'SOLID', 
+                        color: getColorForInstrument(instrument, instrumentIndex),
+                        opacity: isActive ? 1 : 0.1 // Full opacity for active bars, faint for inactive
+                    }];
+                    
+                    row.appendChild(barBlock);
+                }
+                
+                currentBar += section.duration;
+            });
+
+            patternsContainer.appendChild(row);
+        });
+
+        // Add both frames to bars container in correct order
+        barsContainer.appendChild(barNumbersFrame);
+        barsContainer.appendChild(patternsContainer);
 
         // Assemble the layout
         const contentContainer = figma.createFrame();
