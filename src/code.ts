@@ -179,7 +179,7 @@ async function createVisualArrangement(arrangement: ArrangementData) {
 
         // Get unique instruments
         const instruments = Array.from(new Set(
-            arrangement.sections.flatMap(section => Object.keys(section.patterns))
+            arrangement.sections.flatMap(section => Object.keys(section.instruments))
         ));
 
         // Create instrument labels
@@ -256,39 +256,37 @@ async function createVisualArrangement(arrangement: ArrangementData) {
             row.fills = [];
             row.resize(totalBars * 50, 50);
 
-            // Track absolute bar position for the entire arrangement
-            let absoluteBarPosition = 0;
-
-            // Iterate through sections to create cells
+            let currentBar = 0;
             arrangement.sections.forEach(section => {
-                // Get the bar numbers where this instrument plays in this section
-                const instrumentData = section.instruments?.[instrument];
-                const activeBars = instrumentData?.bars || [];
+                const activeBars = section.instruments[instrument];
                 
-                // Create cells for this section
-                for (let barIndex = 0; barIndex < section.duration; barIndex++) {
-                    const cell = figma.createFrame();
-                    cell.name = `${instrument} ${section.name} Bar ${barIndex + 1}`;
-                    cell.resize(50, 50);
-                    
-                    // Check if this bar number is in the active bars list
-                    const isActive = activeBars.includes(barIndex + 1);
-                    
-                    // Set the fill color based on whether the instrument is active
-                    cell.fills = [{
-                        type: 'SOLID',
-                        color: isActive ? 
-                            getColorForInstrument(instrument, instrumentIndex) : 
-                            (absoluteBarPosition % 2 === 0 ? { r: 1, g: 1, b: 1 } : { r: 0.98, g: 0.98, b: 0.98 })
+                // Create base block for the section
+                const block = figma.createRectangle();
+                block.name = `${instrument} Pattern`;
+                block.x = currentBar * 50;
+                block.resize(section.duration * 50, 50);
+                block.fills = [{ 
+                    type: 'SOLID', 
+                    color: getColorForInstrument(instrument, instrumentIndex),
+                    opacity: 0.2 // Base opacity
+                }];
+                row.appendChild(block);
+
+                // Add active bars with full opacity
+                if (activeBars && activeBars.length > 0) {
+                    // Create a single rectangle for the active bars
+                    const activeBlock = figma.createRectangle();
+                    activeBlock.name = `${instrument} Active Pattern`;
+                    activeBlock.x = currentBar * 50;
+                    activeBlock.resize(section.duration * 50, 50);
+                    activeBlock.fills = [{ 
+                        type: 'SOLID', 
+                        color: getColorForInstrument(instrument, instrumentIndex)
                     }];
-
-                    if (isActive) {
-                        cell.opacity = 0.9;
-                    }
-
-                    row.appendChild(cell);
-                    absoluteBarPosition++;
+                    row.appendChild(activeBlock);
                 }
+
+                currentBar += section.duration;
             });
 
             patternsContainer.appendChild(row);
@@ -419,7 +417,7 @@ async function analyzeImage(imageBase64: string): Promise<string[]> {
             'Authorization': `Bearer ${config.OPENAI_API_KEY}`
         },
         body: JSON.stringify({
-            model: "gpt-4o-mini",
+            model: "gpt-4o",
             messages: [
                 {
                     role: "user",
@@ -486,7 +484,6 @@ figma.ui.onmessage = async (msg) => {
             );
 
             const response = await generateArrangement(config, prompt);
-            console.log('Generated Arrangement Response:', response);
             const arrangement = parseArrangement(response, songData.title);
             await createVisualArrangement(arrangement);
             figma.ui.postMessage({ type: 'success', message: 'Arrangement created!' });

@@ -27,38 +27,28 @@ ${selectedSections && selectedSections.length > 0
     ? `Use these sections in order: ${selectedSections.join(', ')}`
     : 'Recommend appropriate sections based on the genre and style'}
 
-For each section:
-1. Specify the number of bars (based on genre conventions)
-2. Define patterns for these instruments: ${usedInstruments.join(', ')}
-3. For each instrument in a section, specify:
-   - A description of what it plays ("pattern")
-   - Exactly which bars it plays in ("bars")
+Instruments: ${usedInstruments.join(', ')}
 
-Format your response as a JSON object like this:
-{
-  "sections": [
-    {
-      "name": "Intro",
-      "duration": 8,
-      "instruments": {
-        "drums": {
-          "pattern": "basic beat",
-          "bars": [3, 4, 5, 6] // Only plays in bars 3-6
-        },
-        "bass": {
-          "pattern": "simple root notes",
-          "bars": [1, 2, 3, 4] // Only plays in bars 1-4
-        }
-      }
-    }
-  ]
-}
+For each section, provide the information in this format:
+SECTION: [section name]
+DURATION: [number of bars]
+INSTRUMENT: [instrument name]
+BARS: [comma-separated list of bar numbers]
+END_INSTRUMENT
 
-Consider that this is a ${creativityDescription} arrangement for the ${genre || 'modern'} genre.
+Example:
+SECTION: Intro
+DURATION: 8
+INSTRUMENT: kick
+BARS: 1,2,3,4,5,6,7,8
+END_INSTRUMENT
+INSTRUMENT: bass
+BARS: 5,6,7,8
+END_INSTRUMENT
+END_SECTION
+
+Separate each section with three dashes (---).
 ${creativity >= 4 ? 'Feel free to use unconventional patterns and transitions.' : 
   creativity >= 3 ? 'Balance between traditional and innovative elements.' :
-  'Stick to established genre conventions and patterns.'}
-
-Your response must be a valid JSON object with no comments or additional text.
-Do not include any trailing commas in arrays or objects.`;
+  'Stick to established genre conventions and patterns.'}`;
 } 

@@ -14,7 +14,7 @@ export async function callOpenAI(apiKey: string, prompt: string) {
                     'Authorization': `Bearer ${apiKey}`
                 },
                 body: JSON.stringify({
-                    model: 'gpt-4',
+                    model: 'gpt-4o',
                     messages: [{ role: 'user', content: prompt }],
                     temperature: 0.7,
                     max_tokens: 2000
@@ -32,6 +32,7 @@ export async function callOpenAI(apiKey: string, prompt: string) {
             console.error('OpenAI API Error:', error);
             if (retryCount === maxRetries - 1) throw error;
             retryCount++;
+            await new Promise(resolve => setTimeout(resolve, baseDelay * Math.pow(2, retryCount)));
         }
     }
     throw new Error('Max retries reached');

@@ -20,19 +20,15 @@ export interface SongData {
 
 export interface SongSection {
     name: string;
-    startBar: number;
     duration: number;
-    patterns: Record<string, string>;
-    barPatterns?: {  // Make barPatterns optional for backward compatibility
-        [instrument: string]: boolean[];
-    };
+    instruments: Record<string, number[]>;
 }
 
 export interface ArrangementData {
     title: string;
     genre?: string;
     style?: string;
-    sections: Section[];
+    sections: SongSection[];
     defaultSections?: string[]; // Default section suggestions
     rawResponse: string;
 }
