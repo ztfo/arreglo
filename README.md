@@ -2,43 +2,12 @@
 
 Arreglo is a Figma plugin that helps music producers visualize song arrangements. Using AI, it generates and visualizes song structures based on your input, making it easy to plan and understand song arrangements.
 
-### Interface
+### Main Interface
 
-The plugin features a clean, modern interface designed for music producers:
-
-#### Main Interface
-![Main plugin interface](images/ui-mocks/arreglo-main.png)
-Create arrangements by setting song details, adding patterns, and selecting sections.
-
-#### Settings Panel
-![Settings configuration](images/ui-mocks/arreglo-settings.png)
-Configure your API keys and preferences.
-
-#### Loading State
-![Loading state](images/ui-mocks/arreglo-loading.png)
-Visual feedback while your arrangement is being generated.
-
-#### Success State
-![Success message](images/ui-mocks/arreglo-success.png)
-Confirmation when your arrangement is ready.
-
-#### Error Handling
-![Error state](images/ui-mocks/arreglo-error.png)
-Clear error messages if something goes wrong.
-
-### Demo Video
-
-[![Watch the demo video](images/video-thumb.png)](https://www.loom.com/share/226d00eb993b497b94f22806fbfcad95?sid=be561512-b089-493f-9ebd-a0cb17b9262c)
-
-### Current Example Output
-
-![Example of an Arreglo arrangement visualization](images/current-example.jpg)
-
-This example shows a generated arrangement with:
-- Multiple sections (Intro, Verse, Chorus, Bridge, etc.)
-- Custom instrument patterns
-- Adjustable creativity levels
-- Visual grid layout showing when each instrument plays
+<div align="center">
+  <img src="images/ui-mocks/arreglo-main.png" alt="Main plugin interface">
+  <p>Create arrangements by setting song details, adding patterns, and selecting sections.</p>
+</div>
 
 ### Features
 
@@ -61,12 +30,12 @@ This example shows a generated arrangement with:
    * Open Figma
    * Run the "Arreglo" plugin
 
-3. Configure (First Time Setup):
+2. Configure (First Time Setup):
    * Open settings (gear icon)
    * Add your OpenAI API key
    * Save settings
 
-4. Create an Arrangement:
+3. Create an Arrangement:
    * Enter a song title
    * Choose a genre
    * Set desired length and tempo
@@ -77,7 +46,7 @@ This example shows a generated arrangement with:
    * Adjust creativity level
    * Click "Create Arrangement"
 
-5. View Your Arrangement:
+4. View Your Arrangement:
    * See a grid showing when each instrument plays
    * Each row represents an instrument
    * Colored cells show active bars for each instrument
@@ -94,3 +63,49 @@ This example shows a generated arrangement with:
 - Export arrangements to JSON and MIDI
 - DAW Trackname Extractions
 - Integration with DAWs
+
+### Additional Screens
+
+#### Settings Panel
+<div align="center">
+  <img src="images/ui-mocks/arreglo-settings.png" alt="Settings configuration">
+  <p>Configure your API keys and preferences.</p>
+</div>
+
+#### Loading State
+<div align="center">
+  <img src="images/ui-mocks/arreglo-loading.png" alt="Loading state">
+  <p>Visual feedback while your arrangement is being generated.</p>
+</div>
+
+#### Success State
+<div align="center">
+  <img src="images/ui-mocks/arreglo-success.png" alt="Success message">
+  <p>Confirmation when your arrangement is ready.</p>
+</div>
+
+#### Error Handling
+<div align="center">
+  <img src="images/ui-mocks/arreglo-error.png" alt="Error state">
+  <p>Clear error messages if something goes wrong.</p>
+</div>
+
+### Demo Video
+
+<div align="center">
+  <a href="https://www.loom.com/share/226d00eb993b497b94f22806fbfcad95?sid=be561512-b089-493f-9ebd-a0cb17b9262c">
+    <img src="images/video-thumb.png" alt="Watch the demo video">
+  </a>
+</div>
+
+### Current Example Output
+
+<div align="center">
+  <img src="images/current-example.jpg" alt="Example of an Arreglo arrangement visualization">
+  <p>This example shows a generated arrangement with:</p>
+</div>
+
+- Multiple sections (Intro, Verse, Chorus, Bridge, etc.)
+- Custom instrument patterns
+- Adjustable creativity levels
+- Visual grid layout showing when each instrument plays
