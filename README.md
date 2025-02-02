@@ -81,7 +81,6 @@ Arreglo is a Figma plugin that helps music producers visualize song arrangements
 
 ### Future Plans
 - Support for different time signatures (3/4, 6/8, etc.)
-- Sexier looking arrangements
 - Export arrangements to JSON and MIDI for DAW Import
 - Direct DAW integration for pattern controls (FL Studio Playlist & Pattern Editor)
 - Integration with other DAWs

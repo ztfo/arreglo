@@ -37,7 +37,7 @@ form#songForm .panel.left {
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     font-weight: bold;
 }
 
@@ -50,6 +50,9 @@ form#songForm .panel.left {
     background-color: transparent;
     color: #fff;
     outline: none;
+    font-size: 1.2rem;
+    height: auto;
+    margin-bottom: 8px;
 }
 
 .settings-panel {
@@ -84,75 +87,13 @@ form#songForm .panel.left {
     font-size: 0.9em;
     color: #666;
 }
-
-button {
-    padding: 8px 16px;
-    background-color: #0d99ff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0b87e6;
-}
-
 nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 12px 0;
     margin-bottom: 24px;
-}
-
-button i {
-    margin-right: 8px;
-}
-
-.icon {
-    display: inline-flex;
-    width: 16px;
-    height: 16px;
-    fill: currentColor;
-}
-
-.icon svg {
-    width: 100%;
-    height: 100%;
-}
-
-button .icon {
-    margin-right: 8px;
-}
-
-nav i {
-    font-size: 16px;
-    color: currentColor;
-    margin-right: 8px;
-}
-
-button i {
-    margin-right: 8px;
-}
-
-.nav-item i {
-    cursor: pointer;
 } 
-
-.form-section {
-    margin: 20px 0;
-    padding: 15px;
-    background: #f5f5f5;
-    border-radius: 8px;
-}
-
-.form-section h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: #333;
-}
-
 .pattern-input-methods {
     display: flex;
     flex-direction: column;
@@ -220,6 +161,11 @@ button i {
 
 input[type="range"] {
     width: 100%;
+}
+
+.gold-text {
+    color: #E7D494;
+    font-weight: bold;
 }
 
 /* Loading state styles */
