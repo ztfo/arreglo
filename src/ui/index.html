@@ -160,15 +160,32 @@
                                 <h3>sections.</h3>
                             </div>
                             <div class="sections-grid">
-                                <label><input type="checkbox" name="sections" value="Intro"> Intro</label>
-                                <label><input type="checkbox" name="sections" value="Verse 1"> Verse</label>
-                                <label><input type="checkbox" name="sections" value="Chorus 1"> Chorus</label>
-                                <label><input type="checkbox" name="sections" value="Verse 2"> Verse x2</label>
-                                <label><input type="checkbox" name="sections" value="Chorus 2"> Chorus x2</label>
-                                <label><input type="checkbox" name="sections" value="Bridge"> Bridge</label>
-                                <label><input type="checkbox" name="sections" value="Build-up"> Build-up</label>
-                                <label><input type="checkbox" name="sections" value="Drop"> Drop</label>
-                                <label><input type="checkbox" name="sections" value="Outro"> Outro</label>
+                                <input type="checkbox" name="sections" value="Intro" id="section-intro">
+                                <label for="section-intro">Intro</label>
+                                
+                                <input type="checkbox" name="sections" value="Verse 1" id="section-verse1">
+                                <label for="section-verse1">Verse</label>
+                                
+                                <input type="checkbox" name="sections" value="Chorus 1" id="section-chorus1">
+                                <label for="section-chorus1">Chorus</label>
+                                
+                                <input type="checkbox" name="sections" value="Verse 2" id="section-verse2">
+                                <label for="section-verse2">Verse x2</label>
+                                
+                                <input type="checkbox" name="sections" value="Chorus 2" id="section-chorus2">
+                                <label for="section-chorus2">Chorus x2</label>
+                                
+                                <input type="checkbox" name="sections" value="Bridge" id="section-bridge">
+                                <label for="section-bridge">Bridge</label>
+                                
+                                <input type="checkbox" name="sections" value="Build-up" id="section-buildup">
+                                <label for="section-buildup">Build-up</label>
+                                
+                                <input type="checkbox" name="sections" value="Drop" id="section-drop">
+                                <label for="section-drop">Drop</label>
+                                
+                                <input type="checkbox" name="sections" value="Outro" id="section-outro">
+                                <label for="section-outro">Outro</label>
                             </div>
                         </div>                        
                     </div>
@@ -220,9 +237,9 @@
                             </div>                            
                         </div>
                     </div>
-                    <div class="grid-item-full">
-                        <button>Download</button>
-                        <button type="submit">Make Arrangement</button>                                            
+                    <div class="grid-item-full button-row">
+                        <button class="btn secondary-button">Download</button>
+                        <button class="btn primary-button" type="submit">Make Arrangement</button>                                            
                     </div>
                 </div>
             </div>
