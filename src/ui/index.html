@@ -13,7 +13,13 @@
             </div>
             <div class="nav-right">
                 <div class="nav-item">
-                    <a href="https://luispalomares.com/arreglo"></a>
+                    <button id="testButton" class="test-button">
+                        <i class="fa-solid fa-vial"></i>
+                        Test
+                    </button>
+                </div>
+                <div class="nav-item">
+                    <a href="https://luispalomares.com/arreglo">
                         <i class="fa-solid fa-circle-info"></i>
                     </a>
                 </div>
@@ -250,6 +256,24 @@
 
             .loading.active ~ .inner-container form {
                 filter: blur(2px);
+            }
+
+            /* Add styles for test button */
+            .test-button {
+                background: none;
+                border: none;
+                color: #666;
+                cursor: pointer;
+                padding: 4px 8px;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                font-size: 14px;
+            }
+            .test-button:hover {
+                color: #000;
+                background: rgba(0,0,0,0.05);
+                border-radius: 4px;
             }
         </style>
 

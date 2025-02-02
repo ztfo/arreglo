@@ -115,7 +115,13 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         mainFrame.paddingBottom = 32;
         mainFrame.paddingLeft = 32;
         mainFrame.paddingRight = 32;
-        mainFrame.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
+        mainFrame.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }]; // Black background
+        // Add 2px border with #0c0c0c color
+        mainFrame.strokes = [{
+            type: 'SOLID',
+            color: { r: 0.047, g: 0.047, b: 0.047 } // #0c0c0c
+        }];
+        mainFrame.strokeWeight = 2;
 
         // Create title section
         const titleFrame = figma.createFrame();
@@ -127,11 +133,80 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         titleFrame.layoutAlign = "STRETCH";
         titleFrame.primaryAxisAlignItems = "CENTER";
 
-        const titleText = figma.createText();
-        titleText.characters = arrangement.title || "Song Arrangement";
-        titleText.fontSize = 24;
-        titleText.fontName = { family: "Inter", style: "Bold" };
-        titleFrame.appendChild(titleText);
+        // Create Arreglo logo frame
+        const arregloLogoFrame = figma.createFrame();
+        arregloLogoFrame.name = "Arreglo Logo";
+        arregloLogoFrame.resize(110, 32);
+        arregloLogoFrame.fills = [];
+
+        // Create the logo mark (square with A)
+        const logoMark = figma.createFrame();
+        logoMark.name = "Logo Mark";
+        logoMark.resize(32, 32);
+        logoMark.fills = [];
+
+        // Create the outer square
+        const outerSquare = figma.createRectangle();
+        outerSquare.name = "Outer Square";
+        outerSquare.resize(32, 32);
+        outerSquare.fills = [];
+        outerSquare.strokes = [{
+            type: 'SOLID',
+            color: { r: 0.906, g: 0.831, b: 0.580 } // #E7D494
+        }];
+        outerSquare.strokeWeight = 2;
+
+        // Create the "A" shape using vector
+        const aShape = figma.createVector();
+        aShape.name = "A Shape";
+        const aPath = "M6 9L23 9L23 23H9V14L20 14V11L6 11L6 26L26 26L26 6L6 6V9Z";
+        aShape.vectorNetwork = {
+            vertices: [
+                { x: 6, y: 9 }, { x: 23, y: 9 }, { x: 23, y: 23 }, { x: 9, y: 23 },
+                { x: 9, y: 14 }, { x: 20, y: 14 }, { x: 20, y: 11 }, { x: 6, y: 11 },
+                { x: 6, y: 26 }, { x: 26, y: 26 }, { x: 26, y: 6 }, { x: 6, y: 6 }
+            ],
+            segments: [
+                { start: 0, end: 1 }, { start: 1, end: 2 }, { start: 2, end: 3 },
+                { start: 3, end: 4 }, { start: 4, end: 5 }, { start: 5, end: 6 },
+                { start: 6, end: 7 }, { start: 7, end: 8 }, { start: 8, end: 9 },
+                { start: 9, end: 10 }, { start: 10, end: 11 }, { start: 11, end: 0 }
+            ]
+        };
+        aShape.fills = [{
+            type: 'SOLID',
+            color: { r: 0.906, g: 0.831, b: 0.580 } // #E7D494
+        }];
+
+        // Create the middle line of the A
+        const middleLine = figma.createRectangle();
+        middleLine.name = "Middle Line";
+        middleLine.resize(9, 3);
+        middleLine.x = 11;
+        middleLine.y = 17;
+        middleLine.fills = [{
+            type: 'SOLID',
+            color: { r: 0.906, g: 0.831, b: 0.580 } // #E7D494
+        }];
+
+        // Assemble the logo mark
+        logoMark.appendChild(outerSquare);
+        logoMark.appendChild(aShape);
+        logoMark.appendChild(middleLine);
+
+        // Create the wordmark
+        const wordmark = figma.createText();
+        wordmark.characters = "arreglo";
+        wordmark.fontSize = 20;
+        wordmark.x = 40;
+        wordmark.y = 6;
+        wordmark.fontName = { family: "Inter", style: "Medium" };
+        wordmark.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
+
+        // Assemble the logo
+        arregloLogoFrame.appendChild(logoMark);
+        arregloLogoFrame.appendChild(wordmark);
+        titleFrame.appendChild(arregloLogoFrame);
         mainFrame.appendChild(titleFrame);
 
         // Create grid container
@@ -139,13 +214,15 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         gridContainer.name = "Grid Container";
         gridContainer.layoutMode = "HORIZONTAL";
         gridContainer.counterAxisSizingMode = "AUTO";
-        gridContainer.fills = [{ type: 'SOLID', color: { r: 0.95, g: 0.95, b: 0.95 } }];
+        gridContainer.fills = [{ type: 'SOLID', color: { r: 0.047, g: 0.047, b: 0.047 } }]; // #0c0c0c
         gridContainer.cornerRadius = 12;
         gridContainer.paddingTop = 24;
         gridContainer.paddingBottom = 24;
         gridContainer.paddingLeft = 24;
         gridContainer.paddingRight = 24;
         gridContainer.counterAxisSizingMode = "AUTO";
+        // Remove border
+        gridContainer.strokes = [];
 
         // Create instruments column
         const instrumentsColumn = figma.createFrame();
@@ -166,6 +243,18 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         spacerFrame.layoutMode = "HORIZONTAL";
         spacerFrame.resize(columnWidth, 32);
         spacerFrame.fills = [];
+        spacerFrame.primaryAxisAlignItems = "MAX";
+        spacerFrame.counterAxisAlignItems = "CENTER";
+        spacerFrame.paddingRight = 16;
+
+        // Add song title to spacer frame
+        const titleText = figma.createText();
+        titleText.characters = arrangement.title || "Song Arrangement";
+        titleText.fontSize = 14;
+        titleText.fontName = { family: "Inter", style: "Medium" };
+        titleText.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]; // White text
+        titleText.textAlignHorizontal = "RIGHT";
+        spacerFrame.appendChild(titleText);
         instrumentsColumn.appendChild(spacerFrame);
 
         // Create instruments grid container
@@ -183,19 +272,30 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         ));
 
         // Create instrument labels
-        instruments.forEach(instrument => {
+        instruments.forEach((instrument, instrumentIndex) => {
             const instrumentFrame = figma.createFrame();
             instrumentFrame.name = instrument;
             instrumentFrame.layoutMode = "HORIZONTAL";
-            instrumentFrame.fills = [{ type: 'SOLID', color: { r: 0.9, g: 0.9, b: 0.9 } }];
-            instrumentFrame.primaryAxisAlignItems = "CENTER";
+            instrumentFrame.fills = [{ type: 'SOLID', color: { r: 0.012, g: 0.012, b: 0.012 } }]; // #030303
+            instrumentFrame.primaryAxisAlignItems = "MAX";
             instrumentFrame.counterAxisAlignItems = "CENTER";
             instrumentFrame.resize(columnWidth, 50);
+            instrumentFrame.paddingLeft = 16;
+            instrumentFrame.paddingRight = 16;
+
+            // Add border radius to first and last instrument frames
+            if (instrumentIndex === 0) {
+                instrumentFrame.topLeftRadius = 16;
+            } else if (instrumentIndex === instruments.length - 1) {
+                instrumentFrame.bottomLeftRadius = 16;
+            }
 
             const label = figma.createText();
             label.characters = instrument;
             label.fontSize = 14;
             label.fontName = { family: "Inter", style: "Medium" };
+            label.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
+            label.textAlignHorizontal = "RIGHT";
             instrumentFrame.appendChild(label);
             instrumentsGridContainer.appendChild(instrumentFrame);
         });
@@ -224,27 +324,27 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         // Create bar numbers (showing every bar)
         const barNumbersFrame = figma.createFrame();
         barNumbersFrame.name = "Bar Numbers";
-        barNumbersFrame.layoutMode = "HORIZONTAL";
-        barNumbersFrame.itemSpacing = 0;
+        barNumbersFrame.layoutMode = "NONE";
         barNumbersFrame.fills = [];
-        barNumbersFrame.counterAxisSizingMode = "AUTO";
         barNumbersFrame.resize(totalBars * 50, 32);
 
         for (let i = 0; i < totalBars; i++) {
             const barNumberContainer = figma.createFrame();
             barNumberContainer.name = `Bar ${i + 1} Container`;
-            barNumberContainer.resize(50, 32);
+            barNumberContainer.layoutMode = "NONE";
             barNumberContainer.fills = [];
-            barNumberContainer.layoutMode = "HORIZONTAL";
-            barNumberContainer.primaryAxisAlignItems = "CENTER";
-            barNumberContainer.counterAxisAlignItems = "CENTER";
+            barNumberContainer.resize(48, 32);
+            barNumberContainer.x = i * 50 + 1;
 
-            // Show number for every bar
             const barNumber = figma.createText();
             barNumber.characters = (i + 1).toString();
             barNumber.fontSize = 10;
             barNumber.fontName = { family: "Inter", style: "Regular" };
-            barNumber.textAlignHorizontal = "CENTER";
+            barNumber.textAlignHorizontal = "LEFT";
+            // Convert #E7D494 to RGB (231/255, 212/255, 148/255)
+            barNumber.fills = [{ type: 'SOLID', color: { r: 0.906, g: 0.831, b: 0.580 } }];
+            barNumber.x = 4;
+            barNumber.y = (32 - barNumber.height) / 2;
             barNumberContainer.appendChild(barNumber);
 
             barNumbersFrame.appendChild(barNumberContainer);
@@ -260,7 +360,10 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         gridLines.x = 0;
         gridLines.y = 0;
 
-        // Vertical lines for each bar and beat
+        // Update grid lines color
+        const gridLineColor = { r: 0.3, g: 0.3, b: 0.3 }; // Darker grid lines for dark theme
+        
+        // Vertical lines
         for (let i = 0; i <= totalBars * 4; i++) {
             const line = figma.createLine();
             const isBarLine = i % 4 === 0;
@@ -269,25 +372,21 @@ async function createVisualArrangement(arrangement: ArrangementData) {
             line.strokeCap = "NONE";
             line.strokes = [{ 
                 type: 'SOLID', 
-                color: { 
-                    r: 0.9, 
-                    g: 0.9, 
-                    b: 0.9 
-                },
+                color: gridLineColor,
                 opacity: isBarLine ? 1 : 0.3
             }];
-            line.x = (i * 12.5); // 50 pixels per bar divided by 4 beats = 12.5 pixels per beat
+            line.x = (i * 12.5);
             line.rotation = 90;
             line.resize(instruments.length * 50, 0);
             gridLines.appendChild(line);
         }
 
-        // Horizontal lines between instruments
+        // Horizontal lines
         for (let i = 0; i <= instruments.length; i++) {
             const line = figma.createLine();
             line.strokeWeight = 1;
             line.strokeCap = "NONE";
-            line.strokes = [{ type: 'SOLID', color: { r: 0.9, g: 0.9, b: 0.9 } }];
+            line.strokes = [{ type: 'SOLID', color: gridLineColor }];
             line.y = i * 50;
             line.resize(totalBars * 50, 0);
             gridLines.appendChild(line);
@@ -315,19 +414,37 @@ async function createVisualArrangement(arrangement: ArrangementData) {
                 
                 // Create bars for this section
                 for (let i = 0; i < section.duration; i++) {
-                    const barBlock = figma.createRectangle();
+                    const barBlock = figma.createFrame();
                     barBlock.name = `Bar ${currentBar + i + 1}`;
-                    barBlock.x = (currentBar + i) * 50;
+                    barBlock.x = (currentBar + i) * 50 + 1;
                     barBlock.resize(48, 48);
                     barBlock.y = 1;
-                    
-                    // Check if this bar is active
-                    const isActive = activeBars && activeBars.includes(i + 1);
+                    barBlock.layoutMode = "HORIZONTAL";
+                    barBlock.itemSpacing = 0;
                     barBlock.fills = [{ 
                         type: 'SOLID', 
                         color: getColorForInstrument(instrument, instrumentIndex),
-                        opacity: isActive ? 1 : 0.1
+                        opacity: activeBars && activeBars.includes(i + 1) ? 1 : 0.1
                     }];
+                    barBlock.strokes = [{
+                        type: 'SOLID',
+                        color: { r: 0, g: 0, b: 0 }, // Pure black
+                        opacity: 1
+                    }];
+                    barBlock.strokeRightWeight = 2; // Increased to 2px
+
+                    // Add beat division indicators
+                    for (let beat = 0; beat < 4; beat++) {
+                        const beatBlock = figma.createRectangle();
+                        beatBlock.name = `Beat ${beat + 1}`;
+                        beatBlock.resize(12, 48);
+                        beatBlock.fills = [{ 
+                            type: 'SOLID', 
+                            color: { r: 1, g: 1, b: 1 },
+                            opacity: beat % 2 === 0 ? 0.1 : 0.05
+                        }];
+                        barBlock.appendChild(beatBlock);
+                    }
                     
                     row.appendChild(barBlock);
                 }
@@ -346,7 +463,7 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         const contentContainer = figma.createFrame();
         contentContainer.name = "Content Container";
         contentContainer.layoutMode = "HORIZONTAL";
-        contentContainer.itemSpacing = 16;
+        contentContainer.itemSpacing = 0; // Removed 16px spacing
         contentContainer.fills = [];
         contentContainer.counterAxisSizingMode = "AUTO";
         contentContainer.appendChild(instrumentsColumn);
@@ -420,9 +537,132 @@ async function analyzeImage(imageBase64: string): Promise<string[]> {
     return extractedText.split(',').map((name: string) => name.trim());
 }
 
+const TEST_ARRANGEMENT_RESPONSE = `---
+
+SECTION: Intro  
+DURATION: 8  
+INSTRUMENT: kick - 4x  
+BARS: 1,2,3,4,5,6,7,8  
+END_INSTRUMENT  
+INSTRUMENT: hi-hat - offbeat  
+BARS: 1,2,3,4,5,6,7,8  
+END_INSTRUMENT  
+INSTRUMENT: vox sample  
+BARS: 4,8  
+END_INSTRUMENT  
+END_SECTION  
+
+---
+
+SECTION: Verse 1  
+DURATION: 16  
+INSTRUMENT: kick - 4x  
+BARS: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16  
+END_INSTRUMENT  
+INSTRUMENT: bassline - chords  
+BARS: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16  
+END_INSTRUMENT  
+INSTRUMENT: hi-hat - offbeat  
+BARS: 5,6,7,8,13,14,15,16  
+END_INSTRUMENT  
+END_SECTION  
+
+---
+
+SECTION: Chorus 1  
+DURATION: 8  
+INSTRUMENT: kick - 4x  
+BARS: 1,2,3,4,5,6,7,8  
+END_INSTRUMENT  
+INSTRUMENT: bassline - melody  
+BARS: 1,2,3,4,5,6,7,8  
+END_INSTRUMENT  
+INSTRUMENT: lead synth - chords  
+BARS: 1,2,3,4,5,6,7,8  
+END_INSTRUMENT  
+INSTRUMENT: vox sample  
+BARS: 4,8  
+END_INSTRUMENT  
+END_SECTION  
+
+---
+
+SECTION: Verse 2  
+DURATION: 16  
+INSTRUMENT: kick - 4x  
+BARS: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16  
+END_INSTRUMENT  
+INSTRUMENT: bassline - chords  
+BARS: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16  
+END_INSTRUMENT  
+INSTRUMENT: hi-hat - offbeat  
+BARS: 5,6,7,8,13,14,15,16  
+END_INSTRUMENT  
+END_SECTION  
+
+---
+
+SECTION: Chorus 2  
+DURATION: 8  
+INSTRUMENT: kick - 4x  
+BARS: 1,2,3,4,5,6,7,8  
+END_INSTRUMENT  
+INSTRUMENT: bassline - melody  
+BARS: 1,2,3,4,5,6,7,8  
+END_INSTRUMENT  
+INSTRUMENT: lead synth - chords  
+BARS: 1,2,3,4,5,6,7,8  
+END_INSTRUMENT  
+INSTRUMENT: vox sample  
+BARS: 4,8  
+END_INSTRUMENT  
+END_SECTION  
+
+---
+
+SECTION: Bridge  
+DURATION: 8  
+INSTRUMENT: saxophone - solo  
+BARS: 1,2,3,4,5,6,7,8  
+END_INSTRUMENT  
+INSTRUMENT: bassline - chords  
+BARS: 1,2,3,4,5,6,7,8  
+END_INSTRUMENT  
+INSTRUMENT: hi-hat - offbeat  
+BARS: 5,6,7,8  
+END_INSTRUMENT  
+END_SECTION  
+
+---
+
+SECTION: Build-up  
+DURATION: 8  
+INSTRUMENT: kick - 4x  
+BARS: 1,2,3,4,5,6,7,8  
+END_INSTRUMENT  
+INSTRUMENT: bassline - melody  
+BARS: 1,2,3,4,5,6,7,8  
+END_INSTRUMENT  
+INSTRUMENT: lead synth - chords  
+BARS: 5,6,7,8  
+END_INSTRUMENT  
+INSTRUMENT: hi-hat - offbeat  
+BARS: 1,2,3,4,5,6,7,8  
+END_INSTRUMENT  
+INSTRUMENT: vox sample  
+BARS: 8  
+END_INSTRUMENT  
+END_SECTION  
+
+---`;
+
 figma.ui.onmessage = async (msg) => {
     try {
-        if (msg.type === 'load-settings') {
+        if (msg.type === 'test-arrangement') {
+            const arrangement = parseArrangement(TEST_ARRANGEMENT_RESPONSE, "Test Song");
+            await createVisualArrangement(arrangement);
+            figma.ui.postMessage({ type: 'success', message: 'Test arrangement created!' });
+        } else if (msg.type === 'load-settings') {
             const config = await getConfig();
             figma.ui.postMessage({ type: 'settings-loaded', config });
         } else if (msg.type === 'save-settings') {
