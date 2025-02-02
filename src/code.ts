@@ -136,7 +136,7 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         // Create Arreglo logo frame
         const arregloLogoFrame = figma.createFrame();
         arregloLogoFrame.name = "Arreglo Logo";
-        arregloLogoFrame.resize(110, 32);
+        arregloLogoFrame.resize(120, 32);
         arregloLogoFrame.fills = [];
 
         // Create the logo mark (square with A)
@@ -154,7 +154,7 @@ async function createVisualArrangement(arrangement: ArrangementData) {
             type: 'SOLID',
             color: { r: 0.906, g: 0.831, b: 0.580 } // #E7D494
         }];
-        outerSquare.strokeWeight = 2;
+        outerSquare.strokeWeight = 3;
 
         // Create the "A" shape using vector
         const aShape = figma.createVector();
@@ -177,6 +177,7 @@ async function createVisualArrangement(arrangement: ArrangementData) {
             type: 'SOLID',
             color: { r: 0.906, g: 0.831, b: 0.580 } // #E7D494
         }];
+        aShape.strokes = [];
 
         // Create the middle line of the A
         const middleLine = figma.createRectangle();
@@ -189,6 +190,15 @@ async function createVisualArrangement(arrangement: ArrangementData) {
             color: { r: 0.906, g: 0.831, b: 0.580 } // #E7D494
         }];
 
+        // Create the "made with" text
+        const madeWithText = figma.createText();
+        madeWithText.characters = "made with";
+        madeWithText.fontSize = 8;
+        madeWithText.x = 40;
+        madeWithText.y = 0;
+        madeWithText.fontName = { family: "Inter", style: "Regular" };
+        madeWithText.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
+
         // Assemble the logo mark
         logoMark.appendChild(outerSquare);
         logoMark.appendChild(aShape);
@@ -196,15 +206,16 @@ async function createVisualArrangement(arrangement: ArrangementData) {
 
         // Create the wordmark
         const wordmark = figma.createText();
-        wordmark.characters = "arreglo";
+        wordmark.characters = "arreglo.";
         wordmark.fontSize = 20;
         wordmark.x = 40;
         wordmark.y = 6;
-        wordmark.fontName = { family: "Inter", style: "Medium" };
+        wordmark.fontName = { family: "Inter", style: "Bold" };
         wordmark.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
 
         // Assemble the logo
         arregloLogoFrame.appendChild(logoMark);
+        arregloLogoFrame.appendChild(madeWithText);
         arregloLogoFrame.appendChild(wordmark);
         titleFrame.appendChild(arregloLogoFrame);
         mainFrame.appendChild(titleFrame);
