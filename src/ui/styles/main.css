@@ -78,7 +78,7 @@ form#songForm .panel.left {
 .form-group select {
     width: 100%;
     padding: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 0;
     background-color: transparent;
     color: #fff;
@@ -340,13 +340,44 @@ form#songForm .panel.left {
     color: #ff3b30;
 }
 
-/* Utility Classes */
-.gold-text {
-    color: #E7D494;
-    font-weight: bold;
+/* Bottom Nav */
+
+.bottom-nav {
+    display: flex;
+    justify-content: space-between;;
 }
 
+.test-button {
+    border-radius: 999px;
+    border-radius: 999px;
+    outline: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 2rem;
+    height: 2rem;
+    background-color: transparent;
+    color: #fff;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.test-button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.signature {
+    width: 5rem;
+    height: 2rem;
+}
+
+
 /* Settings Panel */
+.settings {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .5rem;
+}
+
 .settings-panel {
     display: none;
     visibility: hidden;
@@ -371,11 +402,9 @@ form#songForm .panel.left {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
     color: rgba(255, 255, 255, 0.5);
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 999px;
     transition: all 0.2s ease;
     background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(8px);
@@ -384,6 +413,11 @@ form#songForm .panel.left {
 .settings-button:hover {
     color: #fff;
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+.settings-button svg {
+    width: 2.5rem;
+    height: 2.5rem;
 }
 
 .settings-modal .modal-content {
