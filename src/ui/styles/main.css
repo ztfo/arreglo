@@ -158,15 +158,15 @@ form#songForm .panel.left {
 
 /* Pattern Input */
 .pattern-actions {
+    margin-top: 1rem;
     display: flex;
-    flex-direction: column;
-    gap: 16px;
 }
 
 .pattern-actions .add-pattern-button,
 .upload-button {
     display: inline-flex;
     align-items: center;
+    width: 50%;
     gap: 8px;
     padding: 8px 16px;
     background-color: transparent;
@@ -175,6 +175,17 @@ form#songForm .panel.left {
     color: #E7D494;
     cursor: pointer;
     transition: all 0.2s ease;
+    color: #fff;
+    font-size: 12px;
+}
+
+.pattern-actions .upload-button {
+    border-radius: 0 999px 999px 0;
+    margin-left: -1px;
+}
+
+.pattern-actions .add-pattern-button {
+    border-radius: 999px 0 0 999px;
 }
 
 .pattern-actions .add-pattern-button:hover,
@@ -187,16 +198,18 @@ form#songForm .panel.left {
     margin-top: 16px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0;
+    height: 260px;
+    overflow-y: auto;
 }
 
 .pattern-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 12px;
-    background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 4px;
+    padding: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
 }
 
 .pattern-item button {
@@ -205,6 +218,7 @@ form#songForm .panel.left {
     color: rgba(255, 255, 255, 0.5);
     cursor: pointer;
     padding: 4px 8px;
+    font-size: 1.5rem;
 }
 
 .pattern-item button:hover {

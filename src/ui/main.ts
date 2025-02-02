@@ -10,5 +10,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Initialize creativity value display
+    const creativityInput = document.getElementById('creativity');
+    const creativityValue = document.getElementById('creativityValue');
+    if (creativityInput && creativityValue) {
+        creativityInput.addEventListener('input', (e) => {
+            if (e.target instanceof HTMLInputElement) {
+                creativityValue.textContent = e.target.value;
+            }
+        });
+    }
+
+    // Initialize the app
     new App();
 });
