@@ -31,7 +31,10 @@ form#songForm .panel.right {
 }
 
 form#songForm .panel.left {
-    grid-area: 1 / 1 / 2 / 2;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    grid-row-gap: 1rem;
 }
 
 /* Section Headers */
