@@ -5,8 +5,8 @@ import { ApiConfig, SongData, ArrangementData } from './core/types';
 import { createArrangementPrompt } from './core/prompts';
 
 figma.showUI(__html__, { 
-    width: 500, 
-    height: 600,
+    width: 700, 
+    height: 641,
     themeColors: true 
 });
 

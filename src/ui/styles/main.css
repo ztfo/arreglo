@@ -1,10 +1,14 @@
 body {
     padding: 0;
     margin: 0;
-    background-color: #f0f0f0;
+    background-color: #000;
+    color: #fff;
+    width: 700px;
+    height: 641px;
+    overflow: hidden;
 }
 .container {
-    padding: 20px;
+    padding: 24px;
     font-family: sans-serif;
 }
 
@@ -21,8 +25,11 @@ body {
 .form-group select {
     width: 100%;
     padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 0;
+    background-color: transparent;
+    color: #fff;
+    outline: none;
 }
 
 .settings-panel {
@@ -132,3 +139,143 @@ button i {
 .nav-item i {
     cursor: pointer;
 } 
+
+.form-section {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 8px;
+}
+
+.form-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.pattern-input-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.pattern-input {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+}
+
+.pattern-upload {
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
+    text-align: center;
+}
+
+.upload-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.upload-button:hover {
+    background: #e8e8e8;
+}
+
+.sections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.sections-grid label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.creativity-input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.creativity-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.creativity-value {
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="range"] {
+    width: 100%;
+}
+
+/* Loading state styles */
+.loading {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.loading.active {
+    display: block;
+}
+
+.loading.active ~ .inner-container {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.loading.active ~ .inner-container form {
+    filter: blur(2px);
+}
+
+/* Add styles for test button */
+.test-button {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+}
+.test-button:hover {
+    color: #000;
+    background: rgba(0,0,0,0.05);
+    border-radius: 4px;
+}
+
+/* Logo styles */
+.logo, .label {
+    display: block;
+    margin-bottom: 20px;
+}
+
+.logo svg, .label svg {
+    width: 100%;
+    height: auto;
+    max-width: 110px;
+}
