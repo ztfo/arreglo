@@ -32,6 +32,7 @@ export class ArrangementForm {
     constructor(container: HTMLElement) {
         this.container = container;
         this.createForm();
+        this.setupPatternHandling();
     }
 
     private createForm() {
@@ -83,35 +84,11 @@ export class ArrangementForm {
         songDetailsSection.appendChild(this.genreSelect);
 
         // Patterns Section
-        const patternsSection = this.createSection('Instrument/Track Patterns');
+        const patternsSection = this.createSection('Patterns');
         
-        // Pattern input container
-        const patternInputContainer = document.createElement('div');
-        patternInputContainer.className = 'pattern-input-container';
-        
-        const patternInput = document.createElement('input');
-        patternInput.type = 'text';
-        patternInput.placeholder = 'Pattern name (e.g., Four on the floor kick)';
-        
-        const patternBarsInput = document.createElement('input');
-        patternBarsInput.type = 'number';
-        patternBarsInput.min = '1';
-        patternBarsInput.max = '32';
-        patternBarsInput.value = '8';
-        patternBarsInput.placeholder = 'Bars';
-        
-        const addPatternButton = document.createElement('button');
-        addPatternButton.textContent = 'Add Pattern';
-        addPatternButton.onclick = () => this.addPattern(patternInput.value, parseInt(patternBarsInput.value));
-        
-        patternInputContainer.appendChild(patternInput);
-        patternInputContainer.appendChild(patternBarsInput);
-        patternInputContainer.appendChild(addPatternButton);
-        
+        // Patterns list container
         this.patternsList = document.createElement('div');
         this.patternsList.className = 'patterns-list';
-        
-        patternsSection.appendChild(patternInputContainer);
         patternsSection.appendChild(this.patternsList);
 
         // Sections Selection
@@ -139,42 +116,55 @@ export class ArrangementForm {
         
         sectionsSection.appendChild(this.sectionsContainer);
 
-        // Creativity Meter
-        const creativitySection = this.createSection('Creativity Level');
+        // Creativity Section
+        const creativitySection = this.createSection('Creativity');
+        const creativityMeter = document.createElement('div');
+        creativityMeter.className = 'creativity-meter';
         
-        const creativityLabel = document.createElement('label');
-        creativityLabel.textContent = 'Creativity (0 = Traditional, 5 = Experimental)';
+        const topLabel = document.createElement('span');
+        topLabel.className = 'creativity-label';
+        topLabel.textContent = 'experimental';
         
-        this.creativitySlider = document.createElement('input');
-        this.creativitySlider.type = 'range';
-        this.creativitySlider.min = '0';
-        this.creativitySlider.max = '5';
-        this.creativitySlider.value = '2';
-        this.creativitySlider.step = '1';
+        const blocksContainer = document.createElement('div');
+        blocksContainer.className = 'creativity-blocks';
         
-        const creativityValue = document.createElement('span');
-        creativityValue.textContent = this.creativitySlider.value;
-        this.creativitySlider.oninput = () => {
-            creativityValue.textContent = this.creativitySlider.value;
-        };
+        // Create radio inputs and labels
+        for (let i = 5; i >= 1; i--) {
+            const input = document.createElement('input');
+            input.type = 'radio';
+            input.name = 'creativity';
+            input.value = i.toString();
+            input.id = `creativity-${i}`;
+            if (i === 3) input.checked = true;
+            
+            const label = document.createElement('label');
+            label.htmlFor = `creativity-${i}`;
+            
+            blocksContainer.appendChild(input);
+            blocksContainer.appendChild(label);
+        }
         
-        creativitySection.appendChild(creativityLabel);
-        creativitySection.appendChild(this.creativitySlider);
-        creativitySection.appendChild(creativityValue);
+        const bottomLabel = document.createElement('span');
+        bottomLabel.className = 'creativity-label';
+        bottomLabel.textContent = 'traditional';
+        
+        creativityMeter.appendChild(topLabel);
+        creativityMeter.appendChild(blocksContainer);
+        creativityMeter.appendChild(bottomLabel);
+        creativitySection.appendChild(creativityMeter);
 
-        // Submit Button
+        // Create submit button
         this.submitButton = document.createElement('button');
-        this.submitButton.textContent = 'Generate Arrangement';
+        this.submitButton.type = 'submit';
+        this.submitButton.textContent = 'Make Arrangement';
         this.submitButton.className = 'submit-button';
 
-        // Add all sections to container
-        [
-            songDetailsSection,
-            patternsSection,
-            sectionsSection,
-            creativitySection,
-            this.submitButton
-        ].forEach(element => this.container.appendChild(element));
+        // Append all sections to the container
+        this.container.appendChild(songDetailsSection);
+        this.container.appendChild(patternsSection);
+        this.container.appendChild(sectionsSection);
+        this.container.appendChild(creativitySection);
+        this.container.appendChild(this.submitButton);
     }
 
     private createSection(title: string): HTMLDivElement {
@@ -223,6 +213,55 @@ export class ArrangementForm {
         });
     }
 
+    private setupPatternHandling() {
+        const addPatternBtn = document.getElementById('addPattern');
+        const patternInput = document.getElementById('patternInput') as HTMLInputElement;
+        const modalToggle = document.getElementById('modal-toggle') as HTMLInputElement;
+
+        if (addPatternBtn && patternInput) {
+            addPatternBtn.addEventListener('click', () => {
+                const pattern = patternInput.value.trim();
+                if (pattern) {
+                    this.addPattern(pattern, 8);
+                    patternInput.value = '';
+                    modalToggle.checked = false;
+                }
+            });
+
+            patternInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const pattern = patternInput.value.trim();
+                    if (pattern) {
+                        this.addPattern(pattern, 8);
+                        patternInput.value = '';
+                        modalToggle.checked = false;
+                    }
+                }
+            });
+        }
+
+        const dawScreenshotInput = document.getElementById('daw-screenshot') as HTMLInputElement;
+        if (dawScreenshotInput) {
+            dawScreenshotInput.addEventListener('change', (e) => {
+                const file = (e.target as HTMLInputElement).files?.[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const base64Image = (reader.result as string).split(',')[1];
+                        parent.postMessage({ 
+                            pluginMessage: { 
+                                type: 'analyze-image',
+                                base64Image
+                            }
+                        }, '*');
+                    };
+                    reader.readAsDataURL(file);
+                    modalToggle.checked = false;
+                }
+            });
+        }
+    }
+
     public onSubmit(callback: (data: {
         songName: string;
         tempo: number;
@@ -232,6 +271,8 @@ export class ArrangementForm {
         sections: string[];
         creativity: number;
     }) => void) {
+        if (!this.submitButton) return;
+
         this.submitButton.addEventListener('click', (e) => {
             e.preventDefault();
             
@@ -254,6 +295,9 @@ export class ArrangementForm {
                 return;
             }
 
+            const creativityInput = document.querySelector('input[name="creativity"]:checked') as HTMLInputElement;
+            const creativityValue = creativityInput ? parseInt(creativityInput.value) : 3;
+
             callback({
                 songName: this.songNameInput.value,
                 tempo: parseInt(this.tempoInput.value),
@@ -261,7 +305,7 @@ export class ArrangementForm {
                 genre: this.genreSelect.value,
                 patterns: this.patterns,
                 sections: selectedSections,
-                creativity: parseInt(this.creativitySlider.value)
+                creativity: creativityValue
             });
         });
     }

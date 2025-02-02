@@ -142,7 +142,7 @@ export class SongForm {
             tempo: parseInt((document.getElementById('tempo') as HTMLInputElement).value),
             instruments: this.patterns.map(p => p.name),
             patterns: this.patterns.map(p => ({ name: p.name, bars: 8 })), // Default to 8 bars
-            creativity: parseInt((document.getElementById('creativity') as HTMLInputElement).value),
+            creativity: parseInt((document.querySelector('input[name="creativity"]:checked') as HTMLInputElement)?.value || "2"),
             selectedSections: this.getSelectedSections()
         };
     }

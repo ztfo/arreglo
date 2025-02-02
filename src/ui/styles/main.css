@@ -80,7 +80,11 @@ form#songForm .panel.left {
     margin-bottom: 8px;
 }
 
-
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
 
 .settings-panel {
     display: none;
@@ -124,19 +128,48 @@ nav {
 .pattern-input-methods {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 16px;
 }
 
 .pattern-input {
     display: grid;
     grid-template-columns: 1fr auto;
-    gap: 10px;
+    gap: 8px;
+}
+
+.pattern-input input {
+    background-color: #030303;
+    border: 1px solid #1a1a1a;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.pattern-input input:focus {
+    border-color: #E7D494;
+    outline: none;
+}
+
+.pattern-input button {
+    background-color: #030303;
+    border: 1px solid #1a1a1a;
+    color: #E7D494;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.pattern-input button:hover {
+    background-color: #0c0c0c;
+    border-color: #E7D494;
 }
 
 .pattern-upload {
-    border-top: 1px solid #ddd;
-    padding-top: 15px;
-    text-align: center;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #1a1a1a;
 }
 
 .upload-button {
@@ -144,15 +177,17 @@ nav {
     align-items: center;
     gap: 8px;
     padding: 8px 16px;
-    background: #f0f0f0;
-    border: 1px solid #ddd;
+    background-color: #030303;
+    border: 1px solid #1a1a1a;
     border-radius: 4px;
+    color: #E7D494;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
 }
 
 .upload-button:hover {
-    background: #e8e8e8;
+    background-color: #0c0c0c;
+    border-color: #E7D494;
 }
 
 .sections-grid {
@@ -161,6 +196,12 @@ nav {
     grid-template-rows: repeat(3, 1fr);
     gap: 10px;
     margin: 1rem 0;
+}
+
+.inner-grid {
+    display: grid;
+    grid-template-columns: 5fr 1fr;
+    gap: 1rem;
 }
 
 .sections-grid label {
@@ -252,4 +293,228 @@ input[type="range"] {
 .logo svg, .label svg {
     width: 100%;
     height: auto;
+}
+
+.add-pattern-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #030303;
+    border: 1px solid #1a1a1a;
+    border-radius: 4px;
+    color: #E7D494;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.add-pattern-button:hover {
+    background-color: #0c0c0c;
+    border-color: #E7D494;
+}
+
+.modal-toggle {
+    display: none;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-toggle:checked ~ .modal {
+    display: flex;
+}
+
+.modal-content {
+    background-color: #000;
+    border: 1px solid #1a1a1a;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #fff;
+    background: none;
+    padding: 0;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.close-modal:hover {
+    color: #E7D494;
+}
+
+.modal-body {
+    padding: 16px;
+}
+
+.patterns-list {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pattern-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: #030303;
+    border: 1px solid #1a1a1a;
+    border-radius: 4px;
+    color: #fff;
+}
+
+.pattern-item button {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 16px;
+}
+
+.pattern-item button:hover {
+    color: #E7D494;
+}
+
+.pattern-actions {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.pattern-actions .add-pattern-button,
+.pattern-actions .upload-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #030303;
+    border: 1px solid #1a1a1a;
+    border-radius: 4px;
+    color: #E7D494;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pattern-actions .add-pattern-button:hover,
+.pattern-actions .upload-button:hover {
+    background-color: #0c0c0c;
+    border-color: #E7D494;
+}
+
+.pattern-help {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #1a1a1a;
+    color: #666;
+}
+
+.pattern-help p {
+    margin: 0 0 12px 0;
+    color: #999;
+}
+
+.pattern-help ul {
+    margin: 0;
+    padding-left: 20px;
+    list-style-type: none;
+}
+
+.pattern-help li {
+    margin-bottom: 8px;
+    color: #999;
+}
+
+.pattern-help strong {
+    color: #E7D494;
+    font-weight: 500;
+}
+
+.creativity-meter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 0;
+}
+
+.creativity-label {
+    color: #fff;
+    font-size: 12px;
+    text-transform: lowercase;
+}
+
+.creativity-blocks {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 4px;
+    width: 32px;
+}
+
+.creativity-blocks input[type="radio"] {
+    display: none;
+}
+
+.creativity-blocks label {
+    width: 32px;
+    height: 8px;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.creativity-blocks label:hover {
+    background-color: #333;
+}
+
+/* This selects all labels after the checked input */
+.creativity-blocks input[type="radio"]:checked ~ label {
+    background-color: #1a1a1a;
+}
+
+/* This selects the label immediately after the checked input and all previous labels */
+.creativity-blocks input[type="radio"]:checked + label {
+    background-color: #E7D494;
+}
+
+.creativity-blocks input[type="radio"]:checked + label ~ label {
+    background-color: #E7D494;
 }

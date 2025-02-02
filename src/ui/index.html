@@ -179,18 +179,16 @@
                                 <div class="header-line">
                                     <h3>patterns.</h3>
                                 </div>
-                                <div class="pattern-input-methods">
-                                    <div class="pattern-input">
-                                        <input type="text" id="patternInput" maxlength="20" placeholder="Pattern name (e.g., Four on floor kick)">
-                                        <button type="button" id="addPattern">Add Pattern</button>
-                                    </div>
-                                    <div class="pattern-upload">
-                                        <label for="daw-screenshot" class="upload-button">
-                                            <i class="fa-solid fa-upload"></i>
-                                            Upload DAW Screenshot
-                                        </label>
-                                        <input type="file" id="daw-screenshot" accept="image/*" style="display: none;">
-                                    </div>
+                                <div class="pattern-actions">
+                                    <label for="modal-toggle" class="add-pattern-button">
+                                        <i class="fa-solid fa-plus"></i>
+                                        Add Pattern
+                                    </label>
+                                    <label for="daw-screenshot" class="upload-button">
+                                        <i class="fa-solid fa-upload"></i>
+                                        Upload DAW Screenshot
+                                    </label>
+                                    <input type="file" id="daw-screenshot" accept="image/*" style="display: none;">
                                 </div>
                                 <div id="patternsList" class="patterns-list"></div>
                             </div>
@@ -202,12 +200,22 @@
                                     <h3>creativity.</h3>
                                 </div>
                                 <div class="creativity-input">
-                                    <input type="range" id="creativity" min="0" max="5" value="2" step="1">
-                                    <div class="creativity-labels">
-                                        <span>Traditional</span>
-                                        <span>Experimental</span>
+                                    <div class="creativity-meter">
+                                        <span class="creativity-label top">experimental</span>
+                                        <div class="creativity-blocks">
+                                            <input type="radio" name="creativity" value="5" id="creativity-5">
+                                            <label for="creativity-5"></label>
+                                            <input type="radio" name="creativity" value="4" id="creativity-4">
+                                            <label for="creativity-4"></label>
+                                            <input type="radio" name="creativity" value="3" id="creativity-3">
+                                            <label for="creativity-3"></label>
+                                            <input type="radio" name="creativity" value="2" id="creativity-2" checked>
+                                            <label for="creativity-2"></label>
+                                            <input type="radio" name="creativity" value="1" id="creativity-1">
+                                            <label for="creativity-1"></label>
+                                        </div>
+                                        <span class="creativity-label bottom">traditional</span>
                                     </div>
-                                    <div id="creativityValue" class="creativity-value">2</div>
                                 </div>
                             </div>                            
                         </div>
@@ -249,6 +257,34 @@
                 </select>
             </div>
             <button id="saveSettings">Save</button>
+        </div>
+
+        <!-- Pattern Modal -->
+        <input type="checkbox" id="modal-toggle" class="modal-toggle">
+        <div class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Add Pattern</h3>
+                    <label for="modal-toggle" class="close-modal">&times;</label>
+                </div>
+                <div class="modal-body">
+                    <div class="pattern-input">
+                        <input type="text" id="patternInput" maxlength="20" placeholder="Pattern name (e.g., kick - 4x)">
+                        <button type="button" id="addPattern">Add</button>
+                    </div>
+                    <div class="pattern-help">
+                        <p>The plugin understands these pattern conventions:</p>
+                        <ul>
+                            <li><strong>Four-on-the-floor:</strong> "kick - 4x"</li>
+                            <li><strong>Off-beat patterns:</strong> "hi-hat - offbeat"</li>
+                            <li><strong>Chord patterns:</strong> "bassline - chords"</li>
+                            <li><strong>Melodic patterns:</strong> "bassline - melody"</li>
+                            <li><strong>Build-up patterns:</strong> "synth - buildup"</li>
+                            <li><strong>Sample patterns:</strong> "vox sample"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <script>
