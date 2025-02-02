@@ -1,3 +1,4 @@
+/* Base Styles */
 body {
     padding: 0;
     margin: 0;
@@ -6,10 +7,12 @@ body {
     width: 700px;
     height: 641px;
 }
+
 .container {
     font-family: sans-serif;
 }
 
+/* Form Layout */
 form#songForm {
     display: grid;
     grid-template-columns: 2fr 4fr;
@@ -31,6 +34,7 @@ form#songForm .panel.left {
     grid-area: 1 / 1 / 2 / 2;
 }
 
+/* Section Headers */
 .form-section h3 {
     position: relative;
     margin-top: 0;
@@ -39,6 +43,10 @@ form#songForm .panel.left {
     padding: 0px 1rem;
     z-index: 1;
     display: inline;
+}
+
+.header-line {
+    position: relative;
 }
 
 .form-section .header-line:after {
@@ -52,10 +60,7 @@ form#songForm .panel.left {
     z-index: 0;
 }
 
-.header-line {
-    position: relative;
-}
-
+/* Form Elements */
 .form-group {
     margin-bottom: 15px;
 }
@@ -80,122 +85,33 @@ form#songForm .panel.left {
     margin-bottom: 8px;
 }
 
+/* Grid Layout */
 .grid-container {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1rem;
 }
 
-.settings-panel {
-    display: none;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-}
-.settings-panel.visible {
-    display: block;
-    visibility: visible;
-    opacity: 1;
-}
-
-.error-container {
-    display: none;
-    margin-top: 15px;
-    padding: 10px;
-    background-color: #ffebee;
-    border: 1px solid #ffcdd2;
-    border-radius: 4px;
-}
-
-.loading {
-    display: none;
-    margin-top: 15px;
-    text-align: center;
-}
-
-.loading-subtitle {
-    margin-top: 5px;
-    font-size: 0.9em;
-    color: #666;
-}
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    margin-bottom: 24px;
-} 
-.pattern-input-methods {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.pattern-input {
+.inner-grid {
     display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 8px;
+    grid-template-columns: 5fr 1fr;
+    gap: 1rem;
 }
 
-.pattern-input input {
-    background-color: #030303;
-    border: 1px solid #1a1a1a;
-    color: #fff;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.pattern-input input:focus {
-    border-color: #E7D494;
-    outline: none;
-}
-
-.pattern-input button {
-    background-color: #030303;
-    border: 1px solid #1a1a1a;
-    color: #E7D494;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.pattern-input button:hover {
-    background-color: #0c0c0c;
-    border-color: #E7D494;
-}
-
-.pattern-upload {
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid #1a1a1a;
-}
-
-.upload-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background-color: #030303;
-    border: 1px solid #1a1a1a;
-    border-radius: 4px;
-    color: #E7D494;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.upload-button:hover {
-    background-color: #0c0c0c;
-    border-color: #E7D494;
-}
-
+/* Section Checkboxes */
 .sections-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     gap: 10px;
     margin: 1rem 0;
+}
+
+.sections-grid input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
 }
 
 .sections-grid label {
@@ -211,13 +127,6 @@ nav {
     cursor: pointer;
     font-size: 14px;
     transition: all 0.2s ease;
-}
-
-.sections-grid input[type="checkbox"] {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
 }
 
 .sections-grid label::before {
@@ -244,47 +153,164 @@ nav {
     border-color: rgba(255, 255, 255, 0.2);
 }
 
-.inner-grid {
-    display: grid;
-    grid-template-columns: 5fr 1fr;
-    gap: 1rem;
-}
-
-.sections-grid label {
+/* Pattern Input */
+.pattern-actions {
     display: flex;
-    align-items: center;
-    gap: 5px;
+    flex-direction: column;
+    gap: 16px;
 }
 
+.pattern-actions .add-pattern-button,
+.upload-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 100px;
+    color: #E7D494;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pattern-actions .add-pattern-button:hover,
+.upload-button:hover {
+    border-color: #E7D494;
+    background-color: rgba(231, 212, 148, 0.1);
+}
+
+.patterns-list {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pattern-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.pattern-item button {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+.pattern-item button:hover {
+    color: #fff;
+}
+
+/* Creativity Meter */
 .creativity-input {
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
 
-.creativity-labels {
+.creativity-meter {
     display: flex;
-    justify-content: space-between;
-    font-size: 0.9em;
-    color: #666;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 0;
 }
 
-.creativity-value {
-    text-align: center;
-    font-weight: bold;
-    color: #333;
+.creativity-label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
 }
 
-input[type="range"] {
-    width: 100%;
+.creativity-blocks {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 4px;
 }
 
-.gold-text {
+.creativity-blocks input[type="radio"] {
+    display: none;
+}
+
+.creativity-blocks label {
+    width: 32px;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.creativity-blocks label:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.creativity-blocks input[type="radio"]:checked + label {
+    background-color: #E7D494;
+}
+
+.creativity-blocks input[type="radio"]:checked + label ~ label {
+    background-color: #E7D494;
+}
+
+.creativity-blocks input[type="radio"]:checked ~ label {
+    background-color: #E7D494;
+}
+
+/* Action Buttons */
+.button-row {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    padding-top: 1rem;
+}
+
+.button-row:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -24px;
+    right: -24px;
+    height: 1px;
+    background-color: #252525;
+    z-index: 0;
+}
+
+.btn {
+    padding: 12px 24px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: transparent;
+}
+
+.btn.secondary-button {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.btn.secondary-button:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn.primary-button {
+    border: 1px solid #E7D494;
     color: #E7D494;
-    font-weight: bold;
 }
 
-/* Loading state styles */
+.btn.primary-button:hover {
+    background: rgba(231, 212, 148, 0.1);
+}
+
+/* Loading and Error States */
 .loading {
     display: none;
     position: fixed;
@@ -292,15 +318,89 @@ input[type="range"] {
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    background: white;
+    background: rgba(0, 0, 0, 0.8);
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    z-index: 1000;
+    color: #fff;
 }
 
 .loading.active {
     display: block;
+}
+
+.error-container {
+    display: none;
+    padding: 12px;
+    background-color: rgba(255, 59, 48, 0.1);
+    border: 1px solid rgba(255, 59, 48, 0.2);
+    border-radius: 4px;
+    color: #ff3b30;
+}
+
+/* Utility Classes */
+.gold-text {
+    color: #E7D494;
+    font-weight: bold;
+}
+
+/* Settings Panel */
+.settings-panel {
+    display: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.settings-panel.visible {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+}
+
+.settings-trigger {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 1000;
+}
+
+.settings-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+}
+
+.settings-button:hover {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.settings-modal .modal-content {
+    max-width: 400px;
+}
+
+.settings-modal .form-group:last-child {
+    margin-bottom: 0;
+}
+
+.settings-modal input[type="password"] {
+    font-family: monospace;
+    letter-spacing: 0.1em;
+}
+
+/* Loading States */
+.loading-subtitle {
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .loading.active ~ .inner-container {
@@ -312,57 +412,50 @@ input[type="range"] {
     filter: blur(2px);
 }
 
-/* Add styles for test button */
-.test-button {
-    background: none;
-    border: none;
-    color: #666;
-    cursor: pointer;
-    padding: 4px 8px;
+/* Navigation */
+nav {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 4px;
-    font-size: 14px;
-}
-.test-button:hover {
-    color: #000;
-    background: rgba(0,0,0,0.05);
-    border-radius: 4px;
+    padding: 12px 0;
+    margin-bottom: 24px;
 }
 
-/* Logo styles */
-.logo, .label {
-    display: block;
-    margin-bottom: 20px;
+/* Pattern Help */
+.pattern-help {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.logo svg, .label svg {
-    width: 100%;
-    height: auto;
+.pattern-help p {
+    margin: 0 0 12px 0;
+    color: rgba(255, 255, 255, 0.6);
 }
 
-.add-pattern-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background-color: #030303;
-    border: 1px solid #1a1a1a;
-    border-radius: 4px;
+.pattern-help ul {
+    margin: 0;
+    padding-left: 20px;
+    list-style-type: none;
+}
+
+.pattern-help li {
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.pattern-help strong {
     color: #E7D494;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    width: 100%;
-    justify-content: center;
-    margin-bottom: 16px;
+    font-weight: 500;
 }
 
-.add-pattern-button:hover {
-    background-color: #0c0c0c;
-    border-color: #E7D494;
+/* Grid Item Full */
+.grid-item-full {
+    grid-column: 1 / -1;
+    gap: 16px;
 }
 
+/* Modal Styles */
 .modal-toggle {
     display: none;
 }
@@ -386,7 +479,7 @@ input[type="range"] {
 
 .modal-content {
     background-color: #000;
-    border: 1px solid #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     width: 90%;
     max-width: 500px;
@@ -398,7 +491,7 @@ input[type="range"] {
     justify-content: space-between;
     align-items: center;
     padding: 16px;
-    border-bottom: 1px solid #1a1a1a;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .modal-header h3 {
@@ -411,7 +504,7 @@ input[type="range"] {
 .close-modal {
     background: none;
     border: none;
-    color: #666;
+    color: rgba(255, 255, 255, 0.5);
     font-size: 24px;
     cursor: pointer;
     padding: 0;
@@ -424,196 +517,4 @@ input[type="range"] {
 
 .modal-body {
     padding: 16px;
-}
-
-.patterns-list {
-    margin-top: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.pattern-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 12px;
-    background-color: #030303;
-    border: 1px solid #1a1a1a;
-    border-radius: 4px;
-    color: #fff;
-}
-
-.pattern-item button {
-    background: none;
-    border: none;
-    color: #666;
-    cursor: pointer;
-    padding: 4px 8px;
-    font-size: 16px;
-}
-
-.pattern-item button:hover {
-    color: #E7D494;
-}
-
-.pattern-actions {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-}
-
-.pattern-actions .add-pattern-button,
-.pattern-actions .upload-button {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background-color: #030303;
-    border: 1px solid #1a1a1a;
-    border-radius: 4px;
-    color: #E7D494;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.pattern-actions .add-pattern-button:hover,
-.pattern-actions .upload-button:hover {
-    background-color: #0c0c0c;
-    border-color: #E7D494;
-}
-
-.pattern-help {
-    margin-top: 24px;
-    padding-top: 16px;
-    border-top: 1px solid #1a1a1a;
-    color: #666;
-}
-
-.pattern-help p {
-    margin: 0 0 12px 0;
-    color: #999;
-}
-
-.pattern-help ul {
-    margin: 0;
-    padding-left: 20px;
-    list-style-type: none;
-}
-
-.pattern-help li {
-    margin-bottom: 8px;
-    color: #999;
-}
-
-.pattern-help strong {
-    color: #E7D494;
-    font-weight: 500;
-}
-
-.creativity-meter {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 0;
-}
-
-.creativity-label {
-    color: #fff;
-    font-size: 12px;
-    text-transform: lowercase;
-}
-
-.creativity-blocks {
-    display: flex;
-    flex-direction: column-reverse;
-    gap: 4px;
-    width: 32px;
-}
-
-.creativity-blocks input[type="radio"] {
-    display: none;
-}
-
-.creativity-blocks label {
-    width: 32px;
-    height: 8px;
-    background-color: #1a1a1a;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.creativity-blocks label:hover {
-    background-color: #333;
-}
-
-/* This selects all labels after the checked input */
-.creativity-blocks input[type="radio"]:checked ~ label {
-    background-color: #1a1a1a;
-}
-
-/* This selects the label immediately after the checked input and all previous labels */
-.creativity-blocks input[type="radio"]:checked + label {
-    background-color: #E7D494;
-}
-
-.creativity-blocks input[type="radio"]:checked + label ~ label {
-    background-color: #E7D494;
-}
-
-.grid-item-full {
-    grid-column: 1 / -1;
-    gap: 16px;
-}
-
-.btn {
-    padding: 12px 24px;
-    border-radius: 100px;
-    font-size: .7rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    background: transparent;
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
-.btn.secondary-button {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #fff;
-}
-
-.btn.secondary-button:hover {
-    border-color: rgba(255, 255, 255, 0.2);
-}
-
-.btn.primary-button {
-    border: 1px solid #E7D494;
-    color: #fff;
-}
-
-.btn.primary-button:hover {
-    background: #E7D494;
-}
-
-.button-row {
-    position: relative;
-    display: flex;
-    justify-content: flex-end;
-    padding-top: 1rem;
-}
-
-.button-row:after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -24px;
-    right: -24px;
-    height: 1px;
-    background-color: #252525;
-    z-index: 0;
 }
