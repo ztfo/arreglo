@@ -108,16 +108,32 @@ export class SongForm {
 
     private updatePatternsList() {
         const patternsList = document.getElementById('patternsList') as HTMLDivElement;
-        patternsList.innerHTML = '';
-        this.patterns.forEach((pattern, index) => {
+        const patternsListPreview = document.getElementById('patternsListPreview') as HTMLDivElement;
+        
+        // Function to create pattern item
+        const createPatternItem = (pattern: { name: string }, index: number) => {
             const div = document.createElement('div');
             div.className = 'pattern-item';
             div.innerHTML = `
                 <span>${pattern.name}</span>
                 <button type="button" class="remove-pattern" data-index="${index}">×</button>
             `;
-            patternsList.appendChild(div);
+            return div;
+        };
+
+        // Update main patterns list
+        patternsList.innerHTML = '';
+        this.patterns.forEach((pattern, index) => {
+            patternsList.appendChild(createPatternItem(pattern, index));
         });
+
+        // Update preview patterns list
+        if (patternsListPreview) {
+            patternsListPreview.innerHTML = '';
+            this.patterns.forEach((pattern, index) => {
+                patternsListPreview.appendChild(createPatternItem(pattern, index));
+            });
+        }
 
         // Add remove button handlers
         document.querySelectorAll('.remove-pattern').forEach(button => {

@@ -203,6 +203,26 @@ form#songForm .panel.left {
     overflow-y: auto;
 }
 
+.patterns-list-preview {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.patterns-list-preview h4 {
+    margin: 0 0 12px 0;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.patterns-list-preview .patterns-list {
+    height: 120px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 4px;
+}
+
 .pattern-item {
     display: flex;
     justify-content: space-between;
@@ -524,7 +544,11 @@ nav {
     justify-content: center;
 }
 
-.modal-toggle:checked ~ .modal {
+#settings-toggle:checked ~ .modal {
+    display: flex;
+}
+
+#pattern-toggle:checked ~ .modal {
     display: flex;
 }
 
