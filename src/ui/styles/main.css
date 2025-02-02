@@ -544,11 +544,11 @@ nav {
     justify-content: center;
 }
 
-#settings-toggle:checked ~ .modal {
+#settings-toggle:checked ~ .settings-modal {
     display: flex;
 }
 
-#pattern-toggle:checked ~ .modal {
+#pattern-toggle:checked ~ .pattern-modal {
     display: flex;
 }
 

@@ -207,7 +207,7 @@
                                     <h3>patterns.</h3>
                                 </div>
                                 <div class="pattern-actions">
-                                    <label for="modal-toggle" class="add-pattern-button">
+                                    <label for="pattern-toggle" class="add-pattern-button">
                                         <i class="fa-solid fa-plus"></i>
                                         Add Pattern
                                     </label>
@@ -267,28 +267,12 @@
             </div>
         </div>
 
-        <input type="checkbox" id="settings-toggle" class="modal-toggle">
-        <div class="modal settings-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Settings</h3>
-                    <label for="settings-toggle" class="close-modal">&times;</label>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="openaiKey">OpenAI API Key:</label>
-                        <input type="password" id="openaiKey">
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Pattern Modal -->
         <input type="checkbox" id="pattern-toggle" class="modal-toggle">
-        <div class="modal">
+        <div class="modal pattern-modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>Add Pattern</h3>
+                    <h3>add patterns.</h3>
                     <label for="pattern-toggle" class="close-modal">&times;</label>
                 </div>
                 <div class="modal-body">
@@ -313,6 +297,35 @@
                             <li><strong>Sample patterns:</strong> "vox sample"</li>
                         </ul>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <input type="checkbox" id="settings-toggle" class="modal-toggle">
+        <div class="modal settings-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>settings.</h3>
+                    <label for="settings-toggle" class="close-modal">&times;</label>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="openaiKey">OpenAI API Key:</label>
+                        <input type="password" id="openaiKey">
+                    </div>
+                    <div class="form-group">
+                        <label for="anthropicKey">Anthropic API Key:</label>
+                        <input type="password" id="anthropicKey">
+                    </div>
+                    <div class="form-group">
+                        <label for="preferredApi">Preferred API:</label>
+                        <select id="preferredApi">
+                            <option value="openai">OpenAI</option>
+                            <option value="anthropic">Anthropic</option>
+                        </select>
+                    </div>
+                    <button id="saveSettings">Save</button>
                 </div>
             </div>
         </div>
