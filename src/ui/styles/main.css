@@ -5,11 +5,30 @@ body {
     color: #fff;
     width: 700px;
     height: 641px;
-    overflow: hidden;
 }
 .container {
-    padding: 24px;
     font-family: sans-serif;
+}
+
+form#songForm {
+    display: grid;
+    grid-template-columns: 2fr 4fr;
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;   
+}
+
+form#songForm .panel {
+    padding: 24px;
+}
+
+form#songForm .panel.right {
+    grid-area: 1 / 2 / 2 / 3;
+    background-color: #0d0d0d;
+}
+
+form#songForm .panel.left {
+    grid-area: 1 / 1 / 2 / 2;
 }
 
 .form-group {
@@ -19,6 +38,7 @@ body {
 .form-group label {
     display: block;
     margin-bottom: 5px;
+    font-weight: bold;
 }
 
 .form-group input,
@@ -84,26 +104,6 @@ nav {
     align-items: center;
     padding: 12px 0;
     margin-bottom: 24px;
-}
-
-.nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 18px;
-    font-weight: 600;
-}
-
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.nav-item i {
-    font-size: 16px;
-    color: #666;
-    cursor: pointer;
 }
 
 button i {
@@ -277,5 +277,4 @@ input[type="range"] {
 .logo svg, .label svg {
     width: 100%;
     height: auto;
-    max-width: 110px;
 }
