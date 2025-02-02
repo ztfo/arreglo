@@ -115,8 +115,8 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         mainFrame.paddingBottom = 32;
         mainFrame.paddingLeft = 32;
         mainFrame.paddingRight = 32;
-        mainFrame.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }]; // Black background
-        // Add 2px border with #0c0c0c color
+        mainFrame.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }]; 
+  
         mainFrame.strokes = [{
             type: 'SOLID',
             color: { r: 0.047, g: 0.047, b: 0.047 } // #0c0c0c
@@ -311,6 +311,11 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         barsContainer.fills = [];
         barsContainer.counterAxisSizingMode = "AUTO";
         barsContainer.resize(totalBars * 50, barsContainer.height);
+        barsContainer.strokes = [];
+        barsContainer.paddingTop = 0;
+        barsContainer.paddingBottom = 0;
+        barsContainer.paddingLeft = 0;
+        barsContainer.paddingRight = 0;
 
         // Create patterns container
         const patternsContainer = figma.createFrame();
@@ -321,10 +326,11 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         patternsContainer.counterAxisSizingMode = "AUTO";
         patternsContainer.resize(totalBars * 50, instruments.length * 50);
 
-        // Create bar numbers (showing every bar)
+        // Create bar numbers frame
         const barNumbersFrame = figma.createFrame();
         barNumbersFrame.name = "Bar Numbers";
-        barNumbersFrame.layoutMode = "NONE";
+        barNumbersFrame.layoutMode = "HORIZONTAL";
+        barNumbersFrame.itemSpacing = 0;
         barNumbersFrame.fills = [];
         barNumbersFrame.resize(totalBars * 50, 32);
 
@@ -334,16 +340,16 @@ async function createVisualArrangement(arrangement: ArrangementData) {
             barNumberContainer.layoutMode = "NONE";
             barNumberContainer.fills = [];
             barNumberContainer.resize(48, 32);
-            barNumberContainer.x = i * 50 + 1;
+            barNumberContainer.x = i * 50;
+            barNumberContainer.y = 0;
 
             const barNumber = figma.createText();
             barNumber.characters = (i + 1).toString();
             barNumber.fontSize = 10;
             barNumber.fontName = { family: "Inter", style: "Regular" };
             barNumber.textAlignHorizontal = "LEFT";
-            // Convert #E7D494 to RGB (231/255, 212/255, 148/255)
             barNumber.fills = [{ type: 'SOLID', color: { r: 0.906, g: 0.831, b: 0.580 } }];
-            barNumber.x = 4;
+            barNumber.x = 1;
             barNumber.y = (32 - barNumber.height) / 2;
             barNumberContainer.appendChild(barNumber);
 
@@ -431,7 +437,10 @@ async function createVisualArrangement(arrangement: ArrangementData) {
                         color: { r: 0, g: 0, b: 0 }, // Pure black
                         opacity: 1
                     }];
-                    barBlock.strokeRightWeight = 2; // Increased to 2px
+                    barBlock.strokeRightWeight = 2;
+                    barBlock.strokeTopWeight = 0;
+                    barBlock.strokeBottomWeight = 0;
+                    barBlock.strokeLeftWeight = 0;
 
                     // Add beat division indicators
                     for (let beat = 0; beat < 4; beat++) {
