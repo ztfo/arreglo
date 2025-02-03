@@ -47,6 +47,32 @@ body {
     margin-bottom: 4px;
 }
 
+/* Loading Animation for Accent Bars */
+@keyframes accentPulse {
+    0% {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    50% {
+        background-color: #E7D494;
+    }
+    100% {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+.label.loading .label-accent .accent-bar {
+    animation: accentPulse 1.2s infinite;
+}
+
+/* Stagger the animations for a scanning effect */
+.label.loading .label-accent .accent-bar:nth-child(1) { animation-delay: 0s; }
+.label.loading .label-accent .accent-bar:nth-child(2) { animation-delay: 0.15s; }
+.label.loading .label-accent .accent-bar:nth-child(3) { animation-delay: 0.3s; }
+.label.loading .label-accent .accent-bar:nth-child(4) { animation-delay: 0.45s; }
+.label.loading .label-accent .accent-bar:nth-child(5) { animation-delay: 0.6s; }
+.label.loading .label-accent .accent-bar:nth-child(6) { animation-delay: 0.75s; }
+.label.loading .label-accent .accent-bar:nth-child(7) { animation-delay: 0.9s; }
+.label.loading .label-accent .accent-bar:nth-child(8) { animation-delay: 1.05s; }
 
 /* Form Layout */
 form#songForm {
@@ -246,11 +272,7 @@ form#songForm .panel.left {
     left: 0;
     right: 0;
     bottom: 0;
-}
-
-/* Hide empty state when there are pattern items */
-.patterns-list:has(.pattern-item) .empty-state {
-    display: none;
+    z-index: 1;
 }
 
 .empty-row {
@@ -428,22 +450,6 @@ form#songForm .panel.left {
 }
 
 /* Loading and Error States */
-.loading {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    background: rgba(0, 0, 0, 0.8);
-    padding: 20px;
-    border-radius: 8px;
-    color: #fff;
-}
-
-.loading.active {
-    display: block;
-}
 
 .error-container {
     display: none;

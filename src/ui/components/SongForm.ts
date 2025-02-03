@@ -177,43 +177,48 @@ export class SongForm {
     }
 
     // Add this method to handle loading state during image processing
-    private setLoadingState(isLoading: boolean) {
-        const patternsList = document.getElementById('patternsList');
-        const patternsListPreview = document.getElementById('patternsListPreview');
-        
-        [patternsList, patternsListPreview].forEach(list => {
-            if (list) {
-                const emptyState = list.querySelector('.empty-state');
-                if (emptyState) {
-                    if (isLoading) {
-                        emptyState.classList.add('loading');
-                    } else {
-                        emptyState.classList.remove('loading');
-                    }
-                }
-            }
-        });
-    }
-
-    // Update the file upload handler
     private async handleFileUpload(file: File) {
         try {
+            // Clear existing patterns first
+            this.patterns = [];
+            this.updatePatternsList();
+            
+            // Set loading state before starting the upload
             this.setLoadingState(true);
+            
             const base64Image = await this.fileToBase64(file);
             const trackNames = await this.extractTrackNames(base64Image);
             
+            // Add the new patterns
             trackNames.forEach(name => {
                 if (!this.patterns.some(p => p.name === name)) {
                     this.patterns.push({ name });
                 }
             });
             
-            this.updatePatternsList();
         } catch (error) {
             console.error('Error processing image:', error);
             // Handle error display
         } finally {
             this.setLoadingState(false);
+            this.updatePatternsList();
+            // Reset the file input so the same file can be selected again
+            const fileInput = document.getElementById('daw-screenshot') as HTMLInputElement;
+            if (fileInput) {
+                fileInput.value = '';
+            }
+        }
+    }
+
+    private setLoadingState(isLoading: boolean) {
+        // Find the label element
+        const label = document.querySelector('.label') as HTMLElement;
+        if (label) {
+            if (isLoading) {
+                label.classList.add('loading');
+            } else {
+                label.classList.remove('loading');
+            }
         }
     }
 } 
