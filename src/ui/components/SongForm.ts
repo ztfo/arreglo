@@ -108,7 +108,7 @@ export class SongForm {
         const createEmptyState = (isPreview: boolean = false) => {
             const emptyState = document.createElement('div');
             emptyState.className = 'empty-state';
-            const rowCount = isPreview ? 3 : 6;
+            const rowCount = isPreview ? 3 : 9;
             
             for (let i = 0; i < rowCount; i++) {
                 const emptyRow = document.createElement('div');
@@ -215,9 +215,9 @@ export class SongForm {
         const label = document.querySelector('.label') as HTMLElement;
         if (label) {
             if (isLoading) {
-                label.classList.add('loading');
+                label.classList.add('processing');
             } else {
-                label.classList.remove('loading');
+                label.classList.remove('processing');
             }
         }
     }
