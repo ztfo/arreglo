@@ -33,24 +33,7 @@ export class SongForm {
             if (!file) return;
 
             try {
-                // Convert image to base64
-                const base64Image = await this.fileToBase64(file);
-                
-                // Call OpenAI Vision API
-                const trackNames = await this.extractTrackNames(base64Image);
-                
-                // Add extracted track names to patterns
-                trackNames.forEach(name => {
-                    if (!this.patterns.some(p => p.name === name)) {
-                        this.patterns.push({ name });
-                    }
-                });
-                
-                this.updatePatternsList();
-                
-                // Clear file input
-                fileInput.value = '';
-                
+                await this.handleFileUpload(file);
             } catch (error) {
                 console.error('Error processing image:', error);
                 const errorDiv = document.getElementById('error');
@@ -121,18 +104,41 @@ export class SongForm {
             return div;
         };
 
+        // Function to create empty state
+        const createEmptyState = (isPreview: boolean = false) => {
+            const emptyState = document.createElement('div');
+            emptyState.className = 'empty-state';
+            const rowCount = isPreview ? 3 : 6;
+            
+            for (let i = 0; i < rowCount; i++) {
+                const emptyRow = document.createElement('div');
+                emptyRow.className = 'empty-row';
+                emptyState.appendChild(emptyRow);
+            }
+            
+            return emptyState;
+        };
+
         // Update main patterns list
         patternsList.innerHTML = '';
-        this.patterns.forEach((pattern, index) => {
-            patternsList.appendChild(createPatternItem(pattern, index));
-        });
+        if (this.patterns.length > 0) {
+            this.patterns.forEach((pattern, index) => {
+                patternsList.appendChild(createPatternItem(pattern, index));
+            });
+        } else {
+            patternsList.appendChild(createEmptyState());
+        }
 
         // Update preview patterns list
         if (patternsListPreview) {
             patternsListPreview.innerHTML = '';
-            this.patterns.forEach((pattern, index) => {
-                patternsListPreview.appendChild(createPatternItem(pattern, index));
-            });
+            if (this.patterns.length > 0) {
+                this.patterns.forEach((pattern, index) => {
+                    patternsListPreview.appendChild(createPatternItem(pattern, index));
+                });
+            } else {
+                patternsListPreview.appendChild(createEmptyState(true));
+            }
         }
 
         // Add remove button handlers
@@ -167,6 +173,47 @@ export class SongForm {
         const loading = document.getElementById('loading');
         if (loading) {
             loading.classList.toggle('active', show);
+        }
+    }
+
+    // Add this method to handle loading state during image processing
+    private setLoadingState(isLoading: boolean) {
+        const patternsList = document.getElementById('patternsList');
+        const patternsListPreview = document.getElementById('patternsListPreview');
+        
+        [patternsList, patternsListPreview].forEach(list => {
+            if (list) {
+                const emptyState = list.querySelector('.empty-state');
+                if (emptyState) {
+                    if (isLoading) {
+                        emptyState.classList.add('loading');
+                    } else {
+                        emptyState.classList.remove('loading');
+                    }
+                }
+            }
+        });
+    }
+
+    // Update the file upload handler
+    private async handleFileUpload(file: File) {
+        try {
+            this.setLoadingState(true);
+            const base64Image = await this.fileToBase64(file);
+            const trackNames = await this.extractTrackNames(base64Image);
+            
+            trackNames.forEach(name => {
+                if (!this.patterns.some(p => p.name === name)) {
+                    this.patterns.push({ name });
+                }
+            });
+            
+            this.updatePatternsList();
+        } catch (error) {
+            console.error('Error processing image:', error);
+            // Handle error display
+        } finally {
+            this.setLoadingState(false);
         }
     }
 } 

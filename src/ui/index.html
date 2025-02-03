@@ -120,7 +120,7 @@
                                 <div class="pattern-actions">
                                     <label for="pattern-toggle" class="add-pattern-button">
                                         <i class="fa-solid fa-plus"></i>
-                                        Add Pattern
+                                        Type in Patterns
                                     </label>
                                     <label for="daw-screenshot" class="upload-button">
                                         <i class="fa-solid fa-upload"></i>
@@ -128,7 +128,17 @@
                                     </label>
                                     <input type="file" id="daw-screenshot" accept="image/*" style="display: none;">
                                 </div>
-                                <div id="patternsList" class="patterns-list"></div>
+                                <div id="patternsList" class="patterns-list">
+                                    <div class="empty-state">
+                                        <div class="empty-row"></div>
+                                        <div class="empty-row"></div>
+                                        <div class="empty-row"></div>
+                                        <div class="empty-row"></div>
+                                        <div class="empty-row"></div>
+                                        <div class="empty-row"></div>
+                                        <div class="empty-row"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="right-item">
@@ -195,7 +205,13 @@
                     </div>
                     <div class="patterns-list-preview">
                         <h4>Current Patterns</h4>
-                        <div id="patternsListPreview" class="patterns-list"></div>
+                        <div id="patternsListPreview" class="patterns-list">
+                            <div class="empty-state">
+                                <div class="empty-row"></div>
+                                <div class="empty-row"></div>
+                                <div class="empty-row"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="pattern-help">
                         <p>The plugin understands these pattern conventions:</p>

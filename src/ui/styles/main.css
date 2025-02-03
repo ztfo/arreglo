@@ -231,12 +231,54 @@ form#songForm .panel.left {
 }
 
 .patterns-list {
+    position: relative;
     margin-top: 16px;
     display: flex;
     flex-direction: column;
     gap: 0;
     height: 260px;
     overflow-y: auto;
+}
+
+.empty-state {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* Hide empty state when there are pattern items */
+.patterns-list:has(.pattern-item) .empty-state {
+    display: none;
+}
+
+.empty-row {
+    height: 32px;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 4px;
+    margin-bottom: 4px;
+}
+
+.empty-row:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Loading state animation */
+.empty-state.loading .empty-row {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 0.5;
+    }
 }
 
 .patterns-list-preview {
