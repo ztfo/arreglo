@@ -363,6 +363,8 @@ form#songForm .panel.left {
     cursor: pointer;
     transition: all 0.2s ease;
     background: transparent;
+    text-transform: uppercase;
+    font-weight: 900;
 }
 
 .btn.secondary-button {
@@ -376,7 +378,7 @@ form#songForm .panel.left {
 
 .btn.primary-button {
     border: 1px solid #E7D494;
-    color: #E7D494;
+    color: #fff;
 }
 
 .btn.primary-button:hover {
@@ -417,7 +419,7 @@ form#songForm .panel.left {
     justify-content: space-between;;
 }
 
-.test-button {
+.nav-button {
     border-radius: 999px;
     border-radius: 999px;
     outline: none;
@@ -428,9 +430,12 @@ form#songForm .panel.left {
     color: #fff;
     transition: all 0.2s ease;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.test-button:hover {
+.nav-button:hover {
     background-color: rgba(255, 255, 255, 0.3);
 }
 
