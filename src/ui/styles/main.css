@@ -227,30 +227,50 @@ form#songForm .panel.left {
     cursor: pointer;
     font-size: 14px;
     transition: all 0.2s ease;
+    text-transform: uppercase;
+    font-weight: 500;
 }
 
 .sections-grid label::before {
     content: "";
     position: absolute;
-    left: 12px;
+    right: 12px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: transparent;
+    transition: background-color 0.2s ease;
+    color: rgba(255, 255, 255, 0.8);
+}
+.sections-grid label::after {
+    content: "";
+    position: absolute;
+    right: 15px;
     width: 6px;
     height: 6px;
     border-radius: 50%;
     background-color: transparent;
     transition: background-color 0.2s ease;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .sections-grid input[type="checkbox"]:checked + label {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: #fff;
     border-color: transparent;
+    justify-content: flex-start;
+    color: #000;
 }
 
-.sections-grid input[type="checkbox"]:checked + label::before {
+.sections-grid input[type="checkbox"]:checked + label::after {
     background-color: #3B82F6;
+    box-shadow: 0 0 8px #3B82F6;
+}
+.sections-grid input[type="checkbox"]:checked + label::before {
+    background-color: #000;
 }
 
 .sections-grid label:hover {
-    border-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
 /* Pattern Input */
@@ -498,7 +518,7 @@ form#songForm .panel.left {
 }
 
 .btn.primary-button:hover {
-    background: rgba(231, 212, 148, 0.1);
+    background-color: #E7D494;
 }
 
 /* Loading and Error States */

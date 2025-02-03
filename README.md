@@ -5,7 +5,7 @@ Arreglo is a Figma plugin that helps music producers visualize song arrangements
 ### Main Interface
 
 <div align="center">
-  <img src="images/ui-mocks/arreglo-main.png" alt="Main plugin interface">
+  <img src="images/arreglo-main-screenshot.png" alt="Main plugin interface">
   <p>Create arrangements by setting song details, adding semantic patterns, and selecting sections.</p>
 </div>
 
