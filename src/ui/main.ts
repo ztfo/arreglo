@@ -1,5 +1,10 @@
-import './styles/main.css';
+import './ui';
+import '../ui/styles/main.css';
 import { App } from './app';
+import { images } from './assets/images';
+
+// Set the logo URL as a CSS custom property
+document.documentElement.style.setProperty('--logo-url', `url("${images.logo}")`);
 
 document.addEventListener('DOMContentLoaded', () => {
     // Add test button handler
