@@ -45,15 +45,24 @@ Arreglo is a Figma plugin that helps music producers visualize song arrangements
 ### Usage
 
 1. Install and Run:
-   * Open Figma
-   * Run the "Arreglo" plugin
+   * Clone the repository
+   * Install dependencies with `npm install`
+   * Build the plugin with `npm run build`
 
-2. Configure (First Time Setup):
+2. Open Figma
+   * Open Figma
+   * Go to Plugins menu in the top navigation bar
+   * Go to Development/Import plugin from manifest
+   * Select the `manifest.json` file in the repository
+   * Click "Install"
+   * Click "Open"
+
+3. Configure (First Time Setup):
    * Open settings (bottom left icon)
    * Add your preferred API key
    * Save settings
 
-3. Create an Arrangement:
+4. Create an Arrangement:
    * Enter a song title
    * Choose a genre
    * Set desired length and tempo
@@ -65,7 +74,7 @@ Arreglo is a Figma plugin that helps music producers visualize song arrangements
    * Adjust creativity level
    * Click "Create Arrangement"
 
-4. View Your Arrangement:
+5. View Your Arrangement:
    * See a grid showing when each instrument plays
    * Each row represents an instrument with its specific pattern type
    * Colored cells show active bars based on musical context
