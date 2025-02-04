@@ -170,9 +170,27 @@ export class SongForm {
     }
 
     public showLoading(show: boolean) {
-        const loading = document.getElementById('loading');
-        if (loading) {
-            loading.classList.toggle('active', show);
+        const overlay = document.querySelector('.alert-tray.overlay');
+        if (overlay) {
+            overlay.classList.toggle('active', show);
+            overlay.classList.toggle('show-loading', show);
+        }
+    }
+
+    public showError(message: string) {
+        const overlay = document.querySelector('.alert-tray.overlay');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        if (overlay && errorMessage) {
+            errorMessage.textContent = message;
+            overlay.classList.add('active', 'show-error');
+        }
+    }
+
+    public clearError() {
+        const overlay = document.querySelector('.alert-tray.overlay');
+        if (overlay) {
+            overlay.classList.remove('active', 'show-error');
         }
     }
 

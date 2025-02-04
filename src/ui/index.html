@@ -37,16 +37,13 @@
                             <option value="Techno">Techno</option>
                             <option value="Trance">Trance</option>
                             <option value="DnB">Drum & Bass</option>
+                            <option value="Dubstep">Dubstep</option>
+                            <option value="Deep House">Deep House</option>
+                            <option value="Minimal House">Minimal House</option>
                             <option value="Pop">Pop</option>
-                            <option value="Rock">Rock</option>
-                            <option value="Jazz">Jazz</option>
-                            <option value="Classical">Classical</option>
                             <option value="Hip Hop">Hip Hop</option>
                             <option value="R&B">R&B</option>
-                            <option value="Country">Country</option>
-                            <option value="Electronic">Electronic</option>
-                            <option value="Folk">Folk</option>
-                            <option value="Metal">Metal</option>
+                            <option value="Soul">Soul</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -154,15 +151,15 @@
                                     <div class="creativity-meter">
                                         <span class="creativity-label top">experimental</span>
                                         <div class="creativity-blocks">
-                                            <input type="radio" name="creativity" value="5" id="creativity-5">
+                                            <input title="Experimental" type="radio" name="creativity" value="5" id="creativity-5">
                                             <label for="creativity-5"></label>
-                                            <input type="radio" name="creativity" value="4" id="creativity-4">
+                                            <input title="Creative" type="radio" name="creativity" value="4" id="creativity-4">
                                             <label for="creativity-4"></label>
-                                            <input type="radio" name="creativity" value="3" id="creativity-3">
+                                            <input title="Balanced" type="radio" name="creativity" value="3" id="creativity-3">
                                             <label for="creativity-3"></label>
-                                            <input type="radio" name="creativity" value="2" id="creativity-2" checked>
+                                            <input title="Traditional Elements" type="radio" name="creativity" value="2" id="creativity-2" checked>
                                             <label for="creativity-2"></label>
-                                            <input type="radio" name="creativity" value="1" id="creativity-1">
+                                            <input title="Traditional" type="radio" name="creativity" value="1" id="creativity-1">
                                             <label for="creativity-1"></label>
                                         </div>
                                         <span class="creativity-label bottom">traditional</span>
@@ -180,14 +177,31 @@
         </form>
 
         <div class="alert-tray overlay">
-            <div id="error" class="error-container">
+            <div id="error">
                 <div id="errorMessage"></div>
                 <button id="clearError">Clear</button>
             </div>
-    
-            <div id="loading" class="loading">
-                <div>Generating arrangement...</div>
-                <div class="loading-subtitle">This may take a few moments</div>
+
+            <div id="loading">
+                <div class="loading-icon">
+                    <div class="icon-block">
+                        <div class="loader-block"></div>
+                        <div class="loader-block"></div>
+                        <div class="loader-block"></div>
+                        <div class="loader-block"></div>
+                    </div>
+                </div>
+                <div class="loading-text">
+                    <h2>Tuning in.</h2>
+                    <span>
+                        Your unique arrangement idea is being created. Hang tight.
+                    </span>
+                </div>
+                <div class="loading-dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
             </div>
         </div>
 
