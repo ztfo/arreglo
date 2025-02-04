@@ -16,6 +16,7 @@ export interface SongData {
     }>;
     creativity: number;
     selectedSections: string[];
+    isTest?: boolean;
 }
 
 export interface SongSection {

@@ -45,6 +45,20 @@ export class SongForm {
             }
         });
 
+        // Add test button handler
+        const testButton = document.getElementById('testButton') as HTMLButtonElement;
+        if (testButton) {
+            testButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                // Show loading state
+                this.showLoading(true);
+                // Get form data but mark it as a test
+                const formData = this.getFormData();
+                formData.isTest = true;
+                this.onSubmit(formData);
+            });
+        }
+
         this.form.addEventListener('submit', (event) => {
             event.preventDefault();
             const formData = this.getFormData();
@@ -169,16 +183,19 @@ export class SongForm {
         };
     }
 
-    public showLoading(isLoading: boolean) {
+    public showLoading(show: boolean) {
         const overlay = document.querySelector('.alert-tray.overlay');
         if (overlay) {
-            if (isLoading) {
+            if (show) {
                 overlay.classList.add('active', 'show-loading');
             } else {
-                overlay.classList.remove('active', 'show-loading');
+                overlay.classList.remove('show-loading');
+                // Only remove active if no other states are showing
+                if (!overlay.classList.contains('show-error')) {
+                    overlay.classList.remove('active');
+                }
             }
         }
-        this.setLoadingState(isLoading);
     }
 
     public showError(message: string) {
@@ -235,6 +252,10 @@ export class SongForm {
             const base64Image = await this.fileToBase64(file);
             const trackNames = await this.extractTrackNames(base64Image);
             
+            if (!trackNames || trackNames.length === 0) {
+                throw new Error('<span class="no-text">No track names could be extracted from the image</span>');
+            }
+            
             // Add the new patterns
             trackNames.forEach(name => {
                 if (!this.patterns.some(p => p.name === name)) {
@@ -244,11 +265,18 @@ export class SongForm {
             
         } catch (error) {
             console.error('Error processing image:', error);
-            // Handle error display
+            // Use innerHTML instead of textContent to render the HTML span
+            const errorMessage = error instanceof Error ? error.message : 'Could not extract track names from image';
+            const overlay = document.querySelector('.alert-tray.overlay');
+            const errorElement = document.getElementById('errorMessage');
+            
+            if (overlay && errorElement) {
+                errorElement.innerHTML = errorMessage;
+                overlay.classList.add('active', 'show-error');
+            }
         } finally {
             this.setLoadingState(false);
             this.updatePatternsList();
-            // Reset the file input so the same file can be selected again
             const fileInput = document.getElementById('daw-screenshot') as HTMLInputElement;
             if (fileInput) {
                 fileInput.value = '';
