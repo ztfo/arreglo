@@ -2,7 +2,7 @@
 
 Arreglo is a Figma plugin that helps music producers visualize song arrangements. Using AI with semantic pattern recognition, it generates musically intelligent arrangements based on your instrument patterns and track names, making it easy to plan and understand song structures.
 
-![Plugin Demo](images/ui-gifs/plugin-demo.gif)
+![Plugin Demo](images/ui-gifs/generate-arrangement-flow.gif)
 
 ### Current Example Output
 
@@ -34,8 +34,6 @@ This example shows a generated arrangement with:
   - Genre selection: House, Techno, Trance, DnB, Pop, Rock, Jazz, etc.
   - Creativity control: Traditional to Experimental
   - Time signature: 4/4 (common time)
-
-![Arrangement Generation](images/ui-gifs/arrangement-loading.gif)
 
 ### Usage
 
@@ -89,3 +87,7 @@ This example shows a generated arrangement with:
 - More granular pattern control (note density, swing, etc.)
 - Custom time signature support with adjustable beat divisions
 - Visual beat markers and swing grid options
+
+### Screenshots
+
+![Arrangement Generation](images/ui-gifs/arrangement-loading.gif)
