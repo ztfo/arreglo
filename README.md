@@ -2,17 +2,13 @@
 
 Arreglo is a Figma plugin that helps music producers visualize song arrangements. Using AI with semantic pattern recognition, it generates musically intelligent arrangements based on your instrument patterns and track names, making it easy to plan and understand song structures.
 
-<p align="center">
-  <img src="./images/ui-gifs/plugin-demo.gif" alt="Arreglo Plugin Demo" width="700">
-</p>
+![Plugin Demo](images/ui-gifs/plugin-demo.gif)
 
 ### Current Example Output
 
-<div align="center">
-  <img src="images/current-example.jpg" alt="Example of an Arreglo arrangement visualization">
-  <p>This example shows a generated arrangement with:</p>
-</div>
+![Example Arrangement](images/current-example.jpg)
 
+This example shows a generated arrangement with:
 - Multiple sections (Intro, Verse, Chorus, Bridge, etc.)
 - Custom instrument patterns
 - Adjustable creativity levels
@@ -38,6 +34,8 @@ Arreglo is a Figma plugin that helps music producers visualize song arrangements
   - Genre selection: House, Techno, Trance, DnB, Pop, Rock, Jazz, etc.
   - Creativity control: Traditional to Experimental
   - Time signature: 4/4 (common time)
+
+![Arrangement Generation](images/ui-gifs/arrangement-loading.gif)
 
 ### Usage
 
@@ -91,29 +89,3 @@ Arreglo is a Figma plugin that helps music producers visualize song arrangements
 - More granular pattern control (note density, swing, etc.)
 - Custom time signature support with adjustable beat divisions
 - Visual beat markers and swing grid options
-
-### Additional Screens
-
-#### Settings Panel
-<div align="center">
-  <img src="images/ui-mocks/arreglo-settings.png" alt="Settings configuration">
-  <p>Configure your API keys and preferences.</p>
-</div>
-
-#### Loading State
-<div align="center">
-  <img src="images/ui-mocks/arreglo-loading.png" alt="Loading state">
-  <p>Visual feedback while your arrangement is being generated.</p>
-</div>
-
-#### Success State
-<div align="center">
-  <img src="images/ui-mocks/arreglo-success.png" alt="Success message">
-  <p>Confirmation when your arrangement is ready.</p>
-</div>
-
-#### Error Handling
-<div align="center">
-  <img src="images/ui-mocks/arreglo-error.png" alt="Error state">
-  <p>Clear error messages if something goes wrong.</p>
-</div>
