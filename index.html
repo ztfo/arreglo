@@ -92,6 +92,27 @@
             border-top: 30px solid rgba(255, 255, 255, 0.2);
         }
 
+        .arrow-down {
+            text-align: center;
+            margin: 2rem 0;
+            animation: bounce 2s infinite;
+        }
+
+        .arrow-down i {
+            color: #fff;
+            font-size: 2.5rem;
+            opacity: 0.7;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(10px);
+            }
+        }
+
         .example-output {
             margin: 4rem 0;
             text-align: center;
@@ -194,6 +215,10 @@
 
         <div class="demo">
             <img src="images/ui-gifs/generate-arrangement-flow.gif" alt="Arreglo Plugin Demo">
+        </div>
+
+        <div class="arrow-down">
+            <i class="fas fa-arrow-down"></i>
         </div>
 
         <div class="example-output">
