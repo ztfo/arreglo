@@ -6,7 +6,7 @@ import { createArrangementPrompt } from './core/prompts';
 
 figma.showUI(__html__, { 
     width: 700, 
-    height: 670,
+    height: 660,
     themeColors: true 
 });
 
