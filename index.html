@@ -20,28 +20,39 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Inter', sans-serif;
             background: var(--darker);
             color: var(--light);
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+            margin: 0 auto; 
         }
 
         header {
             text-align: center;
             padding: 4rem 0;
+            gap: 3rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-bottom: 8rem;
         }
 
         .logo {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--gold);
-            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .logo img {
+            height: 70px;
+            width: auto;
         }
 
         .tagline {
@@ -53,14 +64,48 @@
         }
 
         .demo {
-            margin: 4rem 0;
+            position: relative;
+            padding: 2rem;
+            background: var(--dark);
             text-align: center;
+            width: 100%;
+            margin-top: 5rem;
+        }
+
+        .demo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent, #000);
+            pointer-events: none;
         }
 
         .demo img {
             max-width: 100%;
             border-radius: 8px;
             box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+            margin-top: -10rem;
+        }
+
+        .example-output {
+            margin: 4rem 0;
+            text-align: center;
+        }
+
+        .example-output h2 {
+            color: var(--gold);
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+        }
+
+        .example-output img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+            border: 1px solid rgba(231, 212, 148, 0.1);
         }
 
         .features {
@@ -136,40 +181,32 @@
 <body>
     <div class="container">
         <header>
-            <div class="logo">Arreglo</div>
-            <p class="tagline">AI-powered music arrangement visualization plugin for Figma. Transform your track ideas into professional arrangements with semantic pattern recognition.</p>
+            <div class="logo">
+                <img src="src/ui/arreglo-logo.svg" alt="Arreglo Logo">
+            </div>
+            <h2>Tired of getting stuck in 16 bar loops?</h2>
+            <p class="tagline">
+                AI-powered music arrangement visualization plugin for Figma. Transform your track ideas into professional arrangements with semantic pattern recognition.
+            </p>
         </header>
 
         <div class="demo">
             <img src="images/ui-gifs/generate-arrangement-flow.gif" alt="Arreglo Plugin Demo">
         </div>
 
-        <div class="features">
-            <div class="feature">
-                <i class="fas fa-brain"></i>
-                <h3>AI-Powered Arrangements</h3>
-                <p>Creates musically coherent arrangements based on semantic pattern descriptions, understanding different pattern types and musical roles.</p>
-            </div>
-            <div class="feature">
-                <i class="fas fa-music"></i>
-                <h3>Pattern Management</h3>
-                <p>Add patterns with descriptive names, extract track names from DAW screenshots, and support common pattern types like four-on-the-floor and chord progressions.</p>
-            </div>
-            <div class="feature">
-                <i class="fas fa-sliders"></i>
-                <h3>Full Customization</h3>
-                <p>Adjust song length, tempo, genre, and creativity levels. Supports multiple sections and visual grid layouts showing when each instrument plays.</p>
-            </div>
+        <div class="example-output">
+            <h2>Example Arrangement</h2>
+            <img src="images/current-example.jpg" alt="Example Arrangement Output">
         </div>
 
         <div class="cta">
-            <a href="https://www.figma.com/community/plugin/[your-plugin-id]/arreglo" class="button">
-                Install Plugin
+            <a href="/" class="button">
+               Coming Soon!
             </a>
         </div>
 
         <footer>
-            <p>&copy; 2025 | Luis Palomares - Arreglo. Built with ♥️ for music producers.</p>
+            <p>&copy; 2025 | Luis Palomares - Arreglo.</p>
             <div class="social-links">
                 <a href="https://github.com/ztfo/arreglo" target="_blank"><i class="fab fa-github"></i></a>
             </div>
