@@ -45,35 +45,49 @@ body {
     height: 4px;
     background-color: rgba(255,255,255,0.1);
     margin-bottom: 4px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 100px;
 }
 
-/* Loading Animation for Accent Bars */
+/* Label Animation */
 @keyframes accentPulse {
-    0% {
-        background-color: rgba(255, 255, 255, 0.1);
-    }
-    50% {
-        background-color: #E7D494;
-    }
-    100% {
-        background-color: rgba(255, 255, 255, 0.1);
-    }
+    0% { background-color: rgba(255,255,255,0.1); }
+    50% { background-color: rgba(231,212,148,1); }  /* Gold color */
+    100% { background-color: rgba(255,255,255,0.1); }
 }
 
-/* Accent bar loading animation */
-.label.processing .label-accent .accent-bar {
-    animation: accentPulse 1.2s infinite;
+/* When the label has the 'processing' class, animate its accent bars */
+.label.processing .accent-bar {
+    animation: accentPulse 1s infinite;
 }
 
-/* Stagger the animations for a scanning effect */
-.label.processing .label-accent .accent-bar:nth-child(1) { animation-delay: 0s; }
-.label.processing .label-accent .accent-bar:nth-child(2) { animation-delay: 0.15s; }
-.label.processing .label-accent .accent-bar:nth-child(3) { animation-delay: 0.3s; }
-.label.processing .label-accent .accent-bar:nth-child(4) { animation-delay: 0.45s; }
-.label.processing .label-accent .accent-bar:nth-child(5) { animation-delay: 0.6s; }
-.label.processing .label-accent .accent-bar:nth-child(6) { animation-delay: 0.75s; }
-.label.processing .label-accent .accent-bar:nth-child(7) { animation-delay: 0.9s; }
-.label.processing .label-accent .accent-bar:nth-child(8) { animation-delay: 1.05s; }
+/* Each bar is delayed slightly to create a wave effect */
+.label.processing .accent-bar:nth-child(1) { animation-delay: 0s; }
+.label.processing .accent-bar:nth-child(2) { animation-delay: 0.1s; }
+.label.processing .accent-bar:nth-child(3) { animation-delay: 0.2s; }
+.label.processing .accent-bar:nth-child(4) { animation-delay: 0.3s; }
+.label.processing .accent-bar:nth-child(5) { animation-delay: 0.4s; }
+.label.processing .accent-bar:nth-child(6) { animation-delay: 0.5s; }
+.label.processing .accent-bar:nth-child(7) { animation-delay: 0.6s; }
+.label.processing .accent-bar:nth-child(8) { animation-delay: 0.7s; }
+
+.label.processing .accent-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(231, 212, 148, 0.5),
+        transparent
+    );
+    transform: translateX(-100%);
+    animation: pulseScan 2s infinite;
+}
 
 /* Main Loading Overlay */
 
@@ -429,31 +443,55 @@ form#songForm .panel.left {
     z-index: 1;
 }
 
+/* Empty State Animation */
 .empty-row {
-    height: 32px;
-    background-color: rgba(255, 255, 255, 0.03);
-    border-radius: 4px;
-    margin-bottom: 4px;
-}
-
-.empty-row:nth-child(even) {
+    height: 24px;
     background-color: rgba(255, 255, 255, 0.05);
+    margin: 4px 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    opacity: 0.8;
 }
 
-/* Loading state animation */
-.empty-state.loading .empty-row {
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
+@keyframes horizontalScan {
     0% {
-        opacity: 0.5;
+        background-color: rgba(255, 255, 255, 0.05);
     }
     50% {
-        opacity: 0.3;
+        background-color: rgba(231, 212, 148, 0.2);
     }
     100% {
-        opacity: 0.5;
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+}
+
+.empty-state.processing .empty-row {
+    animation: horizontalScan 1s infinite;
+}
+
+/* Stagger the animations from top to bottom */
+.empty-state.processing .empty-row:nth-child(1) { animation-delay: 0s; }
+.empty-state.processing .empty-row:nth-child(2) { animation-delay: 0.1s; }
+.empty-state.processing .empty-row:nth-child(3) { animation-delay: 0.2s; }
+.empty-state.processing .empty-row:nth-child(4) { animation-delay: 0.3s; }
+.empty-state.processing .empty-row:nth-child(5) { animation-delay: 0.4s; }
+.empty-state.processing .empty-row:nth-child(6) { animation-delay: 0.5s; }
+.empty-state.processing .empty-row:nth-child(7) { animation-delay: 0.6s; }
+.empty-state.processing .empty-row:nth-child(8) { animation-delay: 0.7s; }
+
+@keyframes pulseScan {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    50% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100%);
+        opacity: 0;
     }
 }
 

@@ -258,11 +258,21 @@ export class SongForm {
 
     private setLoadingState(isLoading: boolean) {
         const label = document.querySelector('.label') as HTMLElement;
+        const emptyState = document.querySelector('.empty-state') as HTMLElement;
+        
         if (label) {
             if (isLoading) {
                 label.classList.add('processing');
             } else {
                 label.classList.remove('processing');
+            }
+        }
+
+        if (emptyState) {
+            if (isLoading) {
+                emptyState.classList.add('processing');
+            } else {
+                emptyState.classList.remove('processing');
             }
         }
     }
