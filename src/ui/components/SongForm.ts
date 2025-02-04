@@ -263,9 +263,14 @@ export class SongForm {
                 }
             });
             
+            // Update the UI with new patterns
+            this.updatePatternsList();
+            
+            // Don't forget to clear the loading state!
+            this.setLoadingState(false);
+            
         } catch (error) {
             console.error('Error processing image:', error);
-            // Use innerHTML instead of textContent to render the HTML span
             const errorMessage = error instanceof Error ? error.message : 'Could not extract track names from image';
             const overlay = document.querySelector('.alert-tray.overlay');
             const errorElement = document.getElementById('errorMessage');
@@ -274,13 +279,9 @@ export class SongForm {
                 errorElement.innerHTML = errorMessage;
                 overlay.classList.add('active', 'show-error');
             }
-        } finally {
+            
+            // Make sure to clear loading state even if there's an error
             this.setLoadingState(false);
-            this.updatePatternsList();
-            const fileInput = document.getElementById('daw-screenshot') as HTMLInputElement;
-            if (fileInput) {
-                fileInput.value = '';
-            }
         }
     }
 

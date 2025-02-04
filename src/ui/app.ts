@@ -2,7 +2,8 @@ import './styles/main.css';
 import { ErrorDisplay } from './components/ErrorDisplay';
 import { Settings } from './components/Settings';
 import { SongForm } from './components/SongForm';
-import { ApiConfig, SongData } from '../core/types';
+import { ApiConfig, SongData, ArrangementData } from '../core/types';
+import { AnalyticsService } from '../services/AnalyticsService';
 
 export class App {
     private songForm: SongForm;
@@ -52,17 +53,29 @@ export class App {
         };
     }
 
-    private handleFormSubmit(songData: SongData) {
+    private async handleFormSubmit(songData: SongData) {
+        const startTime = performance.now();
         try {
             console.log('Form submitted with song data:', songData);
+            
             parent.postMessage({ 
                 pluginMessage: { 
                     type: 'generate-arrangement', 
-                    songData 
+                    songData,
+                    collectAnalytics: true,
+                    startTime
                 } 
             }, '*');
-        } catch (error) {
-            console.error('Error in handleFormSubmit:', error);
+        } catch (err) {
+            console.error('Error in handleFormSubmit:', err);
+            await AnalyticsService.collectArrangementData(
+                songData,
+                {} as ArrangementData,
+                this.settings.config.PREFERRED_API,
+                performance.now() - startTime,
+                false,
+                err instanceof Error ? err.message : String(err)
+            );
         }
     }
 

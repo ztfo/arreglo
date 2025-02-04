@@ -2,6 +2,7 @@ export interface ApiConfig {
     ANTHROPIC_API_KEY: string;
     OPENAI_API_KEY: string;
     PREFERRED_API: 'anthropic' | 'openai';
+    DATA_COLLECTION_CONSENT: boolean;
 }
 
 export interface SongData {
@@ -80,4 +81,23 @@ export interface Message {
         songData?: SongData;
         message?: string;
     };
+}
+
+export interface ArrangementAnalytics {
+    timestamp: string;
+    requestData: {
+        songData: SongData;
+        prompt?: string;  // The actual prompt sent to AI
+    };
+    responseData: {
+        arrangementData: ArrangementData;
+        rawResponse: string;
+    };
+    metadata: {
+        apiUsed: 'openai' | 'anthropic';
+        processingTime: number;
+        success: boolean;
+        error?: string;
+    };
+    userConsent: boolean;
 } 

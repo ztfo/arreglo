@@ -518,6 +518,10 @@ async function validateConfig(config: ApiConfig): Promise<boolean> {
 async function analyzeImage(imageBase64: string): Promise<string[]> {
     const config = await getConfig();
     
+    if (!config.OPENAI_API_KEY) {
+        throw new Error('OpenAI API key not configured');
+    }
+    
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {

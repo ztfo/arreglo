@@ -271,11 +271,32 @@
                         <input type="password" id="anthropicKey">
                     </div>
                     <div class="form-group">
-                        <label for="preferredApi">Preferred API:</label>
+                        <label for="preferredApi">Preferred AI Model:</label>
                         <select id="preferredApi">
                             <option value="openai">OpenAI</option>
                             <option value="anthropic">Anthropic</option>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="consent-label">
+                            <input type="checkbox" id="dataCollectionConsent">
+                            <span>Help improve Arreglo by allowing anonymous collection of arrangement data. 
+                            <a href="#" id="learnMoreConsent">Learn more</a></span>
+                        </label>
+                        <div class="consent-details" style="display: none;">
+                            <p>We collect:</p>
+                            <ul>
+                                <li>Song arrangement parameters (no titles or personal data)</li>
+                                <li>AI responses and generation patterns</li>
+                                <li>Success/error rates to improve reliability</li>
+                            </ul>
+                            <p>We never collect:</p>
+                            <ul>
+                                <li>Personal information or API keys</li>
+                                <li>Song titles or specific content</li>
+                                <li>Any identifying information</li>
+                            </ul>
+                        </div>
                     </div>
                     <button class="btn primary-button" id="saveSettings">Save</button>
                 </div>

@@ -5,12 +5,24 @@ export class Settings {
   private openaiKey: HTMLInputElement;
   private anthropicKey: HTMLInputElement;
   private preferredApi: HTMLSelectElement;
+  private dataConsent: HTMLInputElement;
+  private _config: ApiConfig = {
+    OPENAI_API_KEY: '',
+    ANTHROPIC_API_KEY: '',
+    PREFERRED_API: 'openai',
+    DATA_COLLECTION_CONSENT: true
+  };
+
+  public get config(): ApiConfig {
+    return this._config;
+  }
 
   constructor(private onSave: (config: ApiConfig) => void) {
     this.panel = document.getElementById('settings') as HTMLElement;
     this.openaiKey = document.getElementById('openaiKey') as HTMLInputElement;
     this.anthropicKey = document.getElementById('anthropicKey') as HTMLInputElement;
     this.preferredApi = document.getElementById('preferredApi') as HTMLSelectElement;
+    this.dataConsent = document.getElementById('dataCollectionConsent') as HTMLInputElement;
 
     document.getElementById('settingsButton')?.addEventListener('click', () => {
         this.toggle();
@@ -20,12 +32,7 @@ export class Settings {
     });
 
     document.getElementById('saveSettings')?.addEventListener('click', () => {
-        const config = {
-            OPENAI_API_KEY: this.openaiKey.value,
-            ANTHROPIC_API_KEY: this.anthropicKey.value,
-            PREFERRED_API: this.preferredApi.value as 'anthropic' | 'openai'
-        };
-        this.onSave(config);
+        this.handleSave();
         this.toggle();
         document.getElementById('settingsButton')?.focus();
     });
@@ -40,9 +47,22 @@ export class Settings {
   }
 
   public updateSettings(config: ApiConfig) {
+    this._config = { ...config };
     this.openaiKey.value = config.OPENAI_API_KEY || '';
     this.anthropicKey.value = config.ANTHROPIC_API_KEY || '';
     this.preferredApi.value = config.PREFERRED_API || 'openai';
+    this.dataConsent.checked = config.DATA_COLLECTION_CONSENT || false;
+  }
+
+  private handleSave() {
+    const config: ApiConfig = {
+      OPENAI_API_KEY: this.openaiKey.value,
+      ANTHROPIC_API_KEY: this.anthropicKey.value,
+      PREFERRED_API: this.preferredApi.value as 'anthropic' | 'openai',
+      DATA_COLLECTION_CONSENT: this.dataConsent.checked
+    };
+    this._config = { ...config };
+    this.onSave(config);
   }
 
   public toggle() {
@@ -53,5 +73,9 @@ export class Settings {
     } else {
       this.panel.removeAttribute('inert');
     }
+  }
+
+  public getPreferredApi(): 'openai' | 'anthropic' {
+    return this.config.PREFERRED_API;
   }
 }
