@@ -86,7 +86,7 @@ body {
     background-color: #000;
     color: #fff;
     z-index: 1000;
-    display: none; /* Hide by default */
+    display: none;
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -96,14 +96,27 @@ body {
     display: flex;
 }
 
-/* Update inner container styles */
 #error, #loading {
-    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    display: none;
+}
+
+/* Make error appear on top of loading */
+#error {
+    z-index: 2;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+#loading {
+    z-index: 1;
 }
 
 .alert-tray.overlay.show-error #error,
@@ -154,10 +167,6 @@ body {
 }
 
 /* Loading icon animations */
-.loading-icon {
-    margin-bottom: 2rem;
-}
-
 .icon-block {
     width: 50px;
     height: 50px;

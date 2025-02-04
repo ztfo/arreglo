@@ -169,12 +169,16 @@ export class SongForm {
         };
     }
 
-    public showLoading(show: boolean) {
+    public showLoading(isLoading: boolean) {
         const overlay = document.querySelector('.alert-tray.overlay');
         if (overlay) {
-            overlay.classList.toggle('active', show);
-            overlay.classList.toggle('show-loading', show);
+            if (isLoading) {
+                overlay.classList.add('active', 'show-loading');
+            } else {
+                overlay.classList.remove('active', 'show-loading');
+            }
         }
+        this.setLoadingState(isLoading);
     }
 
     public showError(message: string) {
@@ -183,14 +187,38 @@ export class SongForm {
         
         if (overlay && errorMessage) {
             errorMessage.textContent = message;
+            // Keep the overlay visible and add error message
             overlay.classList.add('active', 'show-error');
+        }
+
+        const clearButton = document.getElementById('clearError');
+        if (clearButton) {
+            clearButton.onclick = () => {
+                this.clearError();
+                this.clearLoading();
+            };
         }
     }
 
     public clearError() {
         const overlay = document.querySelector('.alert-tray.overlay');
         if (overlay) {
-            overlay.classList.remove('active', 'show-error');
+            overlay.classList.remove('show-error');
+            // Only remove active if no other states are showing
+            if (!overlay.classList.contains('show-loading')) {
+                overlay.classList.remove('active');
+            }
+        }
+    }
+
+    public clearLoading() {
+        const overlay = document.querySelector('.alert-tray.overlay');
+        if (overlay) {
+            overlay.classList.remove('show-loading');
+            // Only remove active if no other states are showing
+            if (!overlay.classList.contains('show-error')) {
+                overlay.classList.remove('active');
+            }
         }
     }
 
@@ -229,7 +257,6 @@ export class SongForm {
     }
 
     private setLoadingState(isLoading: boolean) {
-        // Find the label element
         const label = document.querySelector('.label') as HTMLElement;
         if (label) {
             if (isLoading) {
