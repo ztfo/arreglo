@@ -120,3 +120,7 @@ Arreglo is a Figma plugin that helps music producers visualize song arrangements
   <img src="images/ui-mocks/arreglo-error.png" alt="Error state">
   <p>Clear error messages if something goes wrong.</p>
 </div>
+
+<p align="center">
+  <img src="images/ui-gifs/plugin-demo.gif" alt="Arreglo Plugin Demo" width="700">
+</p>
