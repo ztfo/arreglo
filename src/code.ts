@@ -651,7 +651,7 @@ figma.ui.onmessage = async (msg) => {
                 songData.genre,
                 undefined,
                 songData.selectedSections,
-                songData.patterns.map(p => `${p.name} (${p.bars} bars)`),
+                songData.patterns.map(p => p.name),
                 songData.creativity
             );
 

@@ -28,13 +28,12 @@ ${selectedSections && selectedSections.length > 0
     ? `Use these sections in order: ${selectedSections.join(', ')}`
     : 'Recommend appropriate sections based on the genre and style'}
 
-Available Patterns and Lengths:
+Available Patterns:
 ${instruments.map(name => `- ${name}`).join('\n')}
 
 IMPORTANT: 
 - Only use the exact pattern names provided above
-- Each pattern should be used in multiples of its original length to maintain musical coherence
-- Sections should be structured to accommodate pattern lengths naturally
+- Sections should be structured naturally based on musical phrases
 
 Consider these pattern meanings when arranging:
 - Names ending in "4x" indicate four-on-the-floor patterns (steady beats on every quarter note)

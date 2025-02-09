@@ -3,7 +3,6 @@ import { ArrangementData, SongSection } from './types';
 interface Pattern {
     instrument: string;
     pattern: string;
-    bars: number[];
 }
 
 export function parseArrangement(response: string, title: string): ArrangementData {
