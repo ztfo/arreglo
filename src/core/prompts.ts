@@ -1,3 +1,6 @@
+import { PatternAnalyzer } from './services/PatternAnalyzer';
+import { PatternMetadata, PatternRule } from './types';
+
 export function createArrangementPrompt(
     title: string,
     length: number,
@@ -10,6 +13,15 @@ export function createArrangementPrompt(
     if (!instruments || instruments.length === 0) {
         throw new Error('No instruments provided for arrangement');
     }
+
+    const patternAnalysis = instruments.map(name => ({
+        name,
+        metadata: PatternAnalyzer.analyzeName(name),
+        rules: PatternAnalyzer.getPatternRules(PatternAnalyzer.analyzeName(name))
+    }));
+
+    const patternDescriptions = generatePatternDescriptions(patternAnalysis);
+    const patternGuidelines = generatePatternGuidelines(patternAnalysis, creativity);
 
     // Adjust the temperature based on creativity level (0-5)
     const creativityDescription = creativity <= 1 ? 'traditional'
@@ -32,6 +44,12 @@ ${selectedSections && selectedSections.length > 0
 
 Available Patterns:
 ${instruments.map(name => `- ${name}`).join('\n')}
+
+Pattern Analysis:
+${patternDescriptions}
+
+Arrangement Guidelines:
+${patternGuidelines}
 
 IMPORTANT: 
 - Only use the exact pattern names provided above
@@ -79,4 +97,50 @@ Separate each section with three dashes (---).
 ${creativity >= 4 ? 'Feel free to use unconventional patterns and transitions while respecting instrument roles.' : 
   creativity >= 3 ? 'Balance between traditional and innovative elements while maintaining pattern consistency.' :
   'Stick to established genre conventions and pattern meanings.'}`;
+}
+
+function generatePatternDescriptions(
+    patterns: Array<{name: string, metadata: PatternMetadata, rules: PatternRule[]}>
+): string {
+    const descriptions: string[] = [];
+    
+    patterns.forEach(({name, metadata, rules}) => {
+        const ruleDescriptions = rules.map(r => r.description);
+        const components: string[] = [];
+        
+        if (metadata.type) components.push(metadata.type);
+        if (metadata.timing) components.push(metadata.timing);
+        if (metadata.function) components.push(metadata.function);
+        if (metadata.role) components.push(metadata.role);
+        
+        const componentDesc = components.length > 0 ? ` (${components.join(', ')})` : '';
+        descriptions.push(`- ${name}${componentDesc}: ${ruleDescriptions.join(', ')}`);
+    });
+
+    return descriptions.join('\n');
+}
+
+function generatePatternGuidelines(
+    patterns: Array<{name: string, metadata: PatternMetadata, rules: PatternRule[]}>,
+    creativity: number
+): string {
+    const guidelines: string[] = [];
+    const intensityMultiplier = (creativity / 2.5); // Normalize creativity to a 0-2 scale
+    
+    patterns.forEach(({name, metadata, rules}) => {
+        const avgIntensity = rules.reduce((sum, r) => sum + r.intensity, 0) / rules.length;
+        const adjustedIntensity = Math.min(5, Math.round(avgIntensity * intensityMultiplier));
+        
+        const sections = rules
+            .flatMap(r => r.sectionPreference)
+            .filter((v, i, a) => a.indexOf(v) === i);
+            
+        if (sections.length > 0) {
+            guidelines.push(
+                `- ${name}: Use in ${sections.join(', ')} with intensity ${adjustedIntensity}/5`
+            );
+        }
+    });
+
+    return guidelines.join('\n');
 } 

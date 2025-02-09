@@ -11,10 +11,7 @@ export interface SongData {
     length: number;
     tempo: number;
     instruments: string[];
-    patterns: Array<{
-        name: string;
-        bars: number;
-    }>;
+    patterns: Pattern[];
     creativity: number;
     selectedSections: string[];
     isTest?: boolean;
@@ -23,7 +20,12 @@ export interface SongData {
 export interface SongSection {
     name: string;
     duration: number;
-    instruments: Record<string, number[]>;
+    instruments: {
+        [instrument: string]: number[];
+    };
+    metadata?: {
+        [instrument: string]: PatternMetadata;
+    };
 }
 
 export interface ArrangementData {
@@ -100,4 +102,26 @@ export interface ArrangementAnalytics {
         error?: string;
     };
     userConsent: boolean;
+}
+
+export interface PatternMetadata {
+    base: string;
+    type?: string;
+    complexity?: string;
+    function?: string;
+    timing?: string;
+    role?: string;
+}
+
+export interface PatternRule {
+    name: string;
+    description: string;
+    sectionPreference: string[];
+    intensity: number;
+}
+
+export interface Pattern {
+    name: string;
+    metadata?: PatternMetadata;
+    rules?: PatternRule[];
 } 
