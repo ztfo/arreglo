@@ -54,27 +54,6 @@ function createPatternBlock(instrument: string, pattern: string, instrumentIndex
     return block;
 }
 
-function createGrid(totalBars: number) {
-    const gridFrame = figma.createFrame();
-    gridFrame.name = "Arrangement Grid";
-    gridFrame.layoutMode = "HORIZONTAL";
-    gridFrame.itemSpacing = 2;
-    gridFrame.paddingLeft = 16;
-    gridFrame.paddingRight = 16;
-    gridFrame.fills = [{ type: 'SOLID', color: { r: 0.98, g: 0.98, b: 0.98 } }];
-
-    // Create bar markers
-    for (let i = 0; i < totalBars; i++) {
-        const bar = figma.createRectangle();
-        bar.name = `Bar ${i + 1}`;
-        bar.resize(10, 10);
-        bar.fills = [{ type: 'SOLID', color: { r: 0.9, g: 0.9, b: 0.9 } }];
-        gridFrame.appendChild(bar);
-    }
-
-    return gridFrame;
-}
-
 function createInstrumentTrack(instrument: string, pattern: string, startBar: number, duration: number, trackHeight: number, instrumentIndex: number) {
     const track = figma.createRectangle();
     track.name = `${instrument} Track`;
@@ -365,48 +344,6 @@ async function createVisualArrangement(arrangement: ArrangementData) {
             barNumberContainer.appendChild(barNumber);
 
             barNumbersFrame.appendChild(barNumberContainer);
-        }
-
-        // Create grid lines
-        const gridLines = figma.createFrame();
-        gridLines.name = "Grid Lines";
-        gridLines.layoutMode = "NONE";
-        gridLines.fills = [];
-        gridLines.resize(totalBars * 50, instruments.length * 50);
-        gridLines.constraints = { horizontal: "STRETCH", vertical: "STRETCH" };
-        gridLines.x = 0;
-        gridLines.y = 0;
-
-        // Update grid lines color
-        const gridLineColor = { r: 0.3, g: 0.3, b: 0.3 }; // Darker grid lines for dark theme
-        
-        // Vertical lines
-        for (let i = 0; i <= totalBars * 4; i++) {
-            const line = figma.createLine();
-            const isBarLine = i % 4 === 0;
-            line.name = isBarLine ? `Bar ${i/4 + 1} Line` : `Beat ${(i % 4) + 1} Line`;
-            line.strokeWeight = isBarLine ? 1 : 0.5;
-            line.strokeCap = "NONE";
-            line.strokes = [{ 
-                type: 'SOLID', 
-                color: gridLineColor,
-                opacity: isBarLine ? 1 : 0.3
-            }];
-            line.x = (i * 12.5);
-            line.rotation = 90;
-            line.resize(instruments.length * 50, 0);
-            gridLines.appendChild(line);
-        }
-
-        // Horizontal lines
-        for (let i = 0; i <= instruments.length; i++) {
-            const line = figma.createLine();
-            line.strokeWeight = 1;
-            line.strokeCap = "NONE";
-            line.strokes = [{ type: 'SOLID', color: gridLineColor }];
-            line.y = i * 50;
-            line.resize(totalBars * 50, 0);
-            gridLines.appendChild(line);
         }
 
         // Set patterns container to absolute positioning
