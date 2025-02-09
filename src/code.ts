@@ -648,6 +648,7 @@ figma.ui.onmessage = async (msg) => {
             const songData = msg.songData as SongData;
             const prompt = createArrangementPrompt(
                 songData.title,
+                songData.length,
                 songData.genre,
                 undefined,
                 songData.selectedSections,
@@ -656,7 +657,7 @@ figma.ui.onmessage = async (msg) => {
             );
 
             const response = await generateArrangement(config, prompt);
-            const arrangement = parseArrangement(response, songData.title);
+            const arrangement = parseArrangement(response, songData.title, songData.length);
             await createVisualArrangement(arrangement);
             figma.ui.postMessage({ type: 'success', message: 'Arrangement created!' });
         }

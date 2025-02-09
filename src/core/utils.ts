@@ -5,7 +5,7 @@ interface Pattern {
     pattern: string;
 }
 
-export function parseArrangement(response: string, title: string): ArrangementData {
+export function parseArrangement(response: string, title: string, requestedLength?: number): ArrangementData {
     const sections: SongSection[] = [];
     const sectionTexts = response.split('---').map(s => s.trim());
 
@@ -56,6 +56,59 @@ export function parseArrangement(response: string, title: string): ArrangementDa
 
     if (sections.length === 0) {
         throw new Error('No valid sections found in the response');
+    }
+
+    // Validate total length
+    const totalBars = sections.reduce((sum, section) => sum + section.duration, 0);
+    if (requestedLength && totalBars !== requestedLength) {
+        console.warn(`Generated arrangement length (${totalBars}) differs from requested length (${requestedLength})`);
+        
+        // Adjust sections to match requested length
+        if (sections.length > 0) {
+            const lastSection = sections[sections.length - 1];
+            const difference = requestedLength - totalBars;
+            
+            if (difference < 0) {
+                // If arrangement is too long, trim the last section
+                lastSection.duration = Math.max(4, lastSection.duration + difference); // Ensure minimum 4 bars
+            } else {
+                // If arrangement is too short, extend the last section
+                lastSection.duration += difference;
+                
+                // Extend the bar numbers for instruments in the last section
+                Object.keys(lastSection.instruments).forEach(instrument => {
+                    const currentBars = lastSection.instruments[instrument];
+                    const additionalBars = Array.from(
+                        { length: difference },
+                        (_, i) => Math.max(...currentBars) + i + 1
+                    );
+                    lastSection.instruments[instrument] = [...currentBars, ...additionalBars];
+                });
+            }
+        }
+    }
+
+    // Add bar number normalization
+    let currentBarOffset = 0;
+    for (const section of sections) {
+        Object.keys(section.instruments).forEach(instrument => {
+            // Convert absolute bar numbers to section-relative
+            section.instruments[instrument] = section.instruments[instrument]
+                .map(bar => bar - currentBarOffset)
+                .filter(bar => bar >= 1 && bar <= section.duration);
+            
+            // If no valid bars remain after filtering, remove the instrument from this section
+            if (section.instruments[instrument].length === 0) {
+                delete section.instruments[instrument];
+            }
+            
+            // Add logging to help debug
+            console.log(`Section: ${section.name}, Instrument: ${instrument}`);
+            console.log('Original bars:', section.instruments[instrument]);
+            console.log('Offset:', currentBarOffset);
+            console.log('Normalized bars:', section.instruments[instrument]);
+        });
+        currentBarOffset += section.duration;
     }
 
     return {

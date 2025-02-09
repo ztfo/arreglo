@@ -1,5 +1,6 @@
 export function createArrangementPrompt(
     title: string,
+    length: number,
     genre?: string,
     style?: string,
     selectedSections?: string[],
@@ -23,6 +24,7 @@ Title: ${title}
 ${genre ? `Genre: ${genre}` : 'Genre: Modern'}
 ${style ? `Style: ${style}` : ''}
 Creativity Level: ${creativityDescription} (${creativity}/5)
+Total Length: ${length} bars
 
 ${selectedSections && selectedSections.length > 0
     ? `Use these sections in order: ${selectedSections.join(', ')}`
@@ -33,6 +35,8 @@ ${instruments.map(name => `- ${name}`).join('\n')}
 
 IMPORTANT: 
 - Only use the exact pattern names provided above
+- Total arrangement length MUST be exactly ${length} bars (critical requirement)
+- Each section's duration must add up to exactly ${length} bars total
 - Sections should be structured naturally based on musical phrases
 
 Consider these pattern meanings when arranging:
