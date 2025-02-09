@@ -26,10 +26,19 @@
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
         }
 
         .container {
-            margin: 0 auto; 
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .features-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
         }
 
         header {
@@ -56,12 +65,12 @@
         }
 
         .tagline {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             color: var(--light);
             opacity: 0.9;
             max-width: 600px;
-            margin: 0 auto;
-            padding: 0 1rem;
+            margin: 1rem auto 2rem;
+            line-height: 1.6;
         }
 
         .demo {
@@ -122,6 +131,8 @@
             color: var(--gold);
             margin-bottom: 2rem;
             font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 0.5px;
         }
 
         .example-output img {
@@ -223,31 +234,64 @@
         .privacy-link:hover {
             opacity: 1;
         }
+
+        h2 {
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
 <body>
+    <header>
+        <div class="logo">
+            <img src="src/ui/arreglo-logo.svg" alt="Arreglo Logo">
+        </div>
+        <h2>Tired of not finishing songs?</h2>
+        <p class="tagline">
+            <strong>Try Arreglo,</strong> the AI-powered music arrangement generator for Figma. Transform your track ideas into complete arrangements in minutes.
+        </p>
+    </header>
+
+    <div class="demo">
+        <img src="images/ui-gifs/generate-arrangement-flow.gif" alt="Arreglo Plugin Demo">
+    </div>
+
+    <div class="arrow-down">
+        <i class="fas fa-arrow-down"></i>
+    </div>
+
     <div class="container">
-        <header>
-            <div class="logo">
-                <img src="src/ui/arreglo-logo.svg" alt="Arreglo Logo">
-            </div>
-            <h2>Tired of not finishing songs?</h2>
-            <p class="tagline">
-                AI-powered music arrangement visualization plugin for Figma. Transform your track ideas into professional arrangements.
-            </p>
-        </header>
-
-        <div class="demo">
-            <img src="images/ui-gifs/generate-arrangement-flow.gif" alt="Arreglo Plugin Demo">
-        </div>
-
-        <div class="arrow-down">
-            <i class="fas fa-arrow-down"></i>
-        </div>
-
         <div class="example-output">
             <h2>Example Arrangement</h2>
             <img src="images/current-example.jpg" alt="Example Arrangement Output">
+        </div>
+
+        <div class="features-section">
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-magic"></i>
+                    <h3>Smart Pattern Analysis</h3>
+                    <p>Understands pattern names like "kick-4x" or "bassline-buildup" to create musically coherent arrangements</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-sliders-h"></i>
+                    <h3>Creativity Control</h3>
+                    <p>Adjust from traditional to experimental arrangements with our 5-level creativity slider</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-brain"></i>
+                    <h3>AI-Powered</h3>
+                    <p>Uses advanced AI to understand musical structure and create professional arrangements</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-paint-brush"></i>
+                    <h3>Visual Grid System</h3>
+                    <p>Color-coded tracks, beat divisions, and section markers for clear arrangement visualization</p>
+                </div>
+            </div>
         </div>
 
         <div class="cta">
