@@ -4,14 +4,15 @@ import { Settings } from './components/Settings';
 import { SongForm } from './components/SongForm';
 import { ApiConfig, SongData, ArrangementData } from '../core/types';
 import { AnalyticsService } from '../services/AnalyticsService';
+import { MessageOverlay } from './components/MessageOverlay';
 
 export class App {
     private songForm: SongForm;
     private settings: Settings;
-    private errorDisplay: ErrorDisplay;
+    private messageOverlay: MessageOverlay;
 
     constructor() {
-        this.errorDisplay = new ErrorDisplay();
+        this.messageOverlay = new MessageOverlay();
         this.songForm = new SongForm(this.handleFormSubmit.bind(this));
         this.settings = new Settings(this.handleSettingsSave.bind(this));
 
@@ -39,14 +40,14 @@ export class App {
                     }
                     break;
                 case 'settings-saved':
-                    this.errorDisplay.show('Settings saved successfully!');
+                    this.messageOverlay.show('Settings saved successfully!', 'success');
                     break;
                 case 'error':
-                    this.errorDisplay.show(msg.message || 'An error occurred');
+                    this.messageOverlay.show(msg.message || 'An error occurred', 'error');
                     this.songForm.showLoading(false);
                     break;
                 case 'success':
-                    this.errorDisplay.show(msg.message || 'Operation successful!');
+                    this.messageOverlay.show(msg.message || 'Operation successful!', 'success');
                     this.songForm.showLoading(false);
                     break;
             }
