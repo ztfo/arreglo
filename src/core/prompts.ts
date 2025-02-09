@@ -6,8 +6,9 @@ export function createArrangementPrompt(
     instruments?: string[],
     creativity: number = 2
 ): string {
-    const defaultInstruments = ['drums', 'bass', 'guitar', 'keys'];
-    const usedInstruments = instruments || defaultInstruments;
+    if (!instruments || instruments.length === 0) {
+        throw new Error('No instruments provided for arrangement');
+    }
 
     // Adjust the temperature based on creativity level (0-5)
     const creativityDescription = creativity <= 1 ? 'traditional'
@@ -27,7 +28,13 @@ ${selectedSections && selectedSections.length > 0
     ? `Use these sections in order: ${selectedSections.join(', ')}`
     : 'Recommend appropriate sections based on the genre and style'}
 
-Instruments: ${usedInstruments.join(', ')}
+Available Patterns and Lengths:
+${instruments.map(name => `- ${name}`).join('\n')}
+
+IMPORTANT: 
+- Only use the exact pattern names provided above
+- Each pattern should be used in multiples of its original length to maintain musical coherence
+- Sections should be structured to accommodate pattern lengths naturally
 
 Consider these pattern meanings when arranging:
 - Names ending in "4x" indicate four-on-the-floor patterns (steady beats on every quarter note)

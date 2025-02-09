@@ -712,9 +712,9 @@ figma.ui.onmessage = async (msg) => {
             const prompt = createArrangementPrompt(
                 songData.title,
                 songData.genre,
-                undefined, // style is optional
+                undefined,
                 songData.selectedSections,
-                songData.patterns.map(p => p.name),
+                songData.patterns.map(p => `${p.name} (${p.bars} bars)`),
                 songData.creativity
             );
 
