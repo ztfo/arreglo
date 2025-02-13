@@ -89,53 +89,7 @@ export class App {
         }, '*');
     }
 
-    public showError(message: string) {
-        const overlay = document.querySelector('.alert-tray.overlay');
-        const errorMessage = document.getElementById('errorMessage');
-        
-        if (overlay && errorMessage) {
-            errorMessage.textContent = message;
-            overlay.classList.add('active', 'show-error');
-        }
-
-        const clearButton = document.getElementById('clearError');
-        if (clearButton) {
-            clearButton.onclick = () => {
-                this.clearError();
-                this.clearLoading();
-            };
-        }
-    }
-
-    public showSuccess(message: string) {
-        const overlay = document.querySelector('.alert-tray.overlay');
-        const errorMessage = document.getElementById('errorMessage');
-        
-        if (overlay && errorMessage) {
-            errorMessage.textContent = message;
-            overlay.classList.add('active', 'show-error');
-        }
-
-        const clearButton = document.getElementById('clearError');
-        if (clearButton) {
-            clearButton.onclick = () => {
-                this.clearError();
-                this.clearLoading();
-            };
-        }
-    }
-
-    public clearError() {
-        const overlay = document.querySelector('.alert-tray.overlay');
-        if (overlay) {
-            overlay.classList.remove('show-error');
-        }
-    }
-
     public clearLoading() {
-        const overlay = document.querySelector('.alert-tray.overlay');
-        if (overlay) {
-            overlay.classList.remove('active', 'show-loading');
-        }
+        this.songForm.showLoading(false);
     }
 }

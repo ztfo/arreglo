@@ -686,6 +686,19 @@ form#songForm .panel.left {
     justify-content: center;
 }
 
+.signature a {
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.signature a:hover {
+    text-decoration: underline;
+}
+
+
+
+
 
 /* Settings Panel */
 .settings {
@@ -869,4 +882,69 @@ nav {
     background: rgba(231, 212, 148, 0.1);
     border-radius: 4px;
     margin-top: 4px;
+}
+
+.message-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.message-content {
+    background: var(--dark);
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 80%;
+    text-align: center;
+    position: relative;
+    border: 1px solid var(--gold);
+}
+
+.message-icon {
+    margin-bottom: 1rem;
+    font-size: 2.5rem;
+    color: var(--gold);
+    position: relative;
+    z-index: 1;
+}
+
+.message-header {
+    margin-bottom: 1rem;
+    color: var(--gold);
+    font-size: 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.message-container {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+}
+
+.message-text {
+    color: var(--light);
+    position: relative;
+    z-index: 1;
+    margin: 0;
+}
+
+.dismiss-button {
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
 }
