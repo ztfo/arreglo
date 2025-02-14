@@ -891,10 +891,26 @@ nav {
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.8);
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.message-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.message-overlay.success .message-header {
+    color: var(--gold);
+}
+
+.message-overlay.error .message-header {
+    color: #ff4444;
 }
 
 .message-content {
@@ -905,14 +921,6 @@ nav {
     text-align: center;
     position: relative;
     border: 1px solid var(--gold);
-}
-
-.message-icon {
-    margin-bottom: 1rem;
-    font-size: 2.5rem;
-    color: var(--gold);
-    position: relative;
-    z-index: 1;
 }
 
 .message-header {
