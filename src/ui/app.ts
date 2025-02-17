@@ -50,6 +50,11 @@ export class App {
                     this.messageOverlay.show(msg.message || 'Operation successful!', 'success');
                     this.songForm.showLoading(false);
                     break;
+                case 'image-analyzed':
+                    if (!msg.trackNames || msg.trackNames.length === 0) {
+                        this.messageOverlay.show('No track names found in image', 'error');
+                    }
+                    break;
             }
         };
     }

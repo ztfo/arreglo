@@ -885,19 +885,23 @@ nav {
 }
 
 .message-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+    right: 0;
+    background: #000000;
+    padding: 40px;
+    border-radius: 4px;
+    text-align: center;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.2s ease, visibility 0.2s ease;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 1000;
 }
 
 .message-overlay.visible {
@@ -905,54 +909,88 @@ nav {
     visibility: visible;
 }
 
+.message-overlay .message-header {
+    color: #FFF;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.message-overlay .message-text {
+    color: #999999;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.message-overlay .dismiss-button {
+    background: transparent;
+    color: #E7D494;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 60px;
+    height: 60px;
+    transition: background-color 0.2s ease;
+    border: none;
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.message-overlay .dismiss-button:hover {
+    background: rgba(231, 212, 148, 0.1);
+}
+
+.message-overlay.success::before,
+.message-overlay.error::before {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 24px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.message-overlay.success::before {
+    background-image: url('../assets/arreglo-success.svg');
+}
+
+.message-overlay.error::before {
+    background-image: url('../assets/arreglo-alert.svg');
+}
+
 .message-overlay.success .message-header {
-    color: var(--gold);
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.message-overlay.success .message-text {
+    font-size: 12px;
+    opacity: 0.7;
 }
 
 .message-overlay.error .message-header {
-    color: #ff4444;
+    font-size: 20px;
+    margin-bottom: 4px;
 }
 
-.message-content {
-    background: var(--dark);
-    padding: 2rem;
-    border-radius: 8px;
-    max-width: 80%;
-    text-align: center;
-    position: relative;
-    border: 1px solid var(--gold);
+.message-overlay.error .message-text {
+    font-size: 12px;
+    opacity: 0.7;
 }
 
-.message-header {
-    margin-bottom: 1rem;
-    color: var(--gold);
-    font-size: 1.5rem;
-    position: relative;
-    z-index: 1;
+.pattern-input-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
 }
 
-.message-container {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 1rem;
-    border-radius: 4px;
-    margin-bottom: 1.5rem;
+.pattern-input-container input {
+    flex: 1;
+    min-width: 0; /* Prevents input from overflowing */
 }
 
-.message-text {
-    color: var(--light);
-    position: relative;
-    z-index: 1;
-    margin: 0;
-}
-
-.dismiss-button {
-    background: var(--gold);
-    color: var(--dark);
-    border: none;
-    padding: 0.5rem 1.5rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-    position: relative;
-    z-index: 1;
+.pattern-input-container button {
+    white-space: nowrap;
 }

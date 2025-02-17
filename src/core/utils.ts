@@ -88,25 +88,20 @@ export function parseArrangement(response: string, title: string, requestedLengt
         }
     }
 
-    // Add bar number normalization
+    // Remove or modify the bar number normalization
     let currentBarOffset = 0;
     for (const section of sections) {
         Object.keys(section.instruments).forEach(instrument => {
-            // Convert absolute bar numbers to section-relative
+            // Only normalize the bar numbers relative to section start
+            // but DON'T filter out overlapping bars
             section.instruments[instrument] = section.instruments[instrument]
                 .map(bar => bar - currentBarOffset)
-                .filter(bar => bar >= 1 && bar <= section.duration);
+                .filter(bar => bar >= 1 && bar <= section.duration); // Keep this filter to ensure bars are within section bounds
             
-            // If no valid bars remain after filtering, remove the instrument from this section
-            if (section.instruments[instrument].length === 0) {
-                delete section.instruments[instrument];
-            }
-            
-            // Add logging to help debug
-            console.log(`Section: ${section.name}, Instrument: ${instrument}`);
-            console.log('Original bars:', section.instruments[instrument]);
-            console.log('Offset:', currentBarOffset);
-            console.log('Normalized bars:', section.instruments[instrument]);
+            // Remove this deletion as it's no longer needed
+            // if (section.instruments[instrument].length === 0) {
+            //     delete section.instruments[instrument];
+            // }
         });
         currentBarOffset += section.duration;
     }

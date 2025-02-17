@@ -1,29 +1,42 @@
 import { SongData } from '../../core/types';
+import { MessageOverlay } from './MessageOverlay';
 
 export class SongForm {
     private form: HTMLFormElement;
     private onSubmit: (data: SongData) => void;
     private patterns: Array<{ name: string }> = [];
+    private messageOverlay: MessageOverlay;
 
     constructor(onSubmit: (data: SongData) => void) {
         this.onSubmit = onSubmit;
         this.form = document.getElementById('songForm') as HTMLFormElement;
+        this.messageOverlay = new MessageOverlay();
         this.initializeForm();
     }
 
     private initializeForm() {
-        // Initialize pattern input handling
         const addPatternBtn = document.getElementById('addPattern') as HTMLButtonElement;
         const patternInput = document.getElementById('patternInput') as HTMLInputElement;
         const fileInput = document.getElementById('daw-screenshot') as HTMLInputElement;
         const uploadPreview = document.querySelector('.upload-preview') as HTMLDivElement;
 
-        addPatternBtn.addEventListener('click', () => {
+        const addPattern = () => {
             const name = patternInput.value.trim();
             if (name) {
                 this.patterns.push({ name });
                 this.updatePatternsList();
                 patternInput.value = '';
+            }
+        };
+
+        // Handle button click
+        addPatternBtn?.addEventListener('click', addPattern);
+
+        // Handle Enter key
+        patternInput?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Prevent form submission
+                addPattern();
             }
         });
 
@@ -198,25 +211,6 @@ export class SongForm {
         }
     }
 
-    public showError(message: string) {
-        const overlay = document.querySelector('.alert-tray.overlay');
-        const errorMessage = document.getElementById('errorMessage');
-        
-        if (overlay && errorMessage) {
-            errorMessage.textContent = message;
-            // Keep the overlay visible and add error message
-            overlay.classList.add('active', 'show-error');
-        }
-
-        const clearButton = document.getElementById('clearError');
-        if (clearButton) {
-            clearButton.onclick = () => {
-                this.clearError();
-                this.clearLoading();
-            };
-        }
-    }
-
     public clearError() {
         const overlay = document.querySelector('.alert-tray.overlay');
         if (overlay) {
@@ -242,45 +236,30 @@ export class SongForm {
     // Add this method to handle loading state during image processing
     private async handleFileUpload(file: File) {
         try {
-            // Clear existing patterns first
             this.patterns = [];
             this.updatePatternsList();
-            
-            // Set loading state before starting the upload
             this.setLoadingState(true);
             
             const base64Image = await this.fileToBase64(file);
             const trackNames = await this.extractTrackNames(base64Image);
             
             if (!trackNames || trackNames.length === 0) {
-                throw new Error('<span class="no-text">No track names could be extracted from the image</span>');
+                throw new Error('No track names could be extracted from the image');
             }
             
-            // Add the new patterns
             trackNames.forEach(name => {
                 if (!this.patterns.some(p => p.name === name)) {
                     this.patterns.push({ name });
                 }
             });
             
-            // Update the UI with new patterns
             this.updatePatternsList();
-            
-            // Don't forget to clear the loading state!
             this.setLoadingState(false);
             
         } catch (error) {
             console.error('Error processing image:', error);
             const errorMessage = error instanceof Error ? error.message : 'Could not extract track names from image';
-            const overlay = document.querySelector('.alert-tray.overlay');
-            const errorElement = document.getElementById('errorMessage');
-            
-            if (overlay && errorElement) {
-                errorElement.innerHTML = errorMessage;
-                overlay.classList.add('active', 'show-error');
-            }
-            
-            // Make sure to clear loading state even if there's an error
+            this.messageOverlay.show(errorMessage, 'error');
             this.setLoadingState(false);
         }
     }
