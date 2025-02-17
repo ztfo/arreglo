@@ -1,10 +1,11 @@
 {
     "name": "Arreglo",
-    "id": "arreglo-plugin",
+    "id": "1473434918581718662",
     "api": "1.0.0",
     "main": "dist/code.js",
     "ui": "dist/ui.html",
     "editorType": ["figjam", "figma"],
+    "documentAccess": "dynamic-page",
     "networkAccess": {
         "allowedDomains": [
             "https://api.anthropic.com",
