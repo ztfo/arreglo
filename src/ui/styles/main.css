@@ -994,3 +994,28 @@ nav {
 .pattern-input-container button {
     white-space: nowrap;
 }
+
+/* Add these styles to hide analytics-related elements */
+.analytics-container,
+.analytics-toggle,
+.analytics-consent,
+.data-collection,
+[data-analytics="true"],
+.supabase-related,
+#analyticsToggle,
+.anonymous-data-notice {
+    display: none !important;
+}
+
+/* Hide download button until functionality is implemented */
+.download-button,
+#downloadButton,
+[data-action="download"],
+.action-download {
+    display: none !important;
+}
+
+/* If the download button is part of a button group, adjust spacing */
+.button-group {
+    gap: 8px;
+}

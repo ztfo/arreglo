@@ -16,7 +16,7 @@ export class App {
         this.songForm = new SongForm(this.handleFormSubmit.bind(this));
         this.settings = new Settings(this.handleSettingsSave.bind(this));
 
-        this.initializeMessageHandling();
+        this.initializeApp();
 
         // Load settings when the app initializes
         document.addEventListener('DOMContentLoaded', () => {
@@ -26,6 +26,13 @@ export class App {
         });
 
         parent.postMessage({ pluginMessage: { type: 'load-settings' } }, '*');
+    }
+
+    private initializeApp() {
+        this.initializeMessageHandling();
+        this.songForm = new SongForm(
+            this.handleFormSubmit.bind(this)
+        );
     }
 
     private initializeMessageHandling() {

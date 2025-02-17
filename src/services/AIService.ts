@@ -51,4 +51,54 @@ async function generateWithAnthropic(prompt: string, apiKey: string): Promise<st
     }
     
     return firstContent.text;
+}
+
+// Comment out or disable Supabase initialization
+export class AIService {
+    private apiKey: string;
+
+    constructor(config: ApiConfig) {
+        this.apiKey = config.OPENAI_API_KEY;
+    }
+
+    async generateArrangement(prompt: string): Promise<string> {
+        // Remove any analytics/data collection
+        try {
+            // Just handle the AI generation
+            const response = await this.makeRequest(prompt);
+            return response;
+        } catch (error) {
+            console.error('Error generating arrangement:', error);
+            throw error;
+        }
+    }
+
+    private async makeRequest(prompt: string): Promise<string> {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.apiKey}`
+            },
+            body: JSON.stringify({
+                model: "gpt-4",
+                messages: [{
+                    role: "user",
+                    content: prompt
+                }],
+                temperature: 0.7
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`API request failed: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data.choices[0].message.content;
+    }
+
+    // Remove or comment out analytics methods
+    // private async logArrangement(...) { }
+    // private async collectAnonymousData(...) { }
 } 
