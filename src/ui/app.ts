@@ -2,20 +2,19 @@ import './styles/main.css';
 import { ErrorDisplay } from './components/ErrorDisplay';
 import { Settings } from './components/Settings';
 import { SongForm } from './components/SongForm';
-import { ApiConfig, SongData, ArrangementData } from '../core/types';
+import { ApiConfig, SongData } from '../core/types';
 import { AnalyticsService } from '../services/AnalyticsService';
 import { MessageOverlay } from './components/MessageOverlay';
 
 export class App {
-    private songForm: SongForm;
+    private songForm!: SongForm;
     private settings: Settings;
     private messageOverlay: MessageOverlay;
+    private isGenerating: boolean = false;
 
     constructor() {
         this.messageOverlay = new MessageOverlay();
-        this.songForm = new SongForm(this.handleFormSubmit.bind(this));
         this.settings = new Settings(this.handleSettingsSave.bind(this));
-
         this.initializeApp();
 
         // Load settings when the app initializes
@@ -40,55 +39,47 @@ export class App {
             const msg = event.data.pluginMessage;
             if (!msg) return;
 
-            switch (msg.type) {
-                case 'settings-loaded':
-                    if (msg.config) {
-                        this.settings.updateSettings(msg.config);
-                    }
-                    break;
-                case 'settings-saved':
-                    this.messageOverlay.show('Settings saved successfully!', 'success');
-                    break;
-                case 'error':
-                    this.messageOverlay.show(msg.message || 'An error occurred', 'error');
-                    this.songForm.showLoading(false);
-                    break;
-                case 'success':
-                    this.messageOverlay.show(msg.message || 'Operation successful!', 'success');
-                    this.songForm.showLoading(false);
-                    break;
-                case 'image-analyzed':
-                    if (!msg.trackNames || msg.trackNames.length === 0) {
-                        this.messageOverlay.show('No track names found in image', 'error');
-                    }
-                    break;
+            if (msg.type === 'success') {
+                this.isGenerating = false;
+                this.messageOverlay.show(msg.message, 'success');
+                this.songForm.showLoading(false);
+            } else if (msg.type === 'error') {
+                this.isGenerating = false;
+                this.messageOverlay.show(msg.message, 'error');
+                this.songForm.showLoading(false);
+            } else if (msg.type === 'settings-loaded') {
+                if (msg.config) {
+                    this.settings.updateSettings(msg.config);
+                }
+            } else if (msg.type === 'settings-saved') {
+                this.messageOverlay.show('Settings saved successfully!', 'success');
+            } else if (msg.type === 'image-analyzed') {
+                if (!msg.trackNames || msg.trackNames.length === 0) {
+                    this.messageOverlay.show('No track names found in image', 'error');
+                }
             }
         };
     }
 
     private async handleFormSubmit(songData: SongData) {
-        const startTime = performance.now();
+        if (this.isGenerating) return;
+        
         try {
-            console.log('Form submitted with song data:', songData);
-            
+            this.isGenerating = true;
             parent.postMessage({ 
                 pluginMessage: { 
-                    type: 'generate-arrangement', 
-                    songData,
-                    collectAnalytics: true,
-                    startTime
-                } 
+                    type: 'generate-arrangement',
+                    songData 
+                }
             }, '*');
-        } catch (err) {
-            console.error('Error in handleFormSubmit:', err);
-            await AnalyticsService.collectArrangementData(
-                songData,
-                {} as ArrangementData,
-                this.settings.config.PREFERRED_API,
-                performance.now() - startTime,
-                false,
-                err instanceof Error ? err.message : String(err)
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            this.messageOverlay.show(
+                error instanceof Error ? error.message : 'An error occurred',
+                'error'
             );
+        } finally {
+            this.isGenerating = false;
         }
     }
 
