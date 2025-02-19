@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arreglo - AI-Powered Music Arrangement Plugin for Figma</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
@@ -44,7 +45,7 @@
         header {
             text-align: center;
             padding: 4rem 0;
-            gap: 3rem;
+            gap: 1rem;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -56,7 +57,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 1rem;
+            margin-bottom: 2rem;
         }
 
         .logo img {
@@ -170,23 +171,25 @@
 
         .cta {
             text-align: center;
-            margin: 4rem 0;
         }
 
         .button {
             display: inline-block;
-            background: var(--gold);
-            color: var(--darker);
+            border: 1px solid var(--gold);
+            color: #fff;
             padding: 1rem 2rem;
-            border-radius: 4px;
+            border-radius: 999px;
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s ease;
+            background: transparent;
+            cursor: pointer;
         }
 
         .button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(231, 212, 148, 0.2);
+            background: var(--gold);
+            color: var(--dark);
         }
 
         footer {
@@ -240,6 +243,162 @@
             font-weight: 300;
             letter-spacing: 0.5px;
         }
+
+        .how-to-use {
+            padding: 4rem 0;
+            background: var(--dark);
+        }
+
+        .how-to-use h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--gold);
+            font-size: 2rem;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .step {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 12px;
+            position: relative;
+            transition: transform 0.2s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+        }
+
+        .step-number {
+            background: var(--gold);
+            color: var(--dark);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .step h3 {
+            color: var(--gold);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .step p {
+            color: var(--light);
+            opacity: 0.8;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .steps-grid {
+                grid-template-columns: 1fr;
+                padding: 0 1rem;
+            }
+            
+            .step {
+                padding: 1.5rem;
+            }
+        }
+
+        .vst-beta {
+            padding: 4rem 0 6rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .vst-beta h2 {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .vst-description {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            color: var(--light);
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .beta-form {
+            max-width: 500px;
+            margin: 0 auto 3rem;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            padding: 0 1rem;
+        }
+
+        .beta-input {
+            flex: 1;
+            max-width: 300px;
+            padding: 0.8rem 1.2rem;
+            border: 1px solid rgba(231, 212, 148, 0.2);
+            border-radius: 999px;
+            background: var(--darker);
+            color: var(--light);
+            font-size: 1rem;
+        }
+
+        .beta-input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .vst-features {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .vst-feature {
+            text-align: center;
+        }
+
+        .vst-feature i {
+            color: var(--gold);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .vst-feature p {
+            color: var(--light);
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .form-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .beta-input {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .vst-features {
+                flex-direction: column;
+                gap: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -251,6 +410,11 @@
         <p class="tagline">
             <strong>Try Arreglo,</strong> the AI-powered music arrangement generator for Figma. Transform your track ideas into complete arrangements in minutes.
         </p>
+        <div class="cta">
+            <a href="https://www.figma.com/community/plugin/1473434918581718662/arreglo" class="button" target="_blank">
+               Live on Figma Community!
+            </a>
+        </div>
     </header>
 
     <div class="demo">
@@ -261,52 +425,95 @@
         <i class="fas fa-arrow-down"></i>
     </div>
 
-    <div class="container">
-        <div class="example-output">
-            <h2>Example Arrangement</h2>
-            <img src="images/current-example.jpg" alt="Example Arrangement Output">
+    <section>
+        <div class="container">
+            <div class="example-output">
+                <h2>Example Arrangement</h2>
+                <img src="images/current-example.jpg" alt="Example Arrangement Output">
+            </div>
         </div>
-
-        <div class="features-section">
-            <div class="features">
-                <div class="feature">
-                    <i class="fas fa-magic"></i>
-                    <h3>Smart Pattern Analysis</h3>
-                    <p>Understands pattern names like "kick-4x" or "bassline-buildup" to create musically coherent arrangements</p>
+    </section>
+    
+    <section class="how-to-use">
+        <div class="container">
+            <h2>How to Use Arreglo</h2>
+            <div class="steps-grid">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Configure API</h3>
+                    <p>Click the settings icon and add either your OpenAI or Anthropic API key. This is required for the AI generation.</p>
                 </div>
-                
-                <div class="feature">
-                    <i class="fas fa-sliders-h"></i>
-                    <h3>Creativity Control</h3>
-                    <p>Adjust from traditional to experimental arrangements with our 5-level creativity slider</p>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Song Details</h3>
+                    <p>Enter your song's title, length (in bars), and genre. These help the AI understand the context.</p>
                 </div>
-                
-                <div class="feature">
-                    <i class="fas fa-brain"></i>
-                    <h3>AI-Powered</h3>
-                    <p>Uses advanced AI to understand musical structure and create professional arrangements</p>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Add Patterns</h3>
+                    <p>Click "Type in Patterns" to add your instruments (e.g., "kick - 4x", "hi-hat - offbeat"). You can also upload a DAW screenshot to extract track names.</p>
                 </div>
-                
-                <div class="feature">
-                    <i class="fas fa-paint-brush"></i>
-                    <h3>Visual Grid System</h3>
-                    <p>Color-coded tracks, beat divisions, and section markers for clear arrangement visualization</p>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Select Sections</h3>
+                    <p>Choose which sections you want in your arrangement (Intro, Verse, Chorus, etc.).</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <h3>Adjust Creativity</h3>
+                    <p>Set the creativity level from traditional to experimental to control how innovative the arrangement will be.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">6</div>
+                    <h3>Generate</h3>
+                    <p>Click "Make Arrangement" and watch as Arreglo creates your visual arrangement in Figma!</p>
                 </div>
             </div>
         </div>
+    </section>
 
-        <div class="cta">
-            <a href="/" class="button">
-               Coming to Figma Soon!
-            </a>
+    <section class="vst-beta">
+        <div class="container">
+            <h2>Coming Soon: Arreglo VST Plugin</h2>
+            <p class="vst-description">
+                Take your arrangements directly into your DAW. Sign up for early access.
+            </p>
+            <form id="beta-signup" class="beta-form" action="https://formspree.io/f/xjkgjygl" method="POST">
+                <div class="form-group">
+                    <input 
+                        type="email" 
+                        name="email" 
+                        placeholder="Enter your email" 
+                        required
+                        class="beta-input"
+                    >
+                    <button type="submit" class="button">Join Beta</button>
+                </div>
+            </form>
+            <div class="vst-features">
+                <div class="vst-feature">
+                    <i class="fas fa-file-export"></i>
+                    <p>Direct MIDI Export</p>
+                </div>
+                <div class="vst-feature">
+                    <i class="fas fa-plug"></i>
+                    <p>VST3 Support</p>
+                </div>
+                <div class="vst-feature">
+                    <i class="fas fa-magic"></i>
+                    <p>Real-time Generation</p>
+                </div>
+            </div>
         </div>
+    </section>
 
+    <section class="footer">
         <footer>
             <p>&copy; 2025 | Luis Palomares - Arreglo.</p>
             <div class="social-links">
                 <a href="https://github.com/ztfo/arreglo" target="_blank"><i class="fab fa-github"></i></a>
             </div>
         </footer>
-    </div>
+    </section>
 </body>
 </html> 
