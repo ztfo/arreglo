@@ -139,7 +139,7 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         const aShape = figma.createVector();
         aShape.name = "A Shape";
         const aPath = "M6 9L23 9L23 23H9V14L20 14V11L6 11L6 26L26 26L26 6L6 6V9Z";
-        aShape.vectorNetwork = {
+        aShape.setVectorNetworkAsync({
             vertices: [
                 { x: 6, y: 9 }, { x: 23, y: 9 }, { x: 23, y: 23 }, { x: 9, y: 23 },
                 { x: 9, y: 14 }, { x: 20, y: 14 }, { x: 20, y: 11 }, { x: 6, y: 11 },
@@ -151,7 +151,7 @@ async function createVisualArrangement(arrangement: ArrangementData) {
                 { start: 6, end: 7 }, { start: 7, end: 8 }, { start: 8, end: 9 },
                 { start: 9, end: 10 }, { start: 10, end: 11 }, { start: 11, end: 0 }
             ]
-        };
+        });
         aShape.fills = [{
             type: 'SOLID',
             color: { r: 0.906, g: 0.831, b: 0.580 } // #E7D494
