@@ -171,8 +171,13 @@
                         </div>
                     </div>
                     <div class="grid-item-full button-row">
-                        <!--<button class="btn secondary-button">Download</button>-->
-                        <button class="btn primary-button" type="submit">Make Arrangement</button>                                            
+                        <div class="button-group">
+                            <button class="btn secondary-button" id="exportButton" type="button" disabled>
+                                <i class="fa-solid fa-download"></i>
+                                Export
+                            </button>
+                            <button class="btn primary-button" type="submit">Make Arrangement</button>
+                        </div>                                         
                     </div>
                 </div>
             </div>
@@ -299,6 +304,70 @@
                         </div>
                     </div>
                     <button class="btn primary-button" id="saveSettings">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Modal -->
+        <input type="checkbox" id="export-toggle" class="modal-toggle">
+        <div class="modal export-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>export arrangement.</h3>
+                    <label for="export-toggle" class="close-modal">&times;</label>
+                </div>
+                <div class="modal-body">
+                    <div class="export-info">
+                        <p>Choose your preferred export format:</p>
+                    </div>
+                    <div class="export-formats">
+                        <div class="format-option">
+                            <input type="radio" name="exportFormat" value="json" id="format-json" checked>
+                            <label for="format-json">
+                                <i class="fa-solid fa-code"></i>
+                                <div class="format-details">
+                                    <strong>JSON</strong>
+                                    <small>Structured data for developers</small>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="format-option">
+                            <input type="radio" name="exportFormat" value="mid" id="format-midi">
+                            <label for="format-midi">
+                                <i class="fa-solid fa-music"></i>
+                                <div class="format-details">
+                                    <strong>MIDI</strong>
+                                    <small>Import into any DAW</small>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="format-option">
+                            <input type="radio" name="exportFormat" value="csv" id="format-csv">
+                            <label for="format-csv">
+                                <i class="fa-solid fa-table"></i>
+                                <div class="format-details">
+                                    <strong>CSV</strong>
+                                    <small>Spreadsheet format</small>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="export-options">
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="includeMetadata" checked>
+                                <span>Include metadata</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="exportTempo">Tempo (BPM):</label>
+                            <input type="number" id="exportTempo" value="128" min="60" max="200">
+                        </div>
+                    </div>
+                    <div class="export-actions">
+                        <button class="btn secondary-button" id="cancelExport">Cancel</button>
+                        <button class="btn primary-button" id="confirmExport">Export</button>
+                    </div>
                 </div>
             </div>
         </div>

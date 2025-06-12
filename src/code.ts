@@ -3,6 +3,10 @@ import { generateArrangement } from './core/api';
 import { parseArrangement } from './core/utils';
 import { ApiConfig, SongData, ArrangementData } from './core/types';
 import { createArrangementPrompt } from './core/prompts';
+import { ExportManager, ExportOptions, ExportFormat } from './core/exports';
+
+// Store last generated arrangement for export
+let lastGeneratedArrangement: ArrangementData | null = null;
 
 figma.showUI(__html__, { 
     width: 700, 
@@ -658,8 +662,44 @@ figma.ui.onmessage = async (msg) => {
 
             const response = await generateArrangement(config, prompt);
             const arrangement = parseArrangement(response, songData.title, songData.length);
+            
+            // Store arrangement for export
+            lastGeneratedArrangement = arrangement;
+            
             await createVisualArrangement(arrangement);
             figma.ui.postMessage({ type: 'success', message: 'Arrangement created!' });
+        } else if (msg.type === 'export-arrangement') {
+            // Store the last generated arrangement for export
+            if (!lastGeneratedArrangement) {
+                throw new Error('No arrangement to export. Please generate an arrangement first.');
+            }
+
+            const exportOptions: ExportOptions = {
+                format: msg.format as ExportFormat,
+                includeMetadata: msg.includeMetadata || true,
+                tempo: msg.tempo || 128,
+                timeSignature: msg.timeSignature || [4, 4],
+                quantization: msg.quantization || 480
+            };
+
+            const result = await ExportManager.exportArrangement(lastGeneratedArrangement, exportOptions);
+            
+            if (result.success) {
+                figma.ui.postMessage({ 
+                    type: 'export-success', 
+                    result: {
+                        filename: result.filename,
+                        mimeType: result.mimeType,
+                        data: Array.from(new Uint8Array(result.data as ArrayBuffer)), // Convert for transfer
+                        format: msg.format
+                    }
+                });
+            } else {
+                throw new Error(result.error || 'Export failed');
+            }
+        } else if (msg.type === 'get-export-formats') {
+            const formats = ExportManager.getAvailableFormats();
+            figma.ui.postMessage({ type: 'export-formats', formats });
         }
     } catch (error: unknown) {
         console.error('Plugin error:', error);
