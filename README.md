@@ -217,9 +217,3 @@ Arreglo is designed for music producers by music producers. Contributions welcom
 ## 📄 License
 
 **MIT License** - Free for personal and commercial music production use.
-
----
-
-**Built for producers who want to focus on creativity, not arrangement tedium.**
-
-*Transform your pattern ideas into professional arrangements in seconds.*
