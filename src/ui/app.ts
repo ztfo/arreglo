@@ -2,6 +2,7 @@ import './styles/main.css';
 import { ErrorDisplay } from './components/ErrorDisplay';
 import { Settings } from './components/Settings';
 import { SongForm } from './components/SongForm';
+import { Help } from './components/Help';
 import { ApiConfig, SongData } from '../core/types';
 import { AnalyticsService } from '../services/AnalyticsService';
 import { MessageOverlay } from './components/MessageOverlay';
@@ -9,6 +10,7 @@ import { MessageOverlay } from './components/MessageOverlay';
 export class App {
     private songForm!: SongForm;
     private settings: Settings;
+    private help: Help;
     private messageOverlay: MessageOverlay;
     private isGenerating: boolean = false;
     private hasArrangement: boolean = false;
@@ -16,6 +18,7 @@ export class App {
     constructor() {
         this.messageOverlay = new MessageOverlay();
         this.settings = new Settings(this.handleSettingsSave.bind(this));
+        this.help = new Help();
         this.initializeApp();
 
         // Load settings when the app initializes

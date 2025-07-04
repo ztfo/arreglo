@@ -62,18 +62,25 @@
                     </div>                    
                 </div>
                 <div class="bottom-nav">
-                    <div class="nav-item settings">
-                        <label title="API Keys Settings" for="settings-toggle" class="nav-button">
-                            <i class="fa-solid fa-sliders"></i>
-                        </label>                          
-                        <button id="testButton" class="nav-button" title="Generate Test Arrangement">
-                            <i class="fa-solid fa-vial"></i>
-                        </button>
+                    <div class="nav-row">
+                        <div class="nav-item settings">
+                            <label title="API Keys Settings" for="settings-toggle" class="nav-button">
+                                <i class="fa-solid fa-sliders"></i>
+                            </label>                          
+                            <button id="testButton" class="nav-button" title="Generate Test Arrangement">
+                                <i class="fa-solid fa-vial"></i>
+                            </button>
+                            <button id="help-button" class="nav-button" title="How to Use Arreglo">
+                                <i class="fa-solid fa-question"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="nav-item signature">
-                        <span>made by&nbsp;</span><strong>
-                            <a href="https://iamllu.com" target="_blank">llü</a>
-                        </strong>                          
+                    <div class="nav-row">
+                        <div class="nav-item signature">
+                            <span>made by&nbsp;</span><strong>
+                                <a href="https://iamllu.com" target="_blank">llü</a>
+                            </strong>                          
+                        </div>
                     </div>
                 </div>                    
             </div>
@@ -232,6 +239,15 @@
                         <input type="text" id="patternInput" placeholder="Enter pattern name (e.g., kick - 4x)">
                         <button id="addPattern" class="button">Add</button>
                     </div>
+                    <div class="pattern-best-practices" style="margin-bottom: 16px;">
+                        <strong>Tips for best results:</strong>
+                        <ul style="margin: 8px 0 0 18px; padding: 0; color: #E7D494; font-size: 13px;">
+                            <li>Be specific: <span style="color:#fff">kick - 4x</span>, <span style="color:#fff">snare - fills</span></li>
+                            <li>Use common instrument names</li>
+                            <li>Describe the role: <span style="color:#fff">offbeat</span>, <span style="color:#fff">chords</span></li>
+                            <li>One instrument or sound per pattern</li>
+                        </ul>
+                    </div>
                     <div class="patterns-list-preview">
                         <h4>Current Patterns</h4>
                         <div id="patternsListPreview" class="patterns-list">
@@ -373,6 +389,98 @@
                     <div class="export-actions">
                         <button class="btn secondary-button" id="cancelExport">Cancel</button>
                         <button class="btn primary-button" id="confirmExport">Export</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Modal -->
+        <div id="help-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>how to use arreglo.</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="help-api-section">
+                        <h4>Getting API Keys</h4>
+                        <p>To use Arreglo, you'll need an API key from either OpenAI or Anthropic. <strong>Your API key must have permissions for GPT-4o (or equivalent) models.</strong> Sign up and generate your key here:</p>
+                        <ul>
+                            <li><a href="https://platform.openai.com/signup" target="_blank" rel="noopener">OpenAI API Key Signup</a></li>
+                            <li><a href="https://console.anthropic.com/signup" target="_blank" rel="noopener">Anthropic API Key Signup</a></li>
+                        </ul>
+                        <p>After signing up, copy your API key and paste it into the settings panel.</p>
+                    </div>
+
+                    <div class="help-steps">
+                        <div class="help-step">
+                            <div class="help-step-number">1</div>
+                            <div class="help-step-content">
+                                <h4>Configure API</h4>
+                                <p>Click the settings icon (<i class="fa-solid fa-sliders"></i>) and add your OpenAI or Anthropic API key.</p>
+                            </div>
+                        </div>
+                        <div class="help-step">
+                            <div class="help-step-number">2</div>
+                            <div class="help-step-content">
+                                <h4>Song Details</h4>
+                                <p>Enter your song's title, length in bars, and genre. These help the AI understand the context.</p>
+                            </div>
+                        </div>
+                        <div class="help-step">
+                            <div class="help-step-number">3</div>
+                            <div class="help-step-content">
+                                <h4>Add Patterns</h4>
+                                <p>Click "Type in Patterns" to add your instruments (e.g., "kick - 4x", "hi-hat - offbeat"). You can also upload a DAW screenshot.</p>
+                            </div>
+                        </div>
+                        <div class="help-step">
+                            <div class="help-step-number">4</div>
+                            <div class="help-step-content">
+                                <h4>Select Sections</h4>
+                                <p>Choose which sections you want in your arrangement (Intro, Verse, Chorus, etc.).</p>
+                            </div>
+                        </div>
+                        <div class="help-step">
+                            <div class="help-step-number">5</div>
+                            <div class="help-step-content">
+                                <h4>Adjust Creativity</h4>
+                                <p>Set the creativity level to control how innovative the arrangement will be.</p>
+                            </div>
+                        </div>
+                        <div class="help-step">
+                            <div class="help-step-number">6</div>
+                            <div class="help-step-content">
+                                <h4>Generate</h4>
+                                <p>Click "Make Arrangement" and watch as Arreglo creates your visual arrangement in Figma!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="help-patterns-section">
+                        <h4>Best Practices for Naming Patterns</h4>
+                        <ul>
+                            <li>Be specific: <strong>"kick - 4x"</strong>, <strong>"snare - fills"</strong>, <strong>"bassline - melody"</strong></li>
+                            <li>Use common instrument names (kick, snare, hi-hat, bass, pad, lead, etc.)</li>
+                            <li>Describe the rhythmic or melodic role (e.g., <strong>"offbeat"</strong>, <strong>"chords"</strong>, <strong>"buildup"</strong>)</li>
+                            <li>Keep it short and clear; avoid unnecessary words</li>
+                            <li>Each pattern should represent a single instrument or sound</li>
+                        </ul>
+                        <p>Good pattern names help the AI understand your arrangement and generate more accurate results.</p>
+                    </div>
+
+                    <div class="help-ai-section">
+                        <h4>What the AI Does</h4>
+                        <p>Arreglo's AI analyzes all the information you provide to generate a complete, genre-appropriate arrangement. Here's how it works:</p>
+                        <ul>
+                            <li><strong>Pattern Analysis:</strong> The AI interprets your pattern names and roles to understand which instruments are present and how they typically behave in your genre.</li>
+                            <li><strong>Genre Intelligence:</strong> It applies genre-specific conventions for structure, energy, and instrument usage (e.g., House vs. Pop vs. DnB).</li>
+                            <li><strong>Section Mapping:</strong> Your selected sections (Intro, Verse, Chorus, etc.) are mapped to typical song structures, with transitions and energy arcs.</li>
+                            <li><strong>Creativity Control:</strong> The creativity slider lets you choose between traditional, balanced, or experimental arrangements.</li>
+                            <li><strong>Dynamic Arrangement:</strong> The AI balances repetition and variation, ensuring your arrangement is both logical and interesting.</li>
+                            <li><strong>Export-Ready:</strong> The result is a visual arrangement you can export as MIDI or use as a reference in your DAW.</li>
+                        </ul>
+                        <p>The more clearly you describe your patterns and song details, the better the AI can generate a musical arrangement that fits your vision.</p>
                     </div>
                 </div>
             </div>

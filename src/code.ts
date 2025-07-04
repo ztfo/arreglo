@@ -10,7 +10,7 @@ let lastGeneratedArrangement: ArrangementData | null = null;
 
 figma.showUI(__html__, { 
     width: 700, 
-    height: 660,
+    height: 690,
     themeColors: true 
 });
 

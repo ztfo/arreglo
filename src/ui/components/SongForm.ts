@@ -258,7 +258,9 @@ export class SongForm {
             
         } catch (error) {
             console.error('Error processing image:', error);
-            const errorMessage = error instanceof Error ? error.message : 'Could not extract track names from image';
+            const errorMessage = error instanceof Error
+                ? error.message + '\n\nTip: For best results, only take a screenshot of the track name bar or playlist/arrangement view in your DAW. Avoid including the entire screen or mixer.'
+                : 'Could not extract track names from image.\n\nTip: For best results, only take a screenshot of the track name bar or playlist/arrangement view in your DAW. Avoid including the entire screen or mixer.';
             this.messageOverlay.show(errorMessage, 'error');
             this.setLoadingState(false);
         }

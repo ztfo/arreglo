@@ -29,15 +29,21 @@ User → Figma Plugin → Backend API → OpenAI/Anthropic → Response
 ```
 
 ### Backend Technology Stack Options
-1. **Supabase Edge Functions** (Recommended)
+1. **Vercel API Routes** (Recommended - since you already use Vercel)
+   - Serverless functions
+   - Easy deployment with your existing Vercel setup
+   - Excellent TypeScript support
+   - Built-in environment variable management
+   - Good performance and caching options
+   - Automatic HTTPS and global CDN
+   - Simple integration with your existing workflow
+   - Edge runtime support for better performance
+
+2. **Supabase Edge Functions**
    - Serverless
    - Built-in auth integration
    - Good for our existing Supabase setup
-
-2. **Vercel Functions**
-   - Serverless
-   - Easy deployment
-   - Good TypeScript support
+   - Can be used in combination with Vercel
 
 3. **Netlify Functions**
    - Serverless
@@ -57,7 +63,193 @@ POST /api/track-usage (optional)
 ```
 
 #### 1.2 Backend Service Implementation
-**Supabase Edge Function Example:**
+
+**Vercel API Routes (Recommended):**
+```typescript
+// api/generate-arrangement.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+import OpenAI from 'openai';
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_KEY!
+);
+
+export async function POST(request: NextRequest) {
+  try {
+    const { songData, userId } = await request.json();
+    
+    // Rate limiting check
+    const canProceed = await checkRateLimit(userId);
+    if (!canProceed) {
+      return NextResponse.json(
+        { error: 'Rate limit exceeded. You have reached your daily limit.' },
+        { status: 429 }
+      );
+    }
+    
+    // Generate arrangement using our API key
+    const arrangement = await generateArrangementWithOpenAI(songData);
+    
+    // Track usage
+    await trackUsage(userId, 'arrangement_generation', 5); // 5 cents cost
+    
+    return NextResponse.json({ arrangement });
+  } catch (error) {
+    console.error('Error generating arrangement:', error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Failed to generate arrangement' },
+      { status: 500 }
+    );
+  }
+}
+
+async function generateArrangementWithOpenAI(songData: any): Promise<string> {
+  const prompt = createArrangementPrompt(songData);
+  
+  const response = await openai.chat.completions.create({
+    model: 'gpt-4o',
+    messages: [{ role: 'user', content: prompt }],
+    temperature: 0.7,
+    max_tokens: 2000,
+  });
+  
+  return response.choices[0].message.content || '';
+}
+
+async function checkRateLimit(userId: string): Promise<boolean> {
+  const today = new Date().toISOString().split('T')[0];
+  
+  const { data: rateLimit } = await supabase
+    .from('rate_limits')
+    .select('*')
+    .eq('user_id', userId)
+    .single();
+  
+  if (!rateLimit) {
+    await supabase
+      .from('rate_limits')
+      .insert({ user_id: userId, daily_arrangements: 1, last_reset_date: today });
+    return true;
+  }
+  
+  // Reset if new day
+  if (rateLimit.last_reset_date !== today) {
+    await supabase
+      .from('rate_limits')
+      .update({ 
+        daily_arrangements: 1,
+        daily_image_analyses: 0,
+        last_reset_date: today 
+      })
+      .eq('user_id', userId);
+    return true;
+  }
+  
+  // Check limits (5 arrangements per day for free users)
+  const MAX_DAILY_ARRANGEMENTS = 5;
+  if (rateLimit.daily_arrangements >= MAX_DAILY_ARRANGEMENTS) {
+    return false;
+  }
+  
+  // Increment usage
+  await supabase
+    .from('rate_limits')
+    .update({ daily_arrangements: rateLimit.daily_arrangements + 1 })
+    .eq('user_id', userId);
+  
+  return true;
+}
+
+async function trackUsage(userId: string, actionType: string, costCents: number) {
+  await supabase
+    .from('usage_logs')
+    .insert({
+      user_id: userId,
+      action_type: actionType,
+      cost_cents: costCents,
+      metadata: { timestamp: new Date().toISOString() }
+    });
+}
+```
+
+```typescript
+// api/analyze-image.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+import OpenAI from 'openai';
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_KEY!
+);
+
+export async function POST(request: NextRequest) {
+  try {
+    const { base64Image, userId } = await request.json();
+    
+    // Rate limiting check for image analysis
+    const canProceed = await checkImageAnalysisRateLimit(userId);
+    if (!canProceed) {
+      return NextResponse.json(
+        { error: 'Rate limit exceeded for image analysis.' },
+        { status: 429 }
+      );
+    }
+    
+    const trackNames = await analyzeImageWithOpenAI(base64Image);
+    
+    // Track usage
+    await trackUsage(userId, 'image_analysis', 2); // 2 cents cost
+    
+    return NextResponse.json({ trackNames });
+  } catch (error) {
+    console.error('Error analyzing image:', error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Failed to analyze image' },
+      { status: 500 }
+    );
+  }
+}
+
+async function analyzeImageWithOpenAI(base64Image: string): Promise<string[]> {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4o",
+    messages: [
+      {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: "Please analyze this DAW screenshot and extract all track/instrument names. Return them as a comma-separated list."
+          },
+          {
+            type: "image_url",
+            image_url: {
+              url: `data:image/png;base64,${base64Image}`
+            }
+          }
+        ]
+      }
+    ],
+    max_tokens: 1000
+  });
+
+  const extractedText = response.choices[0].message.content || '';
+  return extractedText.split(',').map((name: string) => name.trim());
+}
+```
+
+**Alternative: Supabase Edge Function Example:**
 ```typescript
 // supabase/functions/generate-arrangement/index.ts
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
@@ -105,13 +297,29 @@ serve(async (req) => {
 ```
 
 #### 1.3 Environment Variables Setup
+
+**Vercel Environment Variables:**
 ```env
-# Backend Environment Variables
+# Add these to your Vercel project settings
 OPENAI_API_KEY=sk-...
 ANTHROPIC_API_KEY=sk-ant-...
 SUPABASE_URL=https://...
 SUPABASE_SERVICE_KEY=...
 ```
+
+**For local development (.env.local):**
+```env
+# For local testing
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
+SUPABASE_URL=https://...
+SUPABASE_SERVICE_KEY=...
+```
+
+**Vercel Deployment Setup:**
+1. Add environment variables in Vercel dashboard
+2. Configure for both Production and Preview environments
+3. Set up domain for your API (e.g., `api.yourdomain.com` or use default vercel.app)
 
 ### Phase 2: Plugin Code Modifications
 
@@ -183,10 +391,10 @@ export async function analyzeImage(base64Image: string): Promise<string[]> {
 }
 
 function getBackendUrl(): string {
-  // Return your backend URL
+  // Return your Vercel backend URL
   return process.env.NODE_ENV === 'production' 
-    ? 'https://your-production-backend.com'
-    : 'https://your-dev-backend.com';
+    ? 'https://your-vercel-app.vercel.app'  // or your custom domain
+    : 'https://your-vercel-app-preview.vercel.app';
 }
 
 async function getUserId(): Promise<string> {
@@ -382,15 +590,33 @@ async function trackUsage(userId: string, actionType: string, costCents: number)
 
 ## Deployment Strategy
 
-### Backend Deployment
+### Backend Deployment (Vercel)
 1. **Development Environment**
-   - Deploy to staging backend
+   - Create new Vercel project or use existing one
+   - Deploy to preview environment: `vercel --prod=false`
+   - Add environment variables in Vercel dashboard
    - Test with development version of plugin
 
 2. **Production Environment**
-   - Deploy to production backend
+   - Deploy to production: `vercel --prod`
+   - Verify environment variables are set for production
    - Update plugin manifest with production URLs
    - Test thoroughly before Figma store update
+
+**Vercel-Specific Setup:**
+```bash
+# Install Vercel CLI if not already installed
+npm i -g vercel
+
+# Initialize Vercel project
+vercel
+
+# Deploy to preview
+vercel
+
+# Deploy to production
+vercel --prod
+```
 
 ### Plugin Deployment
 1. **Version the plugin** (e.g., v2.0.0)
@@ -430,9 +656,11 @@ async function trackUsage(userId: string, actionType: string, costCents: number)
 ## Timeline Estimate
 
 ### Week 1-2: Backend Development
-- Set up Supabase Edge Functions
-- Implement API endpoints
+- Set up Vercel API routes project
+- Implement API endpoints (`/api/generate-arrangement`, `/api/analyze-image`)
 - Add rate limiting and usage tracking
+- Configure environment variables in Vercel
+- Set up Supabase database tables
 
 ### Week 3: Plugin Migration
 - Remove API key management
@@ -444,12 +672,71 @@ async function trackUsage(userId: string, actionType: string, costCents: number)
 - Deploy to production
 - Submit plugin update to Figma store
 
+## Vercel Backend Project Structure
+
+```
+arreglo-backend/
+├── api/
+│   ├── generate-arrangement.ts
+│   ├── analyze-image.ts
+│   └── user-usage.ts (optional)
+├── lib/
+│   ├── openai.ts
+│   ├── anthropic.ts
+│   ├── supabase.ts
+│   ├── rate-limiting.ts
+│   └── usage-tracking.ts
+├── types/
+│   └── index.ts
+├── package.json
+├── tsconfig.json
+├── vercel.json
+└── .env.local
+```
+
+**Example vercel.json:**
+```json
+{
+  "functions": {
+    "api/generate-arrangement.ts": {
+      "maxDuration": 30
+    },
+    "api/analyze-image.ts": {
+      "maxDuration": 30
+    }
+  }
+}
+```
+
+**Example package.json:**
+```json
+{
+  "name": "arreglo-backend",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "tsc",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "openai": "^4.24.0",
+    "@anthropic-ai/sdk": "^0.17.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "@vercel/node": "^3.0.0"
+  }
+}
+```
+
 ## Next Steps
 
-1. **Choose Backend Platform** (Supabase Edge Functions recommended)
-2. **Set up development environment**
-3. **Implement basic backend API**
-4. **Test with current plugin**
+1. **Set up Vercel backend project** (Recommended approach)
+2. **Configure environment variables in Vercel**
+3. **Set up Supabase database tables**
+4. **Implement and test basic backend API**
 5. **Begin plugin modifications**
 
 ## Questions for Refinement
