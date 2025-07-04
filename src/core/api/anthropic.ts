@@ -7,8 +7,8 @@ export async function callAnthropic(apiKey: string, prompt: string) {
             'anthropic-version': '2023-06-01'
         },
         body: JSON.stringify({
-            model: 'claude-2.1',
-            max_tokens: 1000,
+            model: 'claude-3-5-sonnet-20241022',
+            max_tokens: 4096,
             messages: [{ role: 'user', content: prompt }]
         })
     });

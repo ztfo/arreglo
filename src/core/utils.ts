@@ -36,9 +36,35 @@ export function parseArrangement(response: string, title: string, requestedLengt
                 if (!instrumentMatch || !barsMatch) continue;
 
                 const instrumentName = instrumentMatch[1].trim();
-                const bars = barsMatch[1].split(',')
-                    .map(b => parseInt(b.trim()))
-                    .filter(b => !isNaN(b));
+                const barsString = barsMatch[1].trim();
+                
+                // Parse bars - handle both comma-separated and range format
+                let bars: number[] = [];
+                
+                if (barsString.includes('-') && !barsString.includes(',')) {
+                    // Range format like "1-12" or "13-28"
+                    const rangeParts = barsString.split('-');
+                    if (rangeParts.length === 2) {
+                        const start = parseInt(rangeParts[0].trim());
+                        const end = parseInt(rangeParts[1].trim());
+                        if (!isNaN(start) && !isNaN(end) && start <= end) {
+                            const rangeLength = end - start + 1;
+                            
+                            // If the range length matches the section duration, fill all bars
+                            if (rangeLength === section.duration) {
+                                bars = Array.from({ length: section.duration }, (_, i) => i + 1);
+                            } else {
+                                // For partial ranges, assume they start from bar 1 of the section
+                                bars = Array.from({ length: Math.min(rangeLength, section.duration) }, (_, i) => i + 1);
+                            }
+                        }
+                    }
+                } else {
+                    // Comma-separated format like "1,2,3,4,5,6,7,8"
+                    bars = barsString.split(',')
+                        .map(b => parseInt(b.trim()))
+                        .filter(b => !isNaN(b) && b >= 1 && b <= section.duration);
+                }
 
                 if (bars.length > 0) {
                     section.instruments[instrumentName] = bars;
@@ -88,23 +114,7 @@ export function parseArrangement(response: string, title: string, requestedLengt
         }
     }
 
-    // Remove or modify the bar number normalization
-    let currentBarOffset = 0;
-    for (const section of sections) {
-        Object.keys(section.instruments).forEach(instrument => {
-            // Only normalize the bar numbers relative to section start
-            // but DON'T filter out overlapping bars
-            section.instruments[instrument] = section.instruments[instrument]
-                .map(bar => bar - currentBarOffset)
-                .filter(bar => bar >= 1 && bar <= section.duration); // Keep this filter to ensure bars are within section bounds
-            
-            // Remove this deletion as it's no longer needed
-            // if (section.instruments[instrument].length === 0) {
-            //     delete section.instruments[instrument];
-            // }
-        });
-        currentBarOffset += section.duration;
-    }
+    // Bar numbers are already relative to each section, no normalization needed
 
     return {
         title,

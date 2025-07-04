@@ -53,8 +53,8 @@ Example format:
 }`;
 
     const response = await client.messages.create({
-        model: 'claude-3-opus-20240229',
-        max_tokens: 1000,
+        model: 'claude-3-5-sonnet-20241022',
+        max_tokens: 4096,
         temperature: 0.7,
         messages: [
             {

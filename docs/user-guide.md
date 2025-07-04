@@ -1,277 +1,450 @@
-# User Guide
+# Arreglo User Guide
 
-## Getting Started with Arreglo
+## What is Arreglo?
 
-Arreglo is an AI-powered music arrangement plugin for Figma that helps you visualize and plan song structures quickly and intelligently.
+Arreglo is an AI-powered music arrangement generator designed specifically for electronic music producers. Using advanced prompt engineering and genre-specific intelligence, it transforms your simple pattern ideas into complete, professional-quality song arrangements.
 
-### Installation
-
-1. **Open Figma** (Desktop or Web)
-2. **Go to Community** → Search for "Arreglo"
-3. **Install the Plugin** from the Community Store
-4. **Run Plugin** from Plugins menu
-
-### First Time Setup
-
-#### Configure API Keys
-1. **Open Settings** (gear icon in bottom-left of plugin)
-2. **Add API Key** - Choose either:
-   - **OpenAI**: For GPT-4 powered generation
-   - **Anthropic**: For Claude powered generation
-3. **Select Preferred AI** provider
-4. **Save Settings**
-
-> 💡 **Tip**: Both providers work well, but you might prefer one based on style or response speed.
-
-#### Data Collection (Optional)
-- **Anonymous Analytics**: Help improve Arreglo by allowing anonymous data collection
-- **What's Collected**: Arrangement patterns and success rates (never personal data)
-- **What's Not Collected**: Song titles, personal information, or API keys
-
-## Creating Your First Arrangement
-
-### Basic Workflow
-
-#### 1. Song Information
-- **Song Name**: Enter your track title (optional but helpful for context)
-- **Genre**: Select from House, Techno, Pop, Hip Hop, etc.
-- **Tempo**: BPM (60-200, defaults to 128)
-- **Length**: Number of bars (16-256, defaults to 128)
-
-#### 2. Add Patterns
-Choose one of two methods:
-
-**Option A: Type Patterns Manually**
-1. Click **"Type in Patterns"**
-2. Enter pattern names using these conventions:
-   - `kick - 4x` (four-on-the-floor kick pattern)
-   - `hi-hat - offbeat` (off-beat hi-hat pattern)
-   - `bassline - chords` (chord-following bassline)
-   - `synth - melody` (melodic synth line)
-   - `vox sample` (vocal sample)
-
-**Option B: Upload DAW Screenshot**
-1. Click **"DAW Screenshot"**
-2. Upload image of your DAW's track list
-3. AI will extract track names automatically
-
-#### 3. Select Sections
-Choose which song sections you want:
-- **Intro**: Opening section
-- **Verse**: Main verse sections  
-- **Chorus**: Chorus/hook sections
-- **Bridge**: Contrasting bridge section
-- **Build-up**: Energy building section
-- **Drop**: High-energy section (EDM)
-- **Outro**: Ending section
-
-#### 4. Set Creativity Level
-Adjust the creativity slider (1-5):
-- **1 (Traditional)**: Conservative, genre-standard arrangements
-- **3 (Balanced)**: Mix of traditional and modern elements
-- **5 (Experimental)**: Innovative, unconventional arrangements
-
-#### 5. Generate
-Click **"Make Arrangement"** and wait for AI generation (usually 10-30 seconds).
-
-### Understanding Your Arrangement
-
-#### Visual Layout
-Your arrangement appears as a **grid timeline**:
-
-```
-Instruments    | Bars →
-kick - 4x      | ████ ░░░░ ████ ████
-hi-hat - offbeat| ░░██ ████ ████ ░░██
-bassline - chords| ░░░░ ████ ████ ░░░░
-synth - melody | ░░░░ ░░██ ████ ░░░░
-```
-
-- **Rows**: Each instrument/pattern
-- **Columns**: Bars in your song
-- **Filled Blocks**: When instrument plays
-- **Empty Blocks**: When instrument is silent
-- **Colors**: Each instrument has unique color
-- **Numbers**: Bar numbers at top
-
-#### Reading the Grid
-- **Section Labels**: Shows song structure (Intro, Verse, etc.)
-- **Pattern Density**: More filled blocks = busier sections
-- **Layering**: Multiple instruments playing = denser arrangement
-- **Dynamics**: Empty spaces create contrast and breathing room
-
-## Advanced Features
-
-### Pattern Naming Conventions
-
-Arreglo understands semantic pattern names. Use these formats for best results:
-
-#### Rhythm Patterns
-```
-kick - 4x              # Steady four-on-the-floor
-kick - syncopated      # Off-beat kick pattern
-snare - backbeat       # Traditional snare on 2 and 4
-hi-hat - 16th          # 16th note hi-hat pattern
-hi-hat - offbeat       # Off-beat hi-hat emphasis
-```
-
-#### Bassline Patterns
-```
-bassline - root        # Simple root note bass
-bassline - chords      # Follows chord progression
-bassline - melody      # Melodic bassline
-bassline - walking     # Walking bass style
-bassline - buildup     # Ascending/building pattern
-```
-
-#### Melodic Patterns
-```
-synth - lead           # Lead synth melody
-synth - chords         # Synth chord progression
-synth - arp            # Arpeggiated pattern
-synth - pad            # Sustained pad sounds
-synth - stab           # Rhythmic chord stabs
-```
-
-#### Sample Patterns
-```
-vox sample             # Vocal sample
-fx sample              # Sound effect sample
-perc sample            # Percussion sample
-crash sample           # Crash/impact sample
-```
-
-### Creativity Levels Explained
-
-#### Level 1: Traditional
-- Follows genre conventions strictly
-- Predictable section lengths
-- Standard instrument arrangements
-- Safe, commercial sound
-
-#### Level 2: Traditional Elements  
-- Mostly conventional with some variation
-- Slight pattern variations
-- Genre-appropriate but with personality
-
-#### Level 3: Balanced
-- Mix of traditional and modern elements
-- Creative pattern placements
-- Good for contemporary productions
-
-#### Level 4: Creative
-- Innovative arrangements
-- Unexpected pattern combinations
-- Modern production techniques
-- Takes risks while staying musical
-
-#### Level 5: Experimental
-- Highly unconventional arrangements
-- Surprising pattern combinations
-- Avant-garde approach
-- May challenge genre boundaries
-
-### Genre-Specific Tips
-
-#### Electronic Music (House, Techno, Trance)
-- Use `kick - 4x` for steady rhythm foundation
-- Add `hi-hat - offbeat` for groove
-- Include `bassline - chords` for harmonic movement
-- Try `synth - buildup` before drops
-
-#### Hip Hop / R&B
-- Focus on `kick - syncopated` and `snare - backbeat`
-- Use `bassline - root` for solid foundation
-- Add `sample` patterns for character
-- Include `hi-hat - 16th` for modern feel
-
-#### Pop / Rock
-- Start with `kick - 4x` and `snare - backbeat`
-- Use `bassline - chords` for harmonic support
-- Add `guitar - rhythm` and `guitar - lead`
-- Include vocal patterns for hooks
-
-## Troubleshooting
-
-### Common Issues
-
-#### "No arrangements generated"
-- **Check API Keys**: Ensure valid API key is configured
-- **Check Internet**: Plugin requires internet connection
-- **Try Simpler Input**: Start with fewer patterns
-- **Check Pattern Names**: Use recognized naming conventions
-
-#### "Arrangement looks wrong"
-- **Adjust Creativity**: Lower creativity for more predictable results
-- **Check Genre**: Ensure genre matches your style
-- **Review Patterns**: Verify pattern names are clear
-- **Try Different Sections**: Some section combinations work better
-
-#### "Plugin won't load"
-- **Update Figma**: Ensure latest Figma version
-- **Restart Figma**: Close and reopen Figma
-- **Clear Cache**: Clear browser cache (web version)
-- **Reinstall Plugin**: Remove and reinstall from Community Store
-
-### Best Practices
-
-#### Pattern Naming
-- **Be Descriptive**: "kick - 4x" vs just "kick"
-- **Use Conventions**: Follow the semantic patterns above
-- **Stay Consistent**: Use similar naming across patterns
-- **Avoid Ambiguity**: "synth1" vs "synth - lead"
-
-#### Section Selection
-- **Start Simple**: Begin with Intro, Verse, Chorus, Outro
-- **Match Genre**: Electronic = Intro/Buildup/Drop, Pop = Verse/Chorus/Bridge
-- **Consider Flow**: Think about energy progression
-- **Use Variety**: Different sections create interest
-
-#### Creativity Settings
-- **Start Conservative**: Begin with level 2-3, adjust up if needed
-- **Match Project Phase**: High creativity for sketching, lower for final arrangements
-- **Genre Matters**: Electronic music can handle higher creativity than acoustic genres
-
-## Tips for Better Results
-
-### Pattern Strategy
-1. **Foundation First**: Start with rhythm section (kick, snare, hi-hat)
-2. **Add Harmony**: Include bass and chord instruments
-3. **Layer Melody**: Add lead and melodic elements
-4. **Texture Last**: Include samples, effects, and ear candy
-
-### Arrangement Thinking
-1. **Energy Arc**: Plan how energy builds and releases
-2. **Contrast**: Mix busy and sparse sections
-3. **Repetition vs Variation**: Balance familiarity with surprise
-4. **Genre Awareness**: Understand your genre's typical structures
-
-### Workflow Tips
-1. **Iterate**: Generate multiple arrangements and compare
-2. **Start Broad**: Get the big picture before details
-3. **Export Plans**: Use arrangements as guides for actual production
-4. **Learn Patterns**: Notice what works and adapt to your style
-
-## Next Steps
-
-### After Creating Arrangements
-1. **Screenshot**: Save arrangements for reference
-2. **Plan Production**: Use as blueprint for actual music creation
-3. **Adapt as Needed**: Arrangements are starting points, not rules
-4. **Share Results**: Show completed tracks to help improve the plugin
-
-### Advanced Usage
-1. **Multiple Versions**: Generate several arrangements for one song
-2. **Genre Fusion**: Combine elements from different genre arrangements
-3. **Section Focus**: Generate arrangements for specific song sections only
-4. **Collaboration**: Share arrangements with band members or collaborators
-
-### Community
-- **Share Feedback**: Help improve the plugin with suggestions
-- **Report Issues**: Let developers know about problems
-- **Request Features**: Suggest new capabilities
-- **Join Beta**: Sign up for new features like the VST plugin
+### **Version 2.0 Features**
+- **Professional AI Intelligence**: Multi-stage arrangement generation with expert knowledge
+- **50+ Pattern Types**: Comprehensive dance music vocabulary with frequency and energy mapping
+- **Genre-Specialist AI**: Expert-level knowledge for house, techno, and trance
+- **Pattern Relationship Analysis**: AI understands which patterns work together
+- **Automatic Genre Detection**: Analyzes your patterns and optimizes arrangement style
 
 ---
 
-*For technical issues or feature requests, contact the development team or visit the project documentation.* 
+## Getting Started
+
+### **Installation**
+1. **Download**: Get Arreglo from the [Figma Community Store](https://www.figma.com/community/plugin/1473434918581718662/arreglo)
+2. **Install**: Click "Install" then "Open" in Figma
+3. **Setup**: Add your OpenAI or Anthropic API key in settings (gear icon)
+
+### **First Arrangement**
+1. **Song Details**: Enter title, select genre, set length (bars) and tempo (bpm)
+2. **Add Patterns**: Type pattern names and click "Add Pattern" 
+3. **Select Sections**: Choose arrangement sections (Intro, Verse, Chorus, etc.)
+4. **Set Creativity**: Choose level 1-5 (traditional to experimental)
+5. **Generate**: Click "Create Arrangement"
+
+---
+
+## Pattern Intelligence System
+
+### **Smart Pattern Recognition**
+Arreglo's AI analyzes every pattern for multiple attributes:
+
+**Example: "kick-4x"**
+- **Frequency Range**: Sub, Low-Mid
+- **Energy Level**: 9/10 (foundation driving force)
+- **Harmonic Role**: Foundation/rhythm
+- **Genre Affinity**: Essential for house (95%), techno (90%), trance (85%)
+- **Rhythmic Complexity**: Simple (consistent 4-on-the-floor)
+
+### **Pattern Categories**
+
+#### **Foundation Patterns (Essential)**
+```
+kick-4x                → Classic four-on-the-floor
+kick-syncopated        → Off-beat variations
+bassline-rolling       → Moving bass foundation
+sub-drone              → Low-end foundation
+```
+
+#### **Rhythmic Elements**
+```
+snare-backbeat         → 2 and 4 emphasis
+hi-hat-16th           → Constant 16th note drive
+hi-hat-offbeat        → Syncopated hi-hat pattern
+claps-2-4             → House-style hand claps
+percussion-latin       → Latin percussion elements
+```
+
+#### **Harmonic Content**
+```
+piano-chords          → House piano stabs
+synth-pad             → Atmospheric pads
+organ-stab            → Church organ hits
+strings-sustain       → String arrangements
+chord-progression     → Moving chord changes
+```
+
+#### **Melodic Elements**
+```
+lead-synth            → Main melody line
+bass-arp              → Arpeggiated bass
+vocal-hook            → Catchy vocal phrase
+bell-melody           → Melodic bell sounds
+```
+
+#### **Textural/Effects**
+```
+vocal-chop            → Chopped vocal samples
+riser-sweep           → Build-up effects
+impact-hit            → Dramatic impacts
+filter-sweep          → Frequency sweeps
+glitch-fx             → Digital artifacts
+```
+
+---
+
+## Genre-Specific Intelligence
+
+### **House Music (124-128 BPM)**
+
+**AI Expertise**: 
+- Controlled energy progression with strategic builds
+- Four-on-the-floor foundation with complementary percussion
+- Piano and vocal elements for emotional connection
+- Gradual introduction of elements for smooth flow
+
+**Essential Patterns**:
+```
+kick-4x               → Foundation rhythm
+bassline-rolling      → Groove foundation  
+piano-chords          → Harmonic content
+vocal-hook            → Melodic hook
+hi-hat-offbeat        → Rhythmic texture
+```
+
+**Typical Energy Arc**:
+```
+Intro:    20→40% (8 bars)   → Foundation building
+Verse:    40→60% (16 bars)  → Element introduction
+Chorus:   80→80% (16 bars)  → Full arrangement
+Bridge:   50→50% (8 bars)   → Breakdown/variation
+Build:    40→90% (8 bars)   → Tension building
+Drop:     95→95% (16 bars)  → Peak energy
+Outro:    60→20% (8 bars)   → Resolution
+```
+
+### **Techno Music (128-135 BPM)**
+
+**AI Expertise**:
+- Maximum intensity with hypnotic progression
+- Industrial precision and minimalist approach
+- Relentless driving force with subtle variations
+- Focus on groove and rhythmic elements
+
+**Essential Patterns**:
+```
+kick-4x               → Driving foundation
+hi-hat-16th           → Constant drive
+bassline-acid         → 303-style bass
+percussion-minimal    → Industrial percussion
+fx-industrial         → Mechanical sounds
+```
+
+**Typical Arrangement**:
+- Less emphasis on breakdowns and builds
+- Consistent high energy throughout
+- Gradual filter sweeps and effects
+- Focus on hypnotic repetition
+
+### **Trance Music (128-140 BPM)**
+
+**AI Expertise**:
+- Epic builds with emotional breakdown sections
+- Uplifting progression with dramatic tension/release
+- Layered synthesis and harmonic complexity
+- Extended arrangements with proper emotional arcs
+
+**Essential Patterns**:
+```
+kick-4x               → Rhythm foundation
+bassline-pumping      → Sidechain bass
+lead-trance           → Uplifting lead
+pad-ethereal          → Atmospheric pads
+arp-16th              → Driving arpeggios
+```
+
+**Signature Elements**:
+- Extended breakdown sections (32+ bars)
+- Dramatic build-ups with risers and effects
+- Emotional peaks and valleys
+- Complex layering and arrangement
+
+---
+
+## AI Analysis Features
+
+### **Automatic Genre Detection**
+When you add patterns, the AI analyzes and provides:
+
+```
+Pattern Analysis Results:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+House:    85% confidence
+Techno:   25% confidence  
+Trance:   15% confidence
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Detection Reasoning:
+✓ kick-4x: Essential house pattern
+✓ piano-chords: Classic house element
+✓ vocal-hook: House vocal tradition
+⚠ Missing: bassline-rolling (recommended)
+
+Arrangement Style: Optimized for House
+```
+
+### **Pattern Relationship Intelligence**
+The AI understands pattern compatibility:
+
+**Complementary Patterns**:
+```
+kick-4x works well with:
+→ bassline-rolling (frequency separation)
+→ piano-chords (harmonic support)
+→ vocal-hook (melodic interest)
+→ hi-hat-offbeat (rhythmic texture)
+```
+
+**Conflicting Patterns**:
+```
+⚠ Frequency Conflicts:
+kick-4x + sub-drone → Both occupy sub frequencies
+bassline-rolling + bass-808 → Competing bass elements
+
+💡 Suggestion: Use bass-808 for drops, bassline-rolling for verses
+```
+
+### **Energy Arc Design**
+AI creates professional energy flow:
+
+```
+Intelligent Energy Design:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Intro     ████░░░░░░ 30%  → Foundation
+Verse     ██████░░░░ 60%  → Building  
+Chorus    ████████░░ 80%  → Energy peak
+Bridge    ████░░░░░░ 40%  → Tension break
+Build     ██████████ 100% → Maximum build
+Drop      ██████████ 100% → Peak energy
+Outro     ███░░░░░░░ 30%  → Resolution
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+---
+
+## Advanced Features
+
+### **Creative Control System**
+
+**Level 1 - Traditional**: 
+- Classic arrangement structures
+- Genre conventions followed strictly
+- Predictable pattern placement
+- *Best for*: Learning, commercial production
+
+**Level 2 - Balanced** (Recommended):
+- Professional with creative touches
+- Slight variations from conventions
+- Smart pattern experimentation
+- *Best for*: Most arrangements
+
+**Level 3 - Creative**:
+- Interesting arrangement variations
+- Unexpected but musical combinations
+- Cross-genre pattern mixing
+- *Best for*: Artistic projects
+
+**Level 4 - Experimental**:
+- Unconventional structures
+- Surprising pattern relationships
+- Genre-bending approaches
+- *Best for*: Innovation, unique sounds
+
+**Level 5 - Radical**:
+- Completely unconventional
+- Maximum creative freedom
+- Unpredictable results
+- *Best for*: Avant-garde, sound design
+
+### **Pattern Naming Best Practices**
+
+**Good Pattern Names** (AI understands these):
+```
+✓ kick-4x                → Clear rhythm pattern
+✓ bassline-rolling       → Describes movement
+✓ piano-stab             → Instrument + technique
+✓ vocal-hook-filtered    → Multiple descriptors
+✓ riser-breakdown        → Purpose + context
+✓ hi-hat-16th-swing     → Rhythm + feel
+```
+
+**Poor Pattern Names** (AI can't analyze well):
+```
+✗ track1                → No semantic meaning
+✗ audio                 → Too generic
+✗ untitled             → No information
+✗ my_sample            → No musical context
+```
+
+**Advanced Naming**:
+```
+✓ kick-sidechain-pumping     → Technique + effect
+✓ bassline-303-acid-rolling  → Instrument + style + movement
+✓ vocal-female-hook-filtered → Gender + purpose + processing
+✓ synth-lead-trance-uplifting → Instrument + role + genre + mood
+```
+
+---
+
+## Troubleshooting
+
+### **Common Issues**
+
+#### **Empty or Sparse Arrangements**
+**Problem**: Arrangement shows only a few active bars
+**Solution**: 
+- Use more descriptive pattern names
+- Add foundation patterns (kick, bassline)
+- Ensure patterns have semantic meaning
+- Try lower creativity levels (1-2)
+
+#### **Genre Doesn't Match Expectations**
+**Problem**: AI detects wrong genre
+**Solution**:
+- Add genre-specific patterns (see examples above)
+- Use conventional pattern naming
+- Select correct genre in dropdown
+- Add more patterns from target genre
+
+#### **Patterns Not Playing Together**
+**Problem**: Conflicting or incompatible patterns
+**Solution**:
+- Check pattern relationship warnings
+- Avoid frequency conflicts (multiple bass patterns)
+- Use complementary patterns suggested by AI
+- Balance foundation vs texture patterns
+
+#### **AI Generation Fails**
+**Problem**: Error during arrangement generation
+**Solution**:
+- Check API key configuration
+- Verify internet connection
+- Try simpler pattern names
+- Reduce number of patterns
+- Try different creativity level
+
+### **Best Practices**
+
+#### **Pattern Strategy**
+1. **Start with Foundation**: kick, bassline patterns first
+2. **Add Rhythm**: hi-hats, percussion for groove
+3. **Include Harmony**: chords, pads for musicality  
+4. **Add Interest**: vocals, effects, leads for hooks
+5. **Balance Elements**: Don't overload any frequency range
+
+#### **Genre Optimization**
+1. **Study Examples**: Listen to reference tracks in your genre
+2. **Use Genre Keywords**: Include genre terms in pattern names
+3. **Follow Conventions**: Start traditional, add creativity gradually
+4. **Check AI Feedback**: Pay attention to genre detection results
+
+#### **Creativity Scaling**
+1. **Start Conservative**: Use level 1-2 for first attempts
+2. **Understand Your Patterns**: Know what each pattern contributes
+3. **Experiment Gradually**: Increase creativity as you understand results
+4. **Use Reference**: Compare with professional arrangements
+
+---
+
+## Pattern Library Examples
+
+### **Complete House Track Pattern Set**
+```
+Foundation:
+- kick-4x
+- bassline-rolling
+
+Rhythm:
+- hi-hat-offbeat  
+- claps-2-4
+- percussion-shaker
+
+Harmony:
+- piano-chords-stab
+- pad-warm
+
+Melody:
+- vocal-hook
+- lead-synth-simple
+
+Effects:
+- riser-buildup
+- impact-drop
+```
+
+### **Complete Techno Track Pattern Set**
+```
+Foundation:
+- kick-4x-heavy
+- bassline-acid-303
+
+Rhythm:
+- hi-hat-16th-industrial
+- percussion-minimal
+
+Texture:
+- synth-stab-acid
+- fx-mechanical
+
+Effects:
+- filter-sweep-lowpass
+- noise-industrial
+```
+
+### **Complete Trance Track Pattern Set**
+```
+Foundation:
+- kick-4x-punchy
+- bassline-pumping-sidechain
+
+Rhythm:
+- hi-hat-16th
+- percussion-ethnic
+
+Harmony:
+- pad-ethereal-wide
+- strings-emotional
+
+Melody:
+- lead-trance-uplifting
+- arp-16th-melodic
+- vocal-ethereal
+
+Effects:
+- riser-epic-long
+- impact-massive
+- filter-sweep-dramatic
+```
+
+---
+
+## Tips for Professional Results
+
+### **Arrangement Quality**
+1. **Pattern Balance**: Mix foundation, harmony, melody, and texture
+2. **Frequency Separation**: Avoid multiple patterns in same frequency range
+3. **Energy Progression**: Let AI design appropriate energy arcs
+4. **Genre Consistency**: Stick to one primary genre for coherent results
+
+### **Creative Workflow**  
+1. **Start Simple**: Begin with 4-6 core patterns
+2. **Iterate**: Generate multiple arrangements, compare results
+3. **Learn from AI**: Study why certain patterns work together
+4. **Expand Gradually**: Add more patterns as you understand relationships
+
+### **Using Generated Arrangements**
+1. **Export Options**: Use JSON/MIDI export for DAW import
+2. **Visual Reference**: Use Figma arrangement as composition guide
+3. **Adapt and Modify**: Treat as starting point, not final arrangement
+4. **Layer with Creativity**: Add your own variations and fills
+
+---
+
+*For technical documentation, see [API Reference](api-reference.md)*  
+*For development details, see [Architecture](architecture.md)*  
+*For latest features, see [Release Notes](RELEASE_NOTES.md)* 

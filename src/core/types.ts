@@ -111,6 +111,16 @@ export interface PatternMetadata {
     function?: string;
     timing?: string;
     role?: string;
+    
+    // Enhanced metadata for dance music analysis
+    frequencyRange?: string[];        // Which frequency bands this pattern occupies
+    energyContribution?: number;      // Energy level contribution (1-10)
+    rhythmicComplexity?: string;      // simple, moderate, complex, polyrhythmic
+    harmonicRole?: string;            // foundation, melody, harmony, texture, accent
+    layeringPriority?: number;        // Order of introduction (1-10, lower = earlier)
+    genreAffinities?: string[];       // Which genres this pattern works best with
+    frequencyConflicts?: string[];    // Patterns that may conflict in frequency spectrum
+    energyClassification?: string;    // foundation, driving, supporting, atmospheric, accent
 }
 
 export interface PatternRule {
@@ -118,6 +128,48 @@ export interface PatternRule {
     description: string;
     sectionPreference: string[];
     intensity: number;
+    
+    // Enhanced rule properties
+    energyRange?: [number, number];   // Min/max energy contribution
+    frequencyFocus?: string[];        // Which frequency ranges this rule affects
+    genreSpecific?: string[];         // Genres where this rule applies
+    conflictsWith?: string[];         // Pattern types that conflict with this rule
+}
+
+// New interfaces for enhanced pattern analysis
+export interface PatternRelationship {
+    pattern1: string;
+    pattern2: string;
+    relationshipType: 'complementary' | 'conflicting' | 'neutral' | 'layerable';
+    frequencyConflict?: boolean;
+    energyConflict?: boolean;
+    rhythmicConflict?: boolean;
+    confidence: number; // 0-1 confidence score
+}
+
+export interface GenreAnalysis {
+    detectedGenre: string;
+    confidence: number;
+    supportingPatterns: string[];
+    conflictingPatterns: string[];
+    genreScore: {
+        house: number;
+        techno: number;
+        trance: number;
+        [key: string]: number;
+    };
+}
+
+export interface EnergyArc {
+    sections: {
+        name: string;
+        startEnergy: number;
+        endEnergy: number;
+        energyProfile: 'constant' | 'building' | 'dropping' | 'dynamic';
+        peakMoment?: number; // Bar number of peak energy
+    }[];
+    totalEnergyFlow: 'linear' | 'wave' | 'plateau' | 'custom';
+    genreTypical: boolean;
 }
 
 export interface Pattern {

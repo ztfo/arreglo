@@ -20,9 +20,10 @@ export async function generateArrangement(config: ApiConfig, prompt: string): Pr
 async function generateWithOpenAI(prompt: string, apiKey: string): Promise<string> {
     const openai = new OpenAI({ apiKey });
     const response = await openai.chat.completions.create({
-        model: "gpt-4",
+        model: "gpt-4o",
         messages: [{ role: "user", content: prompt }],
         temperature: 0.7,
+        max_tokens: 2000,
     });
     return response.choices[0].message.content || '';
 }
@@ -30,7 +31,7 @@ async function generateWithOpenAI(prompt: string, apiKey: string): Promise<strin
 async function generateWithAnthropic(prompt: string, apiKey: string): Promise<string> {
     const anthropic = new Anthropic({ apiKey });
     const response = await anthropic.messages.create({
-        model: "claude-3-sonnet-20240229",
+        model: "claude-3-5-sonnet-20241022",
         max_tokens: 4096,
         messages: [{ role: "user", content: prompt }],
         temperature: 0.7,
@@ -81,12 +82,13 @@ export class AIService {
                 'Authorization': `Bearer ${this.apiKey}`
             },
             body: JSON.stringify({
-                model: "gpt-4",
+                model: "gpt-4o",
                 messages: [{
                     role: "user",
                     content: prompt
                 }],
-                temperature: 0.7
+                temperature: 0.7,
+                max_tokens: 2000
             })
         });
 

@@ -1,5 +1,8 @@
 import { PatternAnalyzer } from './services/PatternAnalyzer';
-import { PatternMetadata, PatternRule } from './types';
+import { PatternRelationshipAnalyzer } from './services/PatternRelationshipAnalyzer';
+import { GenreDetector } from './services/GenreDetector';
+import { EnergyArcDesigner } from './services/EnergyArcDesigner';
+import { PatternMetadata, PatternRule, GenreAnalysis, EnergyArc } from './types';
 
 export function createArrangementPrompt(
     title: string,
@@ -14,89 +17,148 @@ export function createArrangementPrompt(
         throw new Error('No instruments provided for arrangement');
     }
 
+    // STAGE 1: Context Analysis
+    const contextAnalysis = performContextAnalysis(instruments, genre);
+    
+    // STAGE 2: Energy Arc Design  
+    const energyArc = designEnergyArc(contextAnalysis, selectedSections || [], length);
+    
+    // STAGE 3: Generate Enhanced Arrangement Prompt
+    return generateDetailedArrangementPrompt(
+        title, length, contextAnalysis, energyArc, creativity, style
+    );
+}
+
+// STAGE 1: Context Analysis
+function performContextAnalysis(instruments: string[], targetGenre?: string): {
+    genreAnalysis: any;
+    patternAnalysis: Array<{name: string, metadata: PatternMetadata, rules: PatternRule[]}>;
+    relationships: any[];
+    complementaryGroups: {[key: string]: string[]};
+    conflictingPatterns: {[key: string]: string[]};
+} {
+    // Analyze each pattern with enhanced metadata
     const patternAnalysis = instruments.map(name => ({
         name,
         metadata: PatternAnalyzer.analyzeName(name),
         rules: PatternAnalyzer.getPatternRules(PatternAnalyzer.analyzeName(name))
     }));
 
-    const patternDescriptions = generatePatternDescriptions(patternAnalysis);
-    const patternGuidelines = generatePatternGuidelines(patternAnalysis, creativity);
+    // Detect or validate genre
+    const genreAnalysis = targetGenre ? 
+        { detectedGenre: targetGenre, confidence: 1.0 } :
+        GenreDetector.detectGenre(instruments);
 
-    // Adjust the temperature based on creativity level (0-5)
+    // Analyze pattern relationships
+    const relationships = PatternRelationshipAnalyzer.analyzePatternSet(instruments);
+    
+    // Group complementary and conflicting patterns
+    const complementaryGroups: {[key: string]: string[]} = {};
+    const conflictingPatterns: {[key: string]: string[]} = {};
+    
+    instruments.forEach(pattern => {
+        complementaryGroups[pattern] = PatternRelationshipAnalyzer.findComplementaryPatterns(pattern, instruments);
+        conflictingPatterns[pattern] = PatternRelationshipAnalyzer.findConflictingPatterns(pattern, instruments);
+    });
+
+    return {
+        genreAnalysis,
+        patternAnalysis,
+        relationships,
+        complementaryGroups,
+        conflictingPatterns
+    };
+}
+
+// STAGE 2: Energy Arc Design
+function designEnergyArc(
+    contextAnalysis: any, 
+    selectedSections: string[], 
+    length: number
+): EnergyArc {
+    const detectedGenre = contextAnalysis.genreAnalysis.detectedGenre || 'house';
+    const patterns = contextAnalysis.patternAnalysis.map((p: any) => p.name);
+    
+    // Use selected sections or suggest optimal ones
+    const sections = selectedSections.length > 0 ? 
+        selectedSections : 
+        EnergyArcDesigner.suggestSectionOrder(['Intro', 'Verse', 'Chorus', 'Build-up', 'Drop', 'Outro'], length, detectedGenre);
+    
+    return EnergyArcDesigner.designEnergyArc(sections, length, patterns, detectedGenre);
+}
+
+// STAGE 3: Generate Detailed Arrangement Prompt
+function generateDetailedArrangementPrompt(
+    title: string,
+    length: number, 
+    contextAnalysis: any,
+    energyArc: EnergyArc,
+    creativity: number,
+    style?: string
+): string {
+    const { genreAnalysis, patternAnalysis, complementaryGroups } = contextAnalysis;
+    const detectedGenre = genreAnalysis.detectedGenre || 'house';
+    
     const creativityDescription = creativity <= 1 ? 'traditional'
         : creativity <= 2 ? 'balanced'
         : creativity <= 3 ? 'modern'
         : creativity <= 4 ? 'innovative'
         : 'experimental';
 
-    return `As a music arrangement expert, create a ${creativityDescription} arrangement for a song with these details:
+    const genreConfidence = genreAnalysis.confidence || 1;
+    const genreGuidance = genreConfidence > 0.7 ? 
+        `Strong ${detectedGenre} characteristics detected` :
+        `Moderate ${detectedGenre} influence detected`;
 
+    return `As an expert ${detectedGenre} arrangement specialist, create a professional dance music arrangement:
+
+=== TRACK INFORMATION ===
 Title: ${title}
-${genre ? `Genre: ${genre}` : 'Genre: Modern'}
+Genre: ${detectedGenre} (${genreGuidance})
 ${style ? `Style: ${style}` : ''}
 Creativity Level: ${creativityDescription} (${creativity}/5)
 Total Length: ${length} bars
+Energy Flow: ${energyArc.totalEnergyFlow} pattern
 
-${selectedSections && selectedSections.length > 0
-    ? `Use these sections in order: ${selectedSections.join(', ')}`
-    : 'Recommend appropriate sections based on the genre and style'}
+=== AVAILABLE PATTERNS ===
+${patternAnalysis.map((p: any) => `- ${p.name} [Energy: ${p.metadata.energyContribution}/10, Role: ${p.metadata.harmonicRole}, Freq: ${p.metadata.frequencyRange?.join(', ') || 'mid'}]`).join('\n')}
 
-Available Patterns:
-${instruments.map(name => `- ${name}`).join('\n')}
+=== ENERGY ARC DESIGN ===
+${energyArc.sections.map(section => 
+    `${section.name}: ${section.startEnergy}→${section.endEnergy}% energy (${section.energyProfile} profile)`
+).join('\n')}
 
-Pattern Analysis:
-${patternDescriptions}
+=== PATTERN RELATIONSHIPS ===
+${Object.entries(complementaryGroups).map(([pattern, companions]) => 
+    (companions as string[]).length > 0 ? `${pattern} works well with: ${(companions as string[]).slice(0, 3).join(', ')}` : ''
+).filter(Boolean).slice(0, 5).join('\n')}
 
-Arrangement Guidelines:
-${patternGuidelines}
+=== ARRANGEMENT RULES ===
+- CRITICAL: Total length must be EXACTLY ${length} bars
+- Use only the exact pattern names provided above
+- Follow the energy targets for each section
+- Respect pattern relationships and frequency ranges
+- Layer patterns according to their harmonic roles (foundation → melody → harmony → texture)
+- Each section duration must contribute to the exact total length
 
-IMPORTANT: 
-- Only use the exact pattern names provided above
-- Total arrangement length MUST be exactly ${length} bars (critical requirement)
-- Each section's duration must add up to exactly ${length} bars total
-- Sections should be structured naturally based on musical phrases
+=== SECTION FORMAT ===
+For each section, use this exact format:
 
-Consider these pattern meanings when arranging:
-- Names ending in "4x" indicate four-on-the-floor patterns (steady beats on every quarter note)
-- "bassline - chords" follows chord progressions, ideal for verses and choruses
-- "bassline - melody" is more melodic, good for hooks and builds
-- "bassline - buildup" indicates ascending or intensifying patterns
-- Names with "offbeat" should emphasize off-beat rhythms
-- Names with "solo" indicate lead/featured moments
-- Names with "chords" should follow harmonic progressions
-- Names with "sample" can be used sparsely for impact
-
-For each section, provide the information in this format:
 SECTION: [section name]
 DURATION: [number of bars]
+ENERGY_TARGET: [target energy level from energy arc]
 INSTRUMENT: [instrument name]
-BARS: [comma-separated list of bar numbers]
-END_INSTRUMENT
-
-Example:
-SECTION: Intro
-DURATION: 8
-INSTRUMENT: kick - 4x
-BARS: 1,2,3,4,5,6,7,8  # Steady four-on-the-floor pattern
-END_INSTRUMENT
-INSTRUMENT: bassline - chords
-BARS: 5,6,7,8  # Entering later to build tension
+BARS: [comma-separated bar numbers relative to section start]
+ROLE: [foundation/melody/harmony/texture/accent]
 END_INSTRUMENT
 END_SECTION
 
-Arrange instruments based on their pattern types:
-- Use "4x" patterns consistently in dance sections
-- Introduce "chord" patterns gradually in verses
-- Feature "solo" instruments in bridges or breakdowns
-- Use "buildup" patterns in pre-chorus or build-up sections
-- Layer "offbeat" patterns with main beats for groove
-- Place "sample" patterns strategically for impact
+IMPORTANT: Bar numbers should be relative to each section start (e.g., for a 16-bar section, use "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16" for full section)
 
-Separate each section with three dashes (---).
-${creativity >= 4 ? 'Feel free to use unconventional patterns and transitions while respecting instrument roles.' : 
-  creativity >= 3 ? 'Balance between traditional and innovative elements while maintaining pattern consistency.' :
-  'Stick to established genre conventions and pattern meanings.'}`;
+=== ${detectedGenre.toUpperCase()} ARRANGEMENT PRINCIPLES ===
+${generateGenreSpecificGuidance(detectedGenre, creativity)}
+
+Separate sections with three dashes (---) and ensure all bar numbers add up to exactly ${length} bars.`;
 }
 
 function generatePatternDescriptions(
@@ -143,4 +205,36 @@ function generatePatternGuidelines(
     });
 
     return guidelines.join('\n');
+}
+
+function generateGenreSpecificGuidance(genre: string, creativity: number): string {
+    const genreGuidance: { [key: string]: string } = {
+        house: `- Foundation: Kick on every beat (4x pattern), off-beat hi-hats
+- Groove: Swing timing, emphasis on groove and feel
+- Build-ups: Gradual filter sweeps, percussion layers
+- Drops: Controlled energy, maintain groove
+- Vocals: Use vocal samples strategically for impact`,
+        
+        techno: `- Foundation: Driving 4x kick, consistent energy
+- Percussion: Minimal, precise, industrial sounds
+- Build-ups: Intensity through filtering and effects
+- Drops: Maximum energy, relentless driving force
+- Atmosphere: Dark, mechanical, hypnotic repetition`,
+        
+        trance: `- Foundation: Uplifting 4x kick, emotional progression
+- Melodic: Arpeggiated sequences, emotional leads
+- Build-ups: Epic, extended with rising tension
+- Drops: Euphoric release, maximum emotional impact
+- Breakdown: Emotional, atmospheric, prepare for next build`
+    };
+    
+    const guidance = genreGuidance[genre.toLowerCase()] || genreGuidance.house;
+    
+    const creativityNote = creativity >= 4 ? 
+        '\n- Feel free to break conventions while maintaining genre essence' :
+        creativity >= 3 ? 
+        '\n- Balance traditional elements with modern touches' :
+        '\n- Stay true to classic genre conventions';
+    
+    return guidance + creativityNote;
 } 

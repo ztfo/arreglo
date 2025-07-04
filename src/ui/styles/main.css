@@ -282,6 +282,30 @@ form#songForm .panel.left {
     margin-bottom: 8px;
 }
 
+/* Input with unit styling */
+.input-with-unit {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.input-with-unit input {
+    width: 100%;
+    padding-right: 40px; /* Make room for the unit */
+    margin-bottom: 8px;
+}
+
+.input-unit {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    pointer-events: none;
+    font-weight: 500;
+}
+
 /* Grid Layout */
 .grid-container {
     display: grid;
