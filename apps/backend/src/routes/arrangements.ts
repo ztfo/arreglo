@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { checkAndDecrementCredit, logUsage } from '../services/credits';
 import { generateArrangementWithOpenAI } from '../services/ai';
+import { createArrangementPromptFromSong } from '../services/prompts';
+import { SongData } from '../types';
 
 export const arrangementsRouter = Router();
 
@@ -9,13 +11,14 @@ arrangementsRouter.post('/generate', async (req, res) => {
     const user = (req as any).user;
     if (!user?.id) return res.status(401).json({ error: 'Unauthorized' });
 
-    const { prompt } = req.body || {};
-    if (!prompt) return res.status(400).json({ error: 'Missing prompt' });
+    const { songData, prompt } = req.body || {};
+    if (!prompt && !songData) return res.status(400).json({ error: 'Missing prompt or songData' });
 
     await checkAndDecrementCredit(user.id);
 
     const start = Date.now();
-    const arrangement = await generateArrangementWithOpenAI(prompt);
+    const finalPrompt = prompt || createArrangementPromptFromSong(songData as SongData);
+    const arrangement = await generateArrangementWithOpenAI(finalPrompt);
     const ms = Date.now() - start;
 
     await logUsage(user.id, 'arrangement_generation', { ms });
