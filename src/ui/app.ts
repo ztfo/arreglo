@@ -3,6 +3,8 @@ import { ErrorDisplay } from './components/ErrorDisplay';
 import { Settings } from './components/Settings';
 import { SongForm } from './components/SongForm';
 import { Help } from './components/Help';
+import { AuthUI } from './components/Auth';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { ApiConfig, SongData } from '../core/types';
 import { MessageOverlay } from './components/MessageOverlay';
 
@@ -13,12 +15,17 @@ export class App {
     private messageOverlay: MessageOverlay;
     private isGenerating: boolean = false;
     private hasArrangement: boolean = false;
+    private supabase!: SupabaseClient;
+    private authUI!: AuthUI;
+    private userStatusEl!: HTMLElement;
+    private signOutBtn!: HTMLButtonElement;
 
     constructor() {
         this.messageOverlay = new MessageOverlay();
         this.settings = new Settings(this.handleSettingsSave.bind(this));
         this.help = new Help();
         this.initializeApp();
+        this.initializeAuth();
 
         // Load settings when the app initializes
         document.addEventListener('DOMContentLoaded', () => {
@@ -36,6 +43,50 @@ export class App {
         this.songForm = new SongForm(
             this.handleFormSubmit.bind(this)
         );
+        this.userStatusEl = document.getElementById('userStatus') as HTMLElement;
+        this.signOutBtn = document.getElementById('signOutButton') as HTMLButtonElement;
+        if (this.signOutBtn) {
+            this.signOutBtn.addEventListener('click', async () => {
+                await this.supabase.auth.signOut();
+                await figma.clientStorage.setAsync('SUPABASE_ACCESS_TOKEN', '');
+                this.updateAuthUI(null);
+            });
+        }
+    }
+
+    private initializeAuth() {
+        const url = (process as any).env.SUPABASE_URL || 'https://jfasnpbqruxsyznllbbs.supabase.co';
+        const anon = (process as any).env.SUPABASE_ANON_KEY || '';
+        this.supabase = createClient(url, anon);
+        this.authUI = new AuthUI();
+        this.authUI.onSendLink(async (email) => {
+            await this.supabase.auth.signInWithOtp({ email });
+            this.messageOverlay.show('Magic link sent. Check your email.', 'success');
+        });
+        // Listen for session
+        this.supabase.auth.onAuthStateChange(async (_event, session) => {
+            if (session?.access_token) {
+                await figma.clientStorage.setAsync('SUPABASE_ACCESS_TOKEN', session.access_token);
+                this.messageOverlay.show('Signed in successfully.', 'success');
+                this.updateAuthUI(session.user?.email || '');
+            }
+        });
+
+        // Initialize auth state from current session
+        this.supabase.auth.getSession().then(({ data }) => {
+            const email = data?.session?.user?.email || '';
+            this.updateAuthUI(email);
+        });
+    }
+
+    private updateAuthUI(email: string | null) {
+        const signedIn = !!email;
+        if (this.userStatusEl) {
+            this.userStatusEl.textContent = signedIn ? `Signed in as ${email}` : 'Not signed in';
+        }
+        if (this.signOutBtn) {
+            this.signOutBtn.style.display = signedIn ? 'inline-flex' : 'none';
+        }
     }
 
     private initializeMessageHandling() {

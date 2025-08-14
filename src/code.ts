@@ -660,7 +660,28 @@ figma.ui.onmessage = async (msg) => {
                 songData.creativity
             );
 
-            const response = await generateArrangement(config, prompt);
+            // Try backend first if access token exists
+            const token = await figma.clientStorage.getAsync('SUPABASE_ACCESS_TOKEN');
+            let response: string;
+            if (token) {
+                try {
+                    const { generateArrangementBackend } = await import('./core/api/backend');
+                    response = await generateArrangementBackend({
+                        title: songData.title,
+                        length: songData.length,
+                        genre: songData.genre,
+                        patterns: songData.patterns,
+                        selectedSections: songData.selectedSections,
+                        creativity: songData.creativity,
+                        tempo: songData.tempo
+                    }, token);
+                } catch (e) {
+                    // Fallback to local OpenAI flow
+                    response = await generateArrangement(config, prompt);
+                }
+            } else {
+                response = await generateArrangement(config, prompt);
+            }
             const arrangement = parseArrangement(response, songData.title, songData.length);
             
             // Store arrangement for export

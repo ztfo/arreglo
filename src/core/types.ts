@@ -1,6 +1,7 @@
 export interface ApiConfig {
     OPENAI_API_KEY: string;
     DATA_COLLECTION_CONSENT: boolean;
+    SUPABASE_ACCESS_TOKEN?: string;
 }
 
 export interface SongData {
