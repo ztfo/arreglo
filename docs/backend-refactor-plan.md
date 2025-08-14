@@ -289,3 +289,66 @@ APP_BASE_URL= https://<your-vercel-domain>
 - Whether to keep Anthropic as selectable model in MVP or standardize on one model.
 - Caching policy for repeated prompts to reduce cost.
 - Persisting token usage and cost granularity (request-level vs aggregated).
+
+## Minimal Backend Scaffold (for reference)
+
+```
+apps/backend/
+├── api/
+│   └── index.ts             # Expose Express app for Vercel
+├── src/
+│   ├── app.ts               # Express app (JSON, CORS)
+│   ├── middleware/auth.ts   # Supabase JWT verification
+│   ├── routes/
+│   │   ├── health.ts
+│   │   ├── arrangements.ts  # POST /v1/arrangements/generate (credit check)
+│   │   ├── vision.ts        # POST /v1/vision/extract-tracks (free)
+│   │   ├── billing.ts       # checkout/portal
+│   │   └── webhooks.ts      # Stripe
+│   ├── services/
+│   │   ├── ai.ts            # OpenAI client + prompts reuse
+│   │   ├── storage.ts       # Supabase queries
+│   │   ├── usage.ts         # logs
+│   │   └── credits.ts       # check/decrement credits
+│   └── config/env.ts        # env loading/validation
+├── package.json
+├── tsconfig.json
+└── vercel.json
+```
+
+### Endpoint contract (dev)
+- Auth: pass Supabase Access Token in `Authorization: Bearer <token>` (dev/test accounts ok).
+- Credits: 1 credit is decremented only when an arrangement is successfully generated.
+- Vision: free; still logged in `usage_logs` for analytics.
+
+```ts
+// POST /v1/arrangements/generate
+// body: { songData }
+// response: { arrangement }
+
+// POST /v1/vision/extract-tracks
+// body: { base64Image }
+// response: { trackNames: string[] }
+```
+
+### Development notes
+- No feature flags in dev; plugin can call backend once the endpoint is up.
+- Keep CORS open to `https://www.figma.com` origins and local preview as needed.
+- Ensure no secrets are committed; all environment variables configured in Vercel.
+
+## Testing and Test Users
+- Create test accounts in Supabase Auth (email/password or magic links)
+- Manually set `credit_balance` in `user_profiles` for these accounts
+- Use these tokens to call the API from the plugin in development
+
+### Test Flow
+1. Sign up test user in Supabase Auth
+2. Insert `user_profiles` row for the user (defaults will apply)
+3. Top up credits: `select public.grant_credits('<user_id>'::uuid, 20);`
+4. From plugin, pass the Supabase access token in `Authorization` header to the API
+5. Call `/v1/arrangements/generate` and confirm credit decrements; `/v1/vision/extract-tracks` remains free
+
+### Wiring UI after API is live
+- Replace local OpenAI call in `src/core/api/index.ts` with backend client `generateArrangementBackend(...)`
+- Replace vision helper with `analyzeImageBackend(...)`
+- Remove OpenAI key from settings once backend is enforced in dev
