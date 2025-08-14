@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
+const webpack = require('webpack');
 
 module.exports = {
   mode: 'development',
@@ -34,6 +35,9 @@ module.exports = {
       chunks: ['ui'],
       inject: 'body'
     }),
-    new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/ui/])
+    new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/ui/]),
+    new webpack.DefinePlugin({
+      'process.env.API_BASE_URL': JSON.stringify(process.env.API_BASE_URL || '')
+    })
   ]
 };

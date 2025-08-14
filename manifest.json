@@ -10,7 +10,8 @@
         "allowedDomains": [
             "https://cdnjs.cloudflare.com",
             "https://ka-f.fontawesome.com",
-            "https://api.openai.com"
+            "https://api.openai.com",
+            "https://arreglo.vercel.app"
         ]
     }
 }

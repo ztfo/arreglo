@@ -2,11 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import { createApp } from '../src/app';
 
-const app = express();
-app.use(cors());
-app.use(express.json({ limit: '10mb' }));
+// Create a full Express app with our routes
+const app = createApp();
 
-const inner = createApp();
-app.use(inner);
-
-export default app;
+// Export a Serverless Function handler for Vercel
+export default function handler(req: any, res: any) {
+  return app(req, res);
+}
