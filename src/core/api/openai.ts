@@ -14,8 +14,7 @@ export async function callOpenAI(apiKey: string, prompt: string) {
                     'Authorization': `Bearer ${apiKey}`
                 },
                 body: JSON.stringify({
-                    model: 'gpt-4o', // Fast and excellent for arrangements
-                    // For even better reasoning, could use 'o1-preview' (slower but more sophisticated)
+                    model: 'gpt-5',
                     messages: [{ role: 'user', content: prompt }],
                     temperature: 0.7,
                     max_tokens: 2000

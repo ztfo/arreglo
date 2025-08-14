@@ -453,7 +453,7 @@ async function createVisualArrangement(arrangement: ArrangementData) {
 }
 
 async function validateConfig(config: ApiConfig): Promise<boolean> {
-    return config.OPENAI_API_KEY !== '' || config.ANTHROPIC_API_KEY !== '';
+    return config.OPENAI_API_KEY !== '';
 }
 
 async function analyzeImage(imageBase64: string): Promise<string[]> {
@@ -463,14 +463,14 @@ async function analyzeImage(imageBase64: string): Promise<string[]> {
         throw new Error('OpenAI API key not configured');
     }
     
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${config.OPENAI_API_KEY}`
         },
-        body: JSON.stringify({
-            model: "gpt-4o",
+            body: JSON.stringify({
+            model: "gpt-5",
             messages: [
                 {
                     role: "user",

@@ -1,7 +1,5 @@
 export interface ApiConfig {
-    ANTHROPIC_API_KEY: string;
     OPENAI_API_KEY: string;
-    PREFERRED_API: 'anthropic' | 'openai';
     DATA_COLLECTION_CONSENT: boolean;
 }
 
@@ -96,7 +94,7 @@ export interface ArrangementAnalytics {
         rawResponse: string;
     };
     metadata: {
-        apiUsed: 'openai' | 'anthropic';
+        apiUsed: 'openai';
         processingTime: number;
         success: boolean;
         error?: string;

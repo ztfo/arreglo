@@ -4,7 +4,6 @@ import { Settings } from './components/Settings';
 import { SongForm } from './components/SongForm';
 import { Help } from './components/Help';
 import { ApiConfig, SongData } from '../core/types';
-import { AnalyticsService } from '../services/AnalyticsService';
 import { MessageOverlay } from './components/MessageOverlay';
 
 export class App {

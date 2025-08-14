@@ -54,7 +54,7 @@ A Figma plugin that transforms simple pattern ideas into complete, professional-
 ```bash
 # Download from Figma Community Store
 # Open Figma → Plugins → Arreglo
-# Add your OpenAI or Anthropic API key in settings
+# Add your OpenAI API key in settings
 ```
 
 ### **2. Create an Arrangement**
@@ -139,7 +139,7 @@ Outro:    60→20% (8 bars)  - Resolution
 ## 📋 Requirements
 
 - **Platform**: Figma Desktop App or Web (Chrome/Firefox/Safari)
-- **API Key**: OpenAI or Anthropic API key for AI features
+- **API Key**: OpenAI API key for AI features
 - **Internet**: Required for AI processing
 
 ---

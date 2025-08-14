@@ -7,7 +7,7 @@ This document outlines the implementation of a comprehensive payment system for 
 ## Business Model Overview
 
 ### Current State
-- Users must provide their own OpenAI or Anthropic API keys
+- Users must provide their own OpenAI API keys (until backend is live). After backend launch, keys are managed server-side.
 - No revenue generation for the plugin
 - Barrier to entry for users without API keys
 - No usage tracking or analytics monetization

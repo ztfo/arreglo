@@ -110,7 +110,8 @@ create table public.user_profiles (
   user_id uuid primary key references auth.users(id) on delete cascade,
   created_at timestamptz default now(),
   display_name text,
-  plan text default 'free'
+  plan text default 'free',
+  credit_balance int not null default 0
 );
 
 create table public.arrangements (
@@ -163,13 +164,50 @@ create policy "subscriptions_owner"
   using (auth.uid() = user_id);
 ```
 
-## Billing (Stripe)
-- Create Products/Prices in Stripe.
+## Credits Logic
+- 1 credit = 1 arrangement generation; vision extraction is free.
+- On generation request:
+  - Ensure user is authenticated
+  - Check `credit_balance > 0`
+  - Perform generation
+  - Decrement `credit_balance` by 1 on success
+  - Log usage and token estimates
+- On Stripe purchase or renewal:
+  - Add credits to `user_profiles.credit_balance`
+
+## Generation Endpoint (Pseudocode)
+```ts
+POST /v1/arrangements/generate
+headers: { Authorization: Bearer <supabase_access_token> }
+body: { songData }
+
+authUser = verifySupabaseJWT(token)
+profile = select user_profiles where user_id = authUser.id
+if profile.credit_balance <= 0: return 402 Payment Required
+
+arrangement = ai.generateArrangement(songData)
+
+update user_profiles set credit_balance = credit_balance - 1 where user_id = authUser.id
+insert into arrangements (..., user_id) values (...)
+insert into usage_logs (..., user_id, action_type='arrangement_generation')
+
+return { arrangement }
+```
+
+## Billing (Stripe) and Credits
+- Credit model: 1 credit = 1 arrangement; vision extraction is free.
+- Create Stripe Products/Prices for:
+  - One-time credit packs (e.g., 10, 50, 100 credits)
+  - Optional subscription plans that grant monthly credits
 - Backend endpoints:
-  - `/v1/billing/checkout`: Creates Checkout Session for logged-in user; stores/links `stripe_customer_id`.
+  - `/v1/billing/checkout`: Creates Checkout Session for logged-in user; line items reference price IDs; adds credits on success.
   - `/v1/billing/portal`: Creates Billing Portal session.
-  - `/v1/webhooks/stripe`: Handles events `checkout.session.completed`, `customer.subscription.updated|deleted` to update `subscriptions` and user plan.
-- Supabase stores subscription state; backend enforces plan limits.
+  - `/v1/webhooks/stripe`: Handles `checkout.session.completed`, `invoice.payment_succeeded`, `customer.subscription.updated|deleted`:
+    - On purchase: increment `credit_balance` for user
+    - On subscription renewal: top up `credit_balance`
+- Enforcement:
+  - Generation endpoint checks `credit_balance > 0`; decrements by 1 on success.
+  - Vision endpoint is free (no credit decrement).
 
 ## AI Service (Backend)
 - OpenAI and Anthropic keys stored as backend env vars.
@@ -179,8 +217,8 @@ create policy "subscriptions_owner"
 - Return token usage and estimated cost to usage logs.
 
 ## Rate Limiting
-- Backed by Supabase (daily counters per user) or an in-memory/Redis token bucket (optional) with fallback to DB.
-- Free plan example limits: 5 arrangement generations/day, 5 image analyses/day.
+- With credits, hard daily limits are optional. We may still cap per-day to prevent abuse (e.g., 100/day).
+- Track usage for analytics and cost, but credits are the primary gate.
 
 ## Plugin Refactor (Client)
 - Keep current vision working, but migrate to backend endpoint once ready.
