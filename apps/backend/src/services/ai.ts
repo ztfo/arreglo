@@ -1,6 +1,9 @@
 import OpenAI from 'openai';
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+if (!process.env.OPENAI_API_KEY) {
+  console.warn('[warn] OPENAI_API_KEY is not set');
+}
 
 export async function generateArrangementWithOpenAI(prompt: string): Promise<string> {
   const res = await client.chat.completions.create({
