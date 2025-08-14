@@ -9,7 +9,7 @@
   },
   "keywords": [],
   "author": "ztfo",
-  "license": "ISC",
+  "license": "SEE LICENSE IN LICENSE",
   "description": "a simple figjam plugin to help me arrange songs faster",
   "devDependencies": {
     "@figma/plugin-typings": "^1.97.0",
