@@ -1,9 +1,10 @@
 {
+  "version": 2,
   "functions": {
     "api/index.ts": { "maxDuration": 30 }
   },
   "routes": [
-    { "src": "/v1/(.*)", "dest": "/api/index.ts" },
-    { "src": "/health", "dest": "/api/index.ts" }
+    { "src": "/v1/(.*)", "dest": "/api/index" },
+    { "src": "/health", "dest": "/api/index" }
   ]
 }
