@@ -1,15 +1,15 @@
 # Arreglo - AI-Powered Music Arrangement Generator
 
-> **Version 2.0** - Professional dance music arrangement intelligence for producers
-
 A Figma plugin that transforms simple pattern ideas into complete, professional-quality song arrangements using advanced AI. Specializes in house, techno, and trance music with authentic genre knowledge and intelligent pattern relationships.
+
+Arreglo is evolving into a VST and web app experience that helps you write and arrange music, with an AI co-pilot to navigate and operate your DAW and installed plugins to produce, mix, and master with AI-assisted knowledge.
 
 ## 🎵 Try it Now
 **[Download from Figma Community Store](https://www.figma.com/community/plugin/1473434918581718662/arreglo)**
 
 ![Plugin Demo](images/ui-gifs/generate-arrangement-flow.gif)
 
-## ✨ What's New in v2.0
+## ✨ Highlights
 
 ### 🎯 **Professional AI Intelligence**
 - **Multi-Stage Prompt Architecture**: 3-stage AI process for context analysis → energy arc design → detailed arrangement
@@ -144,26 +144,7 @@ Outro:    60→20% (8 bars)  - Resolution
 
 ---
 
-## 🗺️ Roadmap
-
-### **Current (v2.0)**
-- ✅ Professional arrangement intelligence
-- ✅ Genre-specific AI expertise  
-- ✅ Advanced pattern recognition
-- ✅ Latest AI models (GPT-4o, Claude-3.5-Sonnet)
-
-### **Next (v2.1)**
-- 🔄 Real-time pattern relationship preview
-- 🔄 Extended genre support (DnB, Progressive, Deep House)
-- 🔄 Visual energy arc display
-
-### **Future (v3.0)**
-- 📋 Payment system integration
-- 📋 DAW export (MIDI, Ableton Live, FL Studio)
-- 📋 Collaborative arrangement sharing
-- 📋 Advanced time signatures (3/4, 6/8, 7/8)
-
----
+ 
 
 ## 🎵 Pattern Vocabulary Examples
 
@@ -195,24 +176,12 @@ impact-hit, reverse-cymbal, filter-sweep, glitch-fx
 
 ## 📖 Documentation
 
-- **[Release Notes](docs/RELEASE_NOTES.md)** - Latest features and improvements
-- **[User Guide](docs/user-guide.md)** - Complete usage instructions  
-- **[Architecture](docs/architecture.md)** - Technical system design
-- **[API Reference](docs/api-reference.md)** - Developer documentation
+- **[Backend Refactor Plan](docs/backend-refactor-plan.md)**
+- **[Payment System Integration](docs/payment-system-integration.md)**
 
 ---
 
-## 🤝 Contributing
-
-Arreglo is designed for music producers by music producers. Contributions welcome!
-
-### **Areas for Contribution**
-- **Pattern Vocabulary**: Submit new pattern types and semantic meanings
-- **Genre Expertise**: Add knowledge for new genres (DnB, Progressive, etc.)
-- **Bug Reports**: Found an issue? Report it with arrangement examples
-- **Feature Requests**: Suggest improvements for producer workflow
-
----
+ 
 
 ## 📄 License
 

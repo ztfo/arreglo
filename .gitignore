@@ -7,3 +7,14 @@ envconfig.ts
 *.js
 !webpack.config.js
 .env
+.env.*
+.vercel
+apps/backend/.env*
+apps/backend/node_modules/
+*.local
+*.cache
+*.DS_Store
+coverage/
+*.tgz
+*.zip
+*.tar.gz
