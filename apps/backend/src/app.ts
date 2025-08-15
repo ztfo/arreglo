@@ -3,6 +3,7 @@ import cors from 'cors';
 import { authMiddleware } from './middleware/auth';
 import { arrangementsRouter } from './routes/arrangements';
 import { visionRouter } from './routes/vision';
+import { usageRouter } from './routes/usage';
 import { healthRouter } from './routes/health';
 
 export function createApp() {
@@ -14,6 +15,7 @@ export function createApp() {
   app.use('/v1', authMiddleware);
   app.use('/v1/arrangements', arrangementsRouter);
   app.use('/v1/vision', visionRouter);
+  app.use('/v1/usage', usageRouter);
 
   return app;
 }

@@ -16,10 +16,26 @@ visionRouter.post('/extract-tracks', async (req, res) => {
     const trackNames = await analyzeImageWithOpenAI(base64Image);
     const ms = Date.now() - start;
 
-    await logUsage(user.id, 'image_analysis', { ms });
-    return res.json({ trackNames });
-  } catch (err) {
+    // Log usage (free, but still tracked)
+    await logUsage(user.id, 'image_analysis', { ms, trackCount: trackNames.length });
+
+    return res.json({ 
+      trackNames,
+      analysisTime: ms,
+      trackCount: trackNames.length
+    });
+  } catch (err: any) {
     console.error('vision error', err);
-    return res.status(500).json({ error: 'Failed to analyze image' });
+    
+    // Handle specific OpenAI errors
+    if (err?.message?.includes('rate_limit')) {
+      return res.status(429).json({ error: 'Rate limit exceeded. Please try again later.' });
+    }
+    
+    if (err?.message?.includes('invalid_image')) {
+      return res.status(400).json({ error: 'Invalid image format. Please provide a valid image.' });
+    }
+    
+    return res.status(500).json({ error: 'Failed to analyze image. Please try again.' });
   }
 });
