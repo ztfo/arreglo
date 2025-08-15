@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
 const webpack = require('webpack');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   mode: 'development',
@@ -29,6 +30,10 @@ module.exports = {
     publicPath: '',
   },
   plugins: [
+    new Dotenv({
+      path: '.env', // fallback to .env
+      systemvars: true // allow process.env from CI to override
+    }),
     new HtmlWebpackPlugin({
       template: './src/ui/index.html',
       filename: 'ui.html',
