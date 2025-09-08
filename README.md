@@ -7,13 +7,6 @@ Arreglo turns simple pattern ideas into full song arrangements. I built it to he
 
 ![Plugin demo](images/ui-gifs/generate-arrangement-flow.gif)
 
-## What it does
-- **Understands your patterns**: analyzes roles, frequency ranges, and energy
-- **Designs the energy arc**: intro → build → drop → breakdown → outro
-- **Builds an arrangement**: layers foundation, melody, harmony, and texture
-- **Keeps mixes clean**: avoids frequency clashes and overcrowding
-- **Suggests what’s missing**: recommends patterns that fit your style
-
 ## How to use
 1. Install from the Figma Community and open `Plugins → Arreglo`.
 2. Add your OpenAI API key in settings.
