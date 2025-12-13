@@ -1,10 +1,10 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { analyzeImageWithOpenAI } from '../services/ai';
 import { logUsage } from '../services/credits';
 
 export const visionRouter = Router();
 
-visionRouter.post('/extract-tracks', async (req, res) => {
+visionRouter.post('/extract-tracks', async (req: Request, res: Response) => {
   try {
     const user = (req as any).user;
     if (!user?.id) return res.status(401).json({ error: 'Unauthorized' });

@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
@@ -8,7 +8,7 @@ const supabase = createClient(
 
 export const usageRouter = Router();
 
-usageRouter.get('/', async (req, res) => {
+usageRouter.get('/', async (req: Request, res: Response) => {
   try {
     const user = (req as any).user;
     if (!user?.id) return res.status(401).json({ error: 'Unauthorized' });

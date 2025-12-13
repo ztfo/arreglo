@@ -440,6 +440,38 @@
             border-color: var(--gold);
         }
 
+        .beta-message {
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .beta-message.success {
+            background: rgba(76, 175, 80, 0.15);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            color: #81c784;
+        }
+
+        .beta-message.error {
+            background: rgba(244, 67, 54, 0.15);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #ef5350;
+        }
+
+        .beta-message.loading {
+            background: rgba(231, 212, 148, 0.15);
+            border: 1px solid rgba(231, 212, 148, 0.3);
+            color: var(--gold);
+        }
+
+        .beta-submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         .vst-features {
             display: flex;
             justify-content: center;
@@ -566,17 +598,19 @@
             <p class="vst-description">
                 Take your arrangements directly into your DAW. Sign up for early access.
             </p>
-            <form id="beta-signup" class="beta-form" action="https://formspree.io/f/xjkgjygl" method="POST">
+            <form id="beta-signup" class="beta-form">
                 <div class="form-group">
                     <input 
                         type="email" 
                         name="email" 
+                        id="beta-email"
                         placeholder="Enter your email" 
                         required
                         class="beta-input"
                     >
-                    <button type="submit" class="button">Join Beta</button>
+                    <button type="submit" class="button" id="beta-submit-btn">Join Beta</button>
                 </div>
+                <div id="beta-message" class="beta-message" style="display: none;"></div>
             </form>
             <div class="vst-features">
                 <div class="vst-feature">
@@ -603,5 +637,82 @@
             </div>
         </footer>
     </section>
+
+    <script>
+        // Beta signup form handler
+        (function() {
+            const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                ? 'http://localhost:3000' 
+                : 'https://arreglo.ai';
+            const form = document.getElementById('beta-signup');
+            const emailInput = document.getElementById('beta-email');
+            const submitBtn = document.getElementById('beta-submit-btn');
+            const messageDiv = document.getElementById('beta-message');
+
+            function showMessage(text, type) {
+                messageDiv.textContent = text;
+                messageDiv.className = 'beta-message ' + type;
+                messageDiv.style.display = 'block';
+            }
+
+            function hideMessage() {
+                messageDiv.style.display = 'none';
+            }
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const email = emailInput.value.trim();
+                if (!email) return;
+
+                // Disable form during submission
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Signing up...';
+                hideMessage();
+                showMessage('Processing your signup...', 'loading');
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/v1/beta/signup`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            source: 'website'
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok && data.success) {
+                        showMessage(data.message || 'Thanks for signing up! We\'ll be in touch soon.', 'success');
+                        emailInput.value = '';
+                        // Reset button after a delay
+                        setTimeout(() => {
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = 'Join Beta';
+                        }, 2000);
+                    } else {
+                        showMessage(data.error || 'Something went wrong. Please try again.', 'error');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Join Beta';
+                    }
+                } catch (error) {
+                    console.error('Beta signup error:', error);
+                    showMessage('Network error. Please check your connection and try again.', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Join Beta';
+                }
+            });
+
+            // Clear message when user starts typing
+            emailInput.addEventListener('input', () => {
+                if (messageDiv.style.display === 'block') {
+                    hideMessage();
+                }
+            });
+        })();
+    </script>
 </body>
 </html> 

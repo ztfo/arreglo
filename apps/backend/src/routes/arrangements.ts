@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { checkAndDecrementCredit, logUsage } from '../services/credits';
 import { generateArrangementWithOpenAI } from '../services/ai';
 import { createArrangementPromptFromSong } from '../services/prompts';
@@ -7,7 +7,7 @@ import { SongData } from '../types';
 
 export const arrangementsRouter = Router();
 
-arrangementsRouter.post('/generate', async (req, res) => {
+arrangementsRouter.post('/generate', async (req: Request, res: Response) => {
   try {
     const user = (req as any).user;
     if (!user?.id) return res.status(401).json({ error: 'Unauthorized' });
@@ -54,7 +54,7 @@ arrangementsRouter.post('/generate', async (req, res) => {
 });
 
 // Get user's arrangements
-arrangementsRouter.get('/', async (req, res) => {
+arrangementsRouter.get('/', async (req: Request, res: Response) => {
   try {
     const user = (req as any).user;
     if (!user?.id) return res.status(401).json({ error: 'Unauthorized' });
@@ -68,7 +68,7 @@ arrangementsRouter.get('/', async (req, res) => {
 });
 
 // Get specific arrangement
-arrangementsRouter.get('/:id', async (req, res) => {
+arrangementsRouter.get('/:id', async (req: Request, res: Response) => {
   try {
     const user = (req as any).user;
     if (!user?.id) return res.status(401).json({ error: 'Unauthorized' });

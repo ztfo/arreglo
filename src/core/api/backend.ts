@@ -5,7 +5,7 @@ import { SongData } from '../types';
 
 // Use a build-time constant or environment injection for flexibility.
 // During dev, set this to your Vercel deployment URL.
-const DEFAULT_API_BASE_URL = (typeof process !== 'undefined' && (process as any).env && (process as any).env.API_BASE_URL) || 'https://your-backend.example.com';
+const DEFAULT_API_BASE_URL = (typeof process !== 'undefined' && (process as any).env && (process as any).env.API_BASE_URL) || 'https://arreglo.ai';
 
 function getApiBaseUrl(): string {
     // In Figma plugin we don't have process.env; swap this when wiring to backend
