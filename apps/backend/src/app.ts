@@ -32,11 +32,10 @@ export function createApp() {
   // Public beta signup endpoint (no auth required)
   app.use('/v1/beta', betaPublicRouter);
   
-  // Protected endpoints (require auth)
-  app.use('/v1', authMiddleware);
-  app.use('/v1/arrangements', arrangementsRouter);
-  app.use('/v1/vision', visionRouter);
-  app.use('/v1/usage', usageRouter);
+  // Protected endpoints (require auth) - apply middleware to each protected route
+  app.use('/v1/arrangements', authMiddleware, arrangementsRouter);
+  app.use('/v1/vision', authMiddleware, visionRouter);
+  app.use('/v1/usage', authMiddleware, usageRouter);
 
   return app;
 }

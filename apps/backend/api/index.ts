@@ -1,5 +1,3 @@
-import express from 'express';
-import cors from 'cors';
 import { createApp } from '../src/app';
 
 // Create a full Express app with our routes
