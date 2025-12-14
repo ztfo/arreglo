@@ -1,9 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL as string,
-  process.env.SUPABASE_SERVICE_ROLE_KEY as string
-);
+const supabaseUrl = process.env.SUPABASE_URL as string | undefined;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY as string | undefined;
+const supabase = supabaseUrl && supabaseServiceKey
+  ? createClient(supabaseUrl, supabaseServiceKey)
+  : null;
+
+if (!supabase) {
+  console.warn('Supabase client not initialized - database operations will fail');
+}
 
 export interface ArrangementData {
   userId: string;

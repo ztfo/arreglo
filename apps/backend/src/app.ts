@@ -9,7 +9,22 @@ import { healthRouter } from './routes/health';
 
 export function createApp() {
   const app = express();
-  app.use(cors());
+  
+  // Configure CORS to allow requests from the landing page and Figma
+  app.use(cors({
+    origin: [
+      'https://arreglo.ai',
+      'https://www.arreglo.ai',
+      'https://www.figma.com',
+      'https://figma.com',
+      /^https:\/\/.*\.figma\.com$/,
+      /^https:\/\/.*\.vercel\.app$/
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  }));
+  
   app.use(express.json({ limit: '10mb' }));
 
   app.use('/health', healthRouter);
