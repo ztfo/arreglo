@@ -1,3 +1,4 @@
+-- 003_beta_signups.sql
 -- Beta signups table for VST plugin waitlist
 create table if not exists public.beta_signups (
   id uuid primary key default gen_random_uuid(),

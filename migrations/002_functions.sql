@@ -1,4 +1,4 @@
--- 08132025_functions.sql
+-- 002_functions.sql
 -- Helper functions and views for credits and usage
 
 -- Safely decrement credits for a user; raises exception if insufficient

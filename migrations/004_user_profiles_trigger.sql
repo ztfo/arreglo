@@ -1,4 +1,4 @@
--- 08132025_user_profiles_trigger.sql
+-- 004_user_profiles_trigger.sql
 -- Auto-create user_profiles row when a new user signs up
 
 -- Function to handle new user creation

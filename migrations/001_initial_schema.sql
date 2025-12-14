@@ -1,4 +1,4 @@
--- 08132025_initial_schema.sql
+-- 001_initial_schema.sql
 -- Initial schema for Arreglo (credits + arrangements + subscriptions)
 
 -- Enable required extensions

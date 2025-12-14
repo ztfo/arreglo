@@ -1,4 +1,4 @@
-import { createApp } from '../src/app';
+import { createApp } from '../src/app.js';
 
 // Create a full Express app with our routes
 const app = createApp();
