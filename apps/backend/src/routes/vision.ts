@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
-import { analyzeImageWithOpenAI } from '../services/ai';
-import { logUsage } from '../services/credits';
+import { analyzeImageWithOpenAI } from '../services/ai.js';
+import { logUsage } from '../services/credits.js';
 
 export const visionRouter = Router();
 

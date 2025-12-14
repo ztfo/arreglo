@@ -1,11 +1,11 @@
 import express from 'express';
 import cors from 'cors';
-import { authMiddleware } from './middleware/auth';
-import { arrangementsRouter } from './routes/arrangements';
-import { visionRouter } from './routes/vision';
-import { usageRouter } from './routes/usage';
-import { betaPublicRouter } from './routes/beta';
-import { healthRouter } from './routes/health';
+import { authMiddleware } from './middleware/auth.js';
+import { arrangementsRouter } from './routes/arrangements.js';
+import { visionRouter } from './routes/vision.js';
+import { usageRouter } from './routes/usage.js';
+import { betaPublicRouter } from './routes/beta.js';
+import { healthRouter } from './routes/health.js';
 
 export function createApp() {
   const app = express();

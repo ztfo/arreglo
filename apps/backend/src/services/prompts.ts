@@ -1,4 +1,4 @@
-import { SongData } from '../types';
+import { SongData } from '../types.js';
 
 export function createArrangementPromptFromSong(song: SongData): string {
   const patterns = (song.patterns || []).map(p => p.name);

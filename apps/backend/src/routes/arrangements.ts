@@ -1,10 +1,10 @@
 import { Router, Request, Response } from 'express';
 import { createClient } from '@supabase/supabase-js';
-import { checkAndDecrementCredit, logUsage } from '../services/credits';
-import { generateArrangementWithOpenAI } from '../services/ai';
-import { createArrangementPromptFromSong } from '../services/prompts';
-import { saveArrangement, getUserArrangements, getArrangement } from '../services/storage';
-import { SongData } from '../types';
+import { checkAndDecrementCredit, logUsage } from '../services/credits.js';
+import { generateArrangementWithOpenAI } from '../services/ai.js';
+import { createArrangementPromptFromSong } from '../services/prompts.js';
+import { saveArrangement, getUserArrangements, getArrangement } from '../services/storage.js';
+import { SongData } from '../types.js';
 
 const supabaseUrl = process.env.SUPABASE_URL as string | undefined;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY as string | undefined;
