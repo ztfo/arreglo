@@ -22,6 +22,7 @@ export interface ArrangementData {
 }
 
 export async function saveArrangement(data: ArrangementData): Promise<string> {
+  if (!supabase) throw new Error('Database not configured');
   const { data: result, error } = await supabase
     .from('arrangements')
     .insert({
@@ -42,6 +43,7 @@ export async function saveArrangement(data: ArrangementData): Promise<string> {
 }
 
 export async function getUserArrangements(userId: string) {
+  if (!supabase) throw new Error('Database not configured');
   const { data, error } = await supabase
     .from('arrangements')
     .select('*')
@@ -53,6 +55,7 @@ export async function getUserArrangements(userId: string) {
 }
 
 export async function getArrangement(id: string, userId: string) {
+  if (!supabase) throw new Error('Database not configured');
   const { data, error } = await supabase
     .from('arrangements')
     .select('*')
