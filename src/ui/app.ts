@@ -55,8 +55,21 @@ export class App {
     }
 
     private initializeAuth() {
-        const url = (process as any).env.SUPABASE_URL || 'https://jfasnpbqruxsyznllbbs.supabase.co';
-        const anon = (process as any).env.SUPABASE_ANON_KEY || '';
+        // These should be injected at build time via webpack DefinePlugin
+        // No hardcoded fallbacks to avoid exposing sensitive infrastructure details
+        const url = (process as any).env?.SUPABASE_URL;
+        const anon = (process as any).env?.SUPABASE_ANON_KEY;
+        
+        if (!url || !anon) {
+            console.error('Supabase configuration missing. SUPABASE_URL and SUPABASE_ANON_KEY must be set at build time.');
+            // Create a dummy client that will fail gracefully
+            // This prevents the app from crashing but auth won't work
+            this.supabase = createClient('https://placeholder.supabase.co', 'placeholder-key');
+            this.authUI = new AuthUI();
+            this.messageOverlay.show('Authentication not configured. Please rebuild with environment variables.', 'error');
+            return;
+        }
+        
         this.supabase = createClient(url, anon);
         this.authUI = new AuthUI();
         this.authUI.onSendLink(async (email) => {

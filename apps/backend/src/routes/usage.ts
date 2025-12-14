@@ -47,15 +47,17 @@ usageRouter.get('/', async (req: Request, res: Response) => {
         creditBalance: profile?.credit_balance || 0
       },
       usage: usageSummary ? {
-        totalActions: usageSummary.total_actions || 0,
-        arrangementsGenerated: usageSummary.arrangements_generated || 0,
-        imagesAnalyzed: usageSummary.images_analyzed || 0,
-        totalCostCents: usageSummary.total_cost_cents || 0
+        arrangementsGenerated: usageSummary.total_arrangements || 0,
+        imagesAnalyzed: usageSummary.total_image_analyses || 0,
+        totalCostCents: usageSummary.total_cost_cents || 0,
+        firstUse: usageSummary.first_use,
+        lastUse: usageSummary.last_use
       } : {
-        totalActions: 0,
         arrangementsGenerated: 0,
         imagesAnalyzed: 0,
-        totalCostCents: 0
+        totalCostCents: 0,
+        firstUse: null,
+        lastUse: null
       }
     });
   } catch (err: any) {
