@@ -1,52 +1,41 @@
-// Thin backend API client (disabled until backend is live).
-// Keep secrets server-side. This client sends authenticated requests to your API.
+const API_BASE_URL = 'https://arreglo.vercel.app';
 
-import { SongData } from '../types';
-
-// Use a build-time constant or environment injection for flexibility.
-// During dev, set this to your Vercel deployment URL.
-const DEFAULT_API_BASE_URL = (typeof process !== 'undefined' && (process as any).env && (process as any).env.API_BASE_URL) || 'https://arreglo.vercel.app';
-
-function getApiBaseUrl(): string {
-    // In Figma plugin we don't have process.env; swap this when wiring to backend
-    return DEFAULT_API_BASE_URL;
+export class BackendError extends Error {
+    constructor(message: string, public statusCode: number) {
+        super(message);
+        this.name = 'BackendError';
+    }
 }
 
-export async function generateArrangementBackend(songData: SongData, accessToken?: string): Promise<string> {
-    const response = await fetch(`${getApiBaseUrl()}/v1/arrangements/generate`, {
+async function backendFetch(path: string, token: string, body: object): Promise<Response> {
+    const response = await fetch(`${API_BASE_URL}${path}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            ...(accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {})
+            'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ songData })
+        body: JSON.stringify(body)
     });
 
     if (!response.ok) {
         const text = await response.text().catch(() => '');
-        throw new Error(`Backend generate failed: ${response.status} ${response.statusText} ${text}`);
+        throw new BackendError(
+            `Backend request failed: ${response.status} ${text}`,
+            response.status
+        );
     }
 
+    return response;
+}
+
+export async function generateArrangementBackend(prompt: string, token: string): Promise<string> {
+    const response = await backendFetch('/v1/arrangements/generate', token, { prompt });
     const data = await response.json();
     return data.arrangement;
 }
 
-export async function analyzeImageBackend(base64Image: string, accessToken?: string): Promise<string[]> {
-    const response = await fetch(`${getApiBaseUrl()}/v1/vision/extract-tracks`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            ...(accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {})
-        },
-        body: JSON.stringify({ base64Image })
-    });
-
-    if (!response.ok) {
-        const text = await response.text().catch(() => '');
-        throw new Error(`Backend vision failed: ${response.status} ${response.statusText} ${text}`);
-    }
-
+export async function analyzeImageBackend(base64Image: string, token: string): Promise<string[]> {
+    const response = await backendFetch('/v1/vision/extract-tracks', token, { base64Image });
     const data = await response.json();
     return data.trackNames as string[];
 }
-

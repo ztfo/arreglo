@@ -1,5 +1,4 @@
 export interface ApiConfig {
-    OPENAI_API_KEY: string;
     DATA_COLLECTION_CONSENT: boolean;
     SUPABASE_ACCESS_TOKEN?: string;
 }
@@ -95,7 +94,7 @@ export interface ArrangementAnalytics {
         rawResponse: string;
     };
     metadata: {
-        apiUsed: 'openai';
+        apiUsed: 'backend';
         processingTime: number;
         success: boolean;
         error?: string;

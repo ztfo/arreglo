@@ -2,10 +2,8 @@ import { ApiConfig } from '../../core/types';
 
 export class Settings {
   private panel: HTMLElement;
-  private openaiKey: HTMLInputElement;
   private dataConsent: HTMLInputElement;
   private _config: ApiConfig = {
-    OPENAI_API_KEY: '',
     DATA_COLLECTION_CONSENT: true
   };
 
@@ -15,14 +13,10 @@ export class Settings {
 
   constructor(private onSave: (config: ApiConfig) => void) {
     this.panel = document.getElementById('settings') as HTMLElement;
-    this.openaiKey = document.getElementById('openaiKey') as HTMLInputElement;
     this.dataConsent = document.getElementById('dataCollectionConsent') as HTMLInputElement;
 
     document.getElementById('settingsButton')?.addEventListener('click', () => {
         this.toggle();
-        if (this.panel.classList.contains('visible')) {
-            this.openaiKey.focus();
-        }
     });
 
     document.getElementById('saveSettings')?.addEventListener('click', () => {
@@ -33,22 +27,20 @@ export class Settings {
   }
 
   public async loadSettings() {
-    parent.postMessage({ 
-        pluginMessage: { 
-            type: 'load-settings' 
+    parent.postMessage({
+        pluginMessage: {
+            type: 'load-settings'
         }
     }, '*');
   }
 
   public updateSettings(config: ApiConfig) {
     this._config = { ...config };
-    this.openaiKey.value = config.OPENAI_API_KEY || '';
     this.dataConsent.checked = config.DATA_COLLECTION_CONSENT || false;
   }
 
   private handleSave() {
     const config: ApiConfig = {
-      OPENAI_API_KEY: this.openaiKey.value,
       DATA_COLLECTION_CONSENT: this.dataConsent.checked
     };
     this._config = { ...config };
@@ -64,6 +56,4 @@ export class Settings {
       this.panel.removeAttribute('inert');
     }
   }
-
-  public getPreferredApi(): 'openai' { return 'openai'; }
 }

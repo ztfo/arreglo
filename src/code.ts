@@ -1,5 +1,5 @@
 import { getConfig, setConfig } from './core/config';
-import { generateArrangement } from './core/api';
+import { generateArrangementBackend, analyzeImageBackend, BackendError } from './core/api';
 import { parseArrangement } from './core/utils';
 import { ApiConfig, SongData, ArrangementData } from './core/types';
 import { createArrangementPrompt } from './core/prompts';
@@ -8,11 +8,39 @@ import { ExportManager, ExportOptions, ExportFormat } from './core/exports';
 // Store last generated arrangement for export
 let lastGeneratedArrangement: ArrangementData | null = null;
 
-figma.showUI(__html__, { 
-    width: 700, 
+figma.showUI(__html__, {
+    width: 700,
     height: 690,
-    themeColors: true 
+    themeColors: true
 });
+
+// One-time cleanup: remove legacy OPENAI_API_KEY from clientStorage
+figma.clientStorage.getAsync('OPENAI_API_KEY').then(key => {
+    if (key) figma.clientStorage.deleteAsync('OPENAI_API_KEY');
+});
+
+async function requireAuth(): Promise<string> {
+    const token = await figma.clientStorage.getAsync('SUPABASE_ACCESS_TOKEN');
+    if (!token) {
+        throw new Error('Please sign in to use this feature.');
+    }
+    return token as string;
+}
+
+function handleBackendError(error: unknown): string {
+    if (error instanceof BackendError) {
+        switch (error.statusCode) {
+            case 401: return 'Session expired. Please sign in again.';
+            case 402: return 'Insufficient credits. Please purchase more credits.';
+            case 429: return 'Rate limit exceeded. Please wait and try again.';
+            default: return 'Generation failed. Please try again.';
+        }
+    }
+    if (error instanceof Error && error.message.includes('sign in')) {
+        return error.message;
+    }
+    return 'Generation failed. Please try again.';
+}
 
 const BASE_COLORS = [
     { r: 0.93, g: 0.39, b: 0.39 }, // Red
@@ -61,10 +89,10 @@ function createPatternBlock(instrument: string, pattern: string, instrumentIndex
 function createInstrumentTrack(instrument: string, pattern: string, startBar: number, duration: number, trackHeight: number, instrumentIndex: number) {
     const track = figma.createRectangle();
     track.name = `${instrument} Track`;
-    track.x = startBar * 12; 
+    track.x = startBar * 12;
     track.resize(duration * 12 - 2, trackHeight);
-    track.fills = [{ 
-        type: 'SOLID', 
+    track.fills = [{
+        type: 'SOLID',
         color: getColorForInstrument(instrument, instrumentIndex)
     }];
     track.cornerRadius = 4;
@@ -76,7 +104,7 @@ function createInstrumentTrack(instrument: string, pattern: string, startBar: nu
     label.textAlignHorizontal = "CENTER";
     label.textAlignVertical = "CENTER";
     label.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
-    
+
     label.x = track.x + (track.width - label.width) / 2;
     label.y = track.y + (trackHeight - label.height) / 2;
 
@@ -98,8 +126,8 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         mainFrame.paddingBottom = 32;
         mainFrame.paddingLeft = 32;
         mainFrame.paddingRight = 32;
-        mainFrame.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }]; 
-  
+        mainFrame.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }];
+
         mainFrame.strokes = [{
             type: 'SOLID',
             color: { r: 0.047, g: 0.047, b: 0.047 } // #0c0c0c
@@ -369,7 +397,7 @@ async function createVisualArrangement(arrangement: ArrangementData) {
             let currentBar = 0;
             arrangement.sections.forEach(section => {
                 const activeBars = section.instruments[instrument];
-                
+
                 // Create bars for this section
                 for (let i = 0; i < section.duration; i++) {
                     const barBlock = figma.createFrame();
@@ -379,8 +407,8 @@ async function createVisualArrangement(arrangement: ArrangementData) {
                     barBlock.y = 1;
                     barBlock.layoutMode = "HORIZONTAL";
                     barBlock.itemSpacing = 0;
-                    barBlock.fills = [{ 
-                        type: 'SOLID', 
+                    barBlock.fills = [{
+                        type: 'SOLID',
                         color: getColorForInstrument(instrument, instrumentIndex),
                         opacity: activeBars && activeBars.includes(i + 1) ? 1 : 0.1
                     }];
@@ -399,17 +427,17 @@ async function createVisualArrangement(arrangement: ArrangementData) {
                         const beatBlock = figma.createRectangle();
                         beatBlock.name = `Beat ${beat + 1}`;
                         beatBlock.resize(12, 48);
-                        beatBlock.fills = [{ 
-                            type: 'SOLID', 
+                        beatBlock.fills = [{
+                            type: 'SOLID',
                             color: { r: 1, g: 1, b: 1 },
                             opacity: beat % 2 === 0 ? 0.1 : 0.05
                         }];
                         barBlock.appendChild(beatBlock);
                     }
-                    
+
                     row.appendChild(barBlock);
                 }
-                
+
                 currentBar += section.duration;
             });
 
@@ -424,7 +452,7 @@ async function createVisualArrangement(arrangement: ArrangementData) {
         const contentContainer = figma.createFrame();
         contentContainer.name = "Content Container";
         contentContainer.layoutMode = "HORIZONTAL";
-        contentContainer.itemSpacing = 0; // Removed 16px spacing
+        contentContainer.itemSpacing = 0;
         contentContainer.fills = [];
         contentContainer.counterAxisSizingMode = "AUTO";
         contentContainer.appendChild(instrumentsColumn);
@@ -452,172 +480,122 @@ async function createVisualArrangement(arrangement: ArrangementData) {
     }
 }
 
-async function validateConfig(config: ApiConfig): Promise<boolean> {
-    return config.OPENAI_API_KEY !== '';
-}
-
-async function analyzeImage(imageBase64: string): Promise<string[]> {
-    const config = await getConfig();
-    
-    if (!config.OPENAI_API_KEY) {
-        throw new Error('OpenAI API key not configured');
-    }
-    
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${config.OPENAI_API_KEY}`
-        },
-            body: JSON.stringify({
-            model: "gpt-5",
-            messages: [
-                {
-                    role: "user",
-                    content: [
-                        {
-                            type: "text",
-                            text: "Please analyze this DAW screenshot and extract all track/instrument names. Return them as a comma-separated list."
-                        },
-                        {
-                            type: "image_url",
-                            image_url: {
-                                url: `data:image/png;base64,${imageBase64}`
-                            }
-                        }
-                    ]
-                }
-            ],
-            max_tokens: 1000
-        })
-    });
-
-    if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        throw new Error(`Failed to analyze image: ${response.statusText}${errorData ? ' - ' + JSON.stringify(errorData) : ''}`);
-    }
-
-    const data = await response.json();
-    const extractedText = data.choices[0].message.content;
-    return extractedText.split(',').map((name: string) => name.trim());
-}
-
 const TEST_ARRANGEMENT_RESPONSE = `---
 
-SECTION: Intro  
-DURATION: 8  
-INSTRUMENT: kick - 4x  
-BARS: 1,2,3,4,5,6,7,8  
-END_INSTRUMENT  
-INSTRUMENT: hi-hat - offbeat  
-BARS: 1,2,3,4,5,6,7,8  
-END_INSTRUMENT  
-INSTRUMENT: vox sample  
-BARS: 4,8  
-END_INSTRUMENT  
-END_SECTION  
+SECTION: Intro
+DURATION: 8
+INSTRUMENT: kick - 4x
+BARS: 1,2,3,4,5,6,7,8
+END_INSTRUMENT
+INSTRUMENT: hi-hat - offbeat
+BARS: 1,2,3,4,5,6,7,8
+END_INSTRUMENT
+INSTRUMENT: vox sample
+BARS: 4,8
+END_INSTRUMENT
+END_SECTION
 
 ---
 
-SECTION: Verse 1  
-DURATION: 16  
-INSTRUMENT: kick - 4x  
-BARS: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16  
-END_INSTRUMENT  
-INSTRUMENT: bassline - chords  
-BARS: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16  
-END_INSTRUMENT  
-INSTRUMENT: hi-hat - offbeat  
-BARS: 5,6,7,8,13,14,15,16  
-END_INSTRUMENT  
-END_SECTION  
+SECTION: Verse 1
+DURATION: 16
+INSTRUMENT: kick - 4x
+BARS: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+END_INSTRUMENT
+INSTRUMENT: bassline - chords
+BARS: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+END_INSTRUMENT
+INSTRUMENT: hi-hat - offbeat
+BARS: 5,6,7,8,13,14,15,16
+END_INSTRUMENT
+END_SECTION
 
 ---
 
-SECTION: Chorus 1  
-DURATION: 8  
-INSTRUMENT: kick - 4x  
-BARS: 1,2,3,4,5,6,7,8  
-END_INSTRUMENT  
-INSTRUMENT: bassline - melody  
-BARS: 1,2,3,4,5,6,7,8  
-END_INSTRUMENT  
-INSTRUMENT: lead synth - chords  
-BARS: 1,2,3,4,5,6,7,8  
-END_INSTRUMENT  
-INSTRUMENT: vox sample  
-BARS: 4,8  
-END_INSTRUMENT  
-END_SECTION  
+SECTION: Chorus 1
+DURATION: 8
+INSTRUMENT: kick - 4x
+BARS: 1,2,3,4,5,6,7,8
+END_INSTRUMENT
+INSTRUMENT: bassline - melody
+BARS: 1,2,3,4,5,6,7,8
+END_INSTRUMENT
+INSTRUMENT: lead synth - chords
+BARS: 1,2,3,4,5,6,7,8
+END_INSTRUMENT
+INSTRUMENT: vox sample
+BARS: 4,8
+END_INSTRUMENT
+END_SECTION
 
 ---
 
-SECTION: Verse 2  
-DURATION: 16  
-INSTRUMENT: kick - 4x  
-BARS: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16  
-END_INSTRUMENT  
-INSTRUMENT: bassline - chords  
-BARS: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16  
-END_INSTRUMENT  
-INSTRUMENT: hi-hat - offbeat  
-BARS: 5,6,7,8,13,14,15,16  
-END_INSTRUMENT  
-END_SECTION  
+SECTION: Verse 2
+DURATION: 16
+INSTRUMENT: kick - 4x
+BARS: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+END_INSTRUMENT
+INSTRUMENT: bassline - chords
+BARS: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+END_INSTRUMENT
+INSTRUMENT: hi-hat - offbeat
+BARS: 5,6,7,8,13,14,15,16
+END_INSTRUMENT
+END_SECTION
 
 ---
 
-SECTION: Chorus 2  
-DURATION: 8  
-INSTRUMENT: kick - 4x  
-BARS: 1,2,3,4,5,6,7,8  
-END_INSTRUMENT  
-INSTRUMENT: bassline - melody  
-BARS: 1,2,3,4,5,6,7,8  
-END_INSTRUMENT  
-INSTRUMENT: lead synth - chords  
-BARS: 1,2,3,4,5,6,7,8  
-END_INSTRUMENT  
-INSTRUMENT: vox sample  
-BARS: 4,8  
-END_INSTRUMENT  
-END_SECTION  
+SECTION: Chorus 2
+DURATION: 8
+INSTRUMENT: kick - 4x
+BARS: 1,2,3,4,5,6,7,8
+END_INSTRUMENT
+INSTRUMENT: bassline - melody
+BARS: 1,2,3,4,5,6,7,8
+END_INSTRUMENT
+INSTRUMENT: lead synth - chords
+BARS: 1,2,3,4,5,6,7,8
+END_INSTRUMENT
+INSTRUMENT: vox sample
+BARS: 4,8
+END_INSTRUMENT
+END_SECTION
 
 ---
 
-SECTION: Bridge  
-DURATION: 8  
-INSTRUMENT: saxophone - solo  
-BARS: 1,2,3,4,5,6,7,8  
-END_INSTRUMENT  
-INSTRUMENT: bassline - chords  
-BARS: 1,2,3,4,5,6,7,8  
-END_INSTRUMENT  
-INSTRUMENT: hi-hat - offbeat  
-BARS: 5,6,7,8  
-END_INSTRUMENT  
-END_SECTION  
+SECTION: Bridge
+DURATION: 8
+INSTRUMENT: saxophone - solo
+BARS: 1,2,3,4,5,6,7,8
+END_INSTRUMENT
+INSTRUMENT: bassline - chords
+BARS: 1,2,3,4,5,6,7,8
+END_INSTRUMENT
+INSTRUMENT: hi-hat - offbeat
+BARS: 5,6,7,8
+END_INSTRUMENT
+END_SECTION
 
 ---
 
-SECTION: Build-up  
-DURATION: 8  
-INSTRUMENT: kick - 4x  
-BARS: 1,2,3,4,5,6,7,8  
-END_INSTRUMENT  
-INSTRUMENT: bassline - melody  
-BARS: 1,2,3,4,5,6,7,8  
-END_INSTRUMENT  
-INSTRUMENT: lead synth - chords  
-BARS: 5,6,7,8  
-END_INSTRUMENT  
-INSTRUMENT: hi-hat - offbeat  
-BARS: 1,2,3,4,5,6,7,8  
-END_INSTRUMENT  
-INSTRUMENT: vox sample  
-BARS: 8  
-END_INSTRUMENT  
-END_SECTION  
+SECTION: Build-up
+DURATION: 8
+INSTRUMENT: kick - 4x
+BARS: 1,2,3,4,5,6,7,8
+END_INSTRUMENT
+INSTRUMENT: bassline - melody
+BARS: 1,2,3,4,5,6,7,8
+END_INSTRUMENT
+INSTRUMENT: lead synth - chords
+BARS: 5,6,7,8
+END_INSTRUMENT
+INSTRUMENT: hi-hat - offbeat
+BARS: 1,2,3,4,5,6,7,8
+END_INSTRUMENT
+INSTRUMENT: vox sample
+BARS: 8
+END_INSTRUMENT
+END_SECTION
 
 ---`;
 
@@ -634,20 +612,14 @@ figma.ui.onmessage = async (msg) => {
             await setConfig(msg.config);
             figma.ui.postMessage({ type: 'settings-saved' });
         } else if (msg.type === 'analyze-image') {
-            const config = await getConfig();
-            if (!config.OPENAI_API_KEY) {
-                throw new Error('OpenAI API key not configured');
-            }
-            const trackNames = await analyzeImage(msg.base64Image);
-            figma.ui.postMessage({ 
+            const token = await requireAuth();
+            const trackNames = await analyzeImageBackend(msg.base64Image, token);
+            figma.ui.postMessage({
                 type: 'image-analyzed',
                 trackNames
             });
         } else if (msg.type === 'generate-arrangement') {
-            const config = await getConfig();
-            if (!await validateConfig(config)) {
-                throw new Error('Please configure at least one API key in settings first!');
-            }
+            const token = await requireAuth();
 
             const songData = msg.songData as SongData;
             const prompt = createArrangementPrompt(
@@ -660,34 +632,12 @@ figma.ui.onmessage = async (msg) => {
                 songData.creativity
             );
 
-            // Try backend first if access token exists
-            const token = await figma.clientStorage.getAsync('SUPABASE_ACCESS_TOKEN');
-            let response: string;
-            if (token) {
-                try {
-                    const { generateArrangementBackend } = await import('./core/api/backend');
-                    response = await generateArrangementBackend({
-                        title: songData.title,
-                        length: songData.length,
-                        genre: songData.genre,
-                        instruments: songData.patterns ? songData.patterns.map(p => p.name) : [],
-                        patterns: songData.patterns,
-                        selectedSections: songData.selectedSections,
-                        creativity: songData.creativity,
-                        tempo: songData.tempo
-                    }, token);
-                } catch (e) {
-                    // Fallback to local OpenAI flow
-                    response = await generateArrangement(config, prompt);
-                }
-            } else {
-                response = await generateArrangement(config, prompt);
-            }
+            const response = await generateArrangementBackend(prompt, token);
             const arrangement = parseArrangement(response, songData.title, songData.length);
-            
+
             // Store arrangement for export
             lastGeneratedArrangement = arrangement;
-            
+
             await createVisualArrangement(arrangement);
             figma.ui.postMessage({ type: 'success', message: 'Arrangement created!' });
         } else if (msg.type === 'export-arrangement') {
@@ -705,10 +655,10 @@ figma.ui.onmessage = async (msg) => {
             };
 
             const result = await ExportManager.exportArrangement(lastGeneratedArrangement, exportOptions);
-            
+
             if (result.success) {
-                figma.ui.postMessage({ 
-                    type: 'export-success', 
+                figma.ui.postMessage({
+                    type: 'export-success',
                     result: {
                         filename: result.filename,
                         mimeType: result.mimeType,
@@ -725,10 +675,10 @@ figma.ui.onmessage = async (msg) => {
         }
     } catch (error: unknown) {
         console.error('Plugin error:', error);
-        const errorMessage = (error as Error).message || 'An unknown error occurred';
-        figma.ui.postMessage({ 
-            type: 'error', 
-            message: errorMessage 
+        const errorMessage = handleBackendError(error);
+        figma.ui.postMessage({
+            type: 'error',
+            message: errorMessage
         });
     }
 };
