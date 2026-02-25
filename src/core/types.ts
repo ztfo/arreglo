@@ -1,6 +1,5 @@
 export interface ApiConfig {
     DATA_COLLECTION_CONSENT: boolean;
-    SUPABASE_ACCESS_TOKEN?: string;
 }
 
 export interface SongData {

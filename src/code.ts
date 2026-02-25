@@ -36,10 +36,8 @@ function handleBackendError(error: unknown): string {
             default: return 'Generation failed. Please try again.';
         }
     }
-    if (error instanceof Error && error.message.includes('sign in')) {
-        return error.message;
-    }
-    return 'Generation failed. Please try again.';
+    if (error instanceof Error) return error.message;
+    return 'An unexpected error occurred.';
 }
 
 const BASE_COLORS = [
