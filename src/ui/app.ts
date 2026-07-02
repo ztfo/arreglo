@@ -142,7 +142,11 @@ export class App {
     private updateAuthUI(email: string | null) {
         const signedIn = !!email;
         if (this.userStatusEl) {
-            this.userStatusEl.textContent = signedIn ? `Signed in as ${email}` : 'Not signed in';
+            this.userStatusEl.textContent = signedIn ? (email as string) : 'Not signed in';
+        }
+        const statusDot = document.getElementById('statusDot');
+        if (statusDot) {
+            statusDot.classList.toggle('online', signedIn);
         }
         if (this.signOutBtn) {
             this.signOutBtn.style.display = signedIn ? 'inline-flex' : 'none';

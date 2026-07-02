@@ -12,15 +12,22 @@ export function createApp() {
   const app = express();
   
   // Configure CORS to allow requests from the landing page and Figma
+  const ALLOWED_ORIGINS: (string | RegExp)[] = [
+    'https://arreglo.ai',
+    'https://www.arreglo.ai',
+    'https://www.figma.com',
+    'https://figma.com',
+    /^https:\/\/.*\.figma\.com$/,
+    /^https:\/\/.*\.vercel\.app$/
+  ];
   app.use(cors({
-    origin: [
-      'https://arreglo.ai',
-      'https://www.arreglo.ai',
-      'https://www.figma.com',
-      'https://figma.com',
-      /^https:\/\/.*\.figma\.com$/,
-      /^https:\/\/.*\.vercel\.app$/
-    ],
+    origin: (origin, cb) => {
+      // Figma plugin iframes (sandboxed data: URLs) send Origin: null —
+      // fine to allow since every protected route requires a bearer token
+      if (!origin || origin === 'null') return cb(null, true);
+      const ok = ALLOWED_ORIGINS.some(o => typeof o === 'string' ? o === origin : o.test(origin));
+      cb(null, ok);
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']

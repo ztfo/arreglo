@@ -5,7 +5,7 @@
   "type": "module",
   "license": "SEE LICENSE IN LICENSE",
   "scripts": {
-    "dev": "vercel dev",
+    "dev": "tsc && node --env-file=.env dev-server.mjs",
     "build": "tsc",
     "start": "node api/index.js"
   },
