@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Checkout — Arreglo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #E7D494;
+            --dark: #0C0C0C;
+            --light: #FFFFFF;
+            --glass-bg: rgba(255, 255, 255, 0.06);
+            --glass-border: rgba(255, 255, 255, 0.14);
+        }
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(1200px 800px at 10% -10%, rgba(199, 171, 105, 0.15), transparent 60%), var(--dark);
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 48px 40px;
+            max-width: 420px;
+            margin: 24px;
+        }
+        h1 { color: var(--gold); font-size: 1.6rem; margin: 0 0 12px; }
+        p { line-height: 1.6; opacity: 0.85; }
+        .check { font-size: 2.5rem; margin-bottom: 16px; }
+    </style>
+</head>
+<body>
+    <div class="card" id="success" hidden>
+        <div class="check">✓</div>
+        <h1>Payment received</h1>
+        <p>Your credits will appear in the Arreglo plugin within a few seconds.</p>
+        <p>You can close this tab and head back to Figma.</p>
+    </div>
+    <div class="card" id="cancel" hidden>
+        <h1>Checkout canceled</h1>
+        <p>No charge was made. You can close this tab and try again from the Arreglo plugin anytime.</p>
+    </div>
+    <script>
+        var status = new URLSearchParams(location.search).get('status');
+        document.getElementById(status === 'cancel' ? 'cancel' : 'success').hidden = false;
+    </script>
+</body>
+</html>

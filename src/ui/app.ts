@@ -19,6 +19,10 @@ export class App {
     private authUI!: AuthUI;
     private userStatusEl!: HTMLElement;
     private signOutBtn!: HTMLButtonElement;
+    private creditBalanceEl!: HTMLElement;
+    private buyCreditsBtn!: HTMLButtonElement;
+    private balancePollTimer: number | null = null;
+    private lastKnownBalance: number | null = null;
 
     constructor() {
         this.messageOverlay = new MessageOverlay();
@@ -45,10 +49,16 @@ export class App {
         );
         this.userStatusEl = document.getElementById('userStatus') as HTMLElement;
         this.signOutBtn = document.getElementById('signOutButton') as HTMLButtonElement;
+        this.creditBalanceEl = document.getElementById('creditBalance') as HTMLElement;
+        this.buyCreditsBtn = document.getElementById('buyCreditsButton') as HTMLButtonElement;
+        if (this.buyCreditsBtn) {
+            this.buyCreditsBtn.addEventListener('click', () => this.openBuyCreditsModal());
+        }
         if (this.signOutBtn) {
             this.signOutBtn.addEventListener('click', async () => {
                 await this.supabase.auth.signOut();
-                await figma.clientStorage.setAsync('SUPABASE_ACCESS_TOKEN', '');
+                parent.postMessage({ pluginMessage: { type: 'clear-session' } }, '*');
+                this.stopBalancePolling();
                 this.updateAuthUI(null);
             });
         }
@@ -57,8 +67,8 @@ export class App {
     private initializeAuth() {
         // These should be injected at build time via webpack DefinePlugin
         // No hardcoded fallbacks to avoid exposing sensitive infrastructure details
-        const url = (process as any).env?.SUPABASE_URL;
-        const anon = (process as any).env?.SUPABASE_ANON_KEY;
+        const url = process.env.SUPABASE_URL;
+        const anon = process.env.SUPABASE_ANON_KEY;
         
         // Create AuthUI instance once (before checking config to avoid duplicates)
         this.authUI = new AuthUI();
@@ -72,25 +82,61 @@ export class App {
             return;
         }
         
-        this.supabase = createClient(url, anon);
+        // The plugin iframe is sandboxed (no reliable localStorage), so sessions
+        // are persisted in figma.clientStorage via the plugin sandbox instead
+        this.supabase = createClient(url, anon, { auth: { persistSession: false } });
+
         this.authUI.onSendLink(async (email) => {
-            await this.supabase.auth.signInWithOtp({ email });
-            this.messageOverlay.show('Magic link sent. Check your email.', 'success');
+            const { error } = await this.supabase.auth.signInWithOtp({ email });
+            if (error) {
+                this.messageOverlay.show(`Could not send code: ${error.message}`, 'error');
+                return;
+            }
+            this.authUI.showCodeStep();
+            this.messageOverlay.show('Code sent. Check your email.', 'success');
         });
-        // Listen for session
-        this.supabase.auth.onAuthStateChange(async (_event, session) => {
-            if (session?.access_token) {
-                await figma.clientStorage.setAsync('SUPABASE_ACCESS_TOKEN', session.access_token);
-                this.messageOverlay.show('Signed in successfully.', 'success');
-                this.updateAuthUI(session.user?.email || '');
+
+        this.authUI.onVerifyCode(async (email, code) => {
+            const { data, error } = await this.supabase.auth.verifyOtp({ email, token: code, type: 'email' });
+            if (error || !data.session) {
+                this.messageOverlay.show(`Sign in failed: ${error?.message || 'no session returned'}`, 'error');
+                return;
+            }
+            this.saveSession(data.session.access_token, data.session.refresh_token);
+            this.messageOverlay.show('Signed in successfully.', 'success');
+            this.updateAuthUI(data.session.user?.email || '');
+        });
+
+        // Keep the stored token fresh when the client refreshes it
+        this.supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'TOKEN_REFRESHED' && session) {
+                this.saveSession(session.access_token, session.refresh_token);
             }
         });
 
-        // Initialize auth state from current session
-        this.supabase.auth.getSession().then(({ data }) => {
-            const email = data?.session?.user?.email || '';
-            this.updateAuthUI(email);
+        // Ask the plugin sandbox for a stored session to restore
+        parent.postMessage({ pluginMessage: { type: 'restore-session' } }, '*');
+    }
+
+    private saveSession(accessToken: string, refreshToken: string) {
+        parent.postMessage({
+            pluginMessage: { type: 'save-session', accessToken, refreshToken }
+        }, '*');
+    }
+
+    private async restoreSession(accessToken: string, refreshToken: string) {
+        const { data, error } = await this.supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken
         });
+        if (error || !data.session) {
+            parent.postMessage({ pluginMessage: { type: 'clear-session' } }, '*');
+            this.updateAuthUI(null);
+            return;
+        }
+        // setSession may have refreshed an expired token — persist the fresh pair
+        this.saveSession(data.session.access_token, data.session.refresh_token);
+        this.updateAuthUI(data.session.user?.email || '');
     }
 
     private updateAuthUI(email: string | null) {
@@ -100,6 +146,66 @@ export class App {
         }
         if (this.signOutBtn) {
             this.signOutBtn.style.display = signedIn ? 'inline-flex' : 'none';
+        }
+        if (this.authUI) {
+            this.authUI.setVisible(!signedIn);
+        }
+        if (this.buyCreditsBtn) {
+            this.buyCreditsBtn.style.display = signedIn ? 'inline-flex' : 'none';
+        }
+        if (this.creditBalanceEl) {
+            this.creditBalanceEl.style.display = signedIn ? '' : 'none';
+        }
+        if (signedIn) {
+            parent.postMessage({ pluginMessage: { type: 'get-usage' } }, '*');
+        }
+    }
+
+    private openBuyCreditsModal() {
+        const toggle = document.getElementById('credits-toggle') as HTMLInputElement;
+        if (toggle) toggle.checked = true;
+        parent.postMessage({ pluginMessage: { type: 'get-credit-packs' } }, '*');
+    }
+
+    private renderCreditPacks(packs: Array<{ id: string; credits: number; amountCents: number }>) {
+        const list = document.getElementById('creditPacksList');
+        if (!list) return;
+        if (!packs.length) {
+            list.innerHTML = '<small>No packs available right now.</small>';
+            return;
+        }
+        list.innerHTML = '';
+        packs.forEach(pack => {
+            const btn = document.createElement('button');
+            btn.className = 'btn primary-button';
+            btn.textContent = `${pack.credits} credits — $${(pack.amountCents / 100).toFixed(2)}`;
+            btn.addEventListener('click', () => {
+                btn.disabled = true;
+                parent.postMessage({ pluginMessage: { type: 'buy-credits', pack: pack.id } }, '*');
+            });
+            list.appendChild(btn);
+        });
+    }
+
+    private startBalancePolling() {
+        // Poll for the webhook-granted credits for ~2 minutes after checkout
+        // opens; stopBalancePolling() ends it early once the balance increases
+        this.stopBalancePolling();
+        let polls = 0;
+        this.balancePollTimer = window.setInterval(() => {
+            polls += 1;
+            if (polls > 24) {
+                this.stopBalancePolling();
+                return;
+            }
+            parent.postMessage({ pluginMessage: { type: 'get-usage' } }, '*');
+        }, 5000);
+    }
+
+    private stopBalancePolling() {
+        if (this.balancePollTimer !== null) {
+            window.clearInterval(this.balancePollTimer);
+            this.balancePollTimer = null;
         }
     }
 
@@ -118,6 +224,9 @@ export class App {
                 this.isGenerating = false;
                 this.messageOverlay.show(msg.message, 'error');
                 this.songForm.showLoading(false);
+                if (msg.statusCode === 402) {
+                    this.openBuyCreditsModal();
+                }
             } else if (msg.type === 'settings-loaded') {
                 if (msg.config) {
                     this.settings.updateSettings(msg.config);
@@ -132,6 +241,27 @@ export class App {
                 this.handleExportSuccess(msg.result);
             } else if (msg.type === 'export-formats') {
                 this.updateExportFormats(msg.formats);
+            } else if (msg.type === 'session-restored') {
+                if (msg.accessToken && msg.refreshToken) {
+                    this.restoreSession(msg.accessToken, msg.refreshToken);
+                } else {
+                    this.updateAuthUI(null);
+                }
+            } else if (msg.type === 'usage-loaded') {
+                if (this.creditBalanceEl) {
+                    this.creditBalanceEl.textContent = `${msg.creditBalance} credits`;
+                }
+                // Purchase landed — no need to keep polling
+                if (this.lastKnownBalance !== null && msg.creditBalance > this.lastKnownBalance) {
+                    this.stopBalancePolling();
+                }
+                this.lastKnownBalance = msg.creditBalance;
+            } else if (msg.type === 'credit-packs') {
+                this.renderCreditPacks(msg.packs || []);
+            } else if (msg.type === 'checkout-url') {
+                window.open(msg.url, '_blank');
+                this.messageOverlay.show('Checkout opened in your browser. Credits appear here after payment.', 'success');
+                this.startBalancePolling();
             }
         };
     }

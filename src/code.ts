@@ -1,5 +1,5 @@
 import { getConfig, setConfig } from './core/config';
-import { generateArrangementBackend, analyzeImageBackend, BackendError } from './core/api';
+import { generateArrangementBackend, analyzeImageBackend, getUsageBackend, getCreditPacksBackend, createCheckoutSessionBackend, BackendError } from './core/api';
 import { parseArrangement } from './core/utils';
 import { ApiConfig, SongData, ArrangementData } from './core/types';
 import { createArrangementPrompt } from './core/prompts';
@@ -25,6 +25,11 @@ async function requireAuth(): Promise<string> {
         throw new Error('Please sign in to use this feature.');
     }
     return token as string;
+}
+
+async function sendUsage(token: string) {
+    const usage = await getUsageBackend(token);
+    figma.ui.postMessage({ type: 'usage-loaded', creditBalance: usage.creditBalance, plan: usage.plan });
 }
 
 function handleBackendError(error: unknown): string {
@@ -599,7 +604,32 @@ END_SECTION
 
 figma.ui.onmessage = async (msg) => {
     try {
-        if (msg.type === 'test-arrangement') {
+        if (msg.type === 'save-session') {
+            await figma.clientStorage.setAsync('SUPABASE_ACCESS_TOKEN', msg.accessToken);
+            await figma.clientStorage.setAsync('SUPABASE_REFRESH_TOKEN', msg.refreshToken);
+        } else if (msg.type === 'clear-session') {
+            await figma.clientStorage.deleteAsync('SUPABASE_ACCESS_TOKEN');
+            await figma.clientStorage.deleteAsync('SUPABASE_REFRESH_TOKEN');
+        } else if (msg.type === 'restore-session') {
+            const accessToken = await figma.clientStorage.getAsync('SUPABASE_ACCESS_TOKEN');
+            const refreshToken = await figma.clientStorage.getAsync('SUPABASE_REFRESH_TOKEN');
+            figma.ui.postMessage({
+                type: 'session-restored',
+                accessToken: accessToken || null,
+                refreshToken: refreshToken || null
+            });
+        } else if (msg.type === 'get-usage') {
+            const token = await requireAuth();
+            await sendUsage(token);
+        } else if (msg.type === 'get-credit-packs') {
+            const token = await requireAuth();
+            const packs = await getCreditPacksBackend(token);
+            figma.ui.postMessage({ type: 'credit-packs', packs });
+        } else if (msg.type === 'buy-credits') {
+            const token = await requireAuth();
+            const url = await createCheckoutSessionBackend(msg.pack, token);
+            figma.ui.postMessage({ type: 'checkout-url', url });
+        } else if (msg.type === 'test-arrangement') {
             const arrangement = parseArrangement(TEST_ARRANGEMENT_RESPONSE, "Test Song");
             await createVisualArrangement(arrangement);
             figma.ui.postMessage({ type: 'success', message: 'Test arrangement created!' });
@@ -638,6 +668,11 @@ figma.ui.onmessage = async (msg) => {
 
             await createVisualArrangement(arrangement);
             figma.ui.postMessage({ type: 'success', message: 'Arrangement created!' });
+
+            // Refresh the credit balance shown in the UI (non-fatal if it fails)
+            try {
+                await sendUsage(token);
+            } catch { /* balance refresh is best-effort */ }
         } else if (msg.type === 'export-arrangement') {
             // Store the last generated arrangement for export
             if (!lastGeneratedArrangement) {
@@ -676,7 +711,8 @@ figma.ui.onmessage = async (msg) => {
         const errorMessage = handleBackendError(error);
         figma.ui.postMessage({
             type: 'error',
-            message: errorMessage
+            message: errorMessage,
+            statusCode: error instanceof BackendError ? error.statusCode : undefined
         });
     }
 };

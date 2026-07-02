@@ -520,6 +520,7 @@
         .feature:nth-child(2n) { animation: floaty 8s ease-in-out infinite; }
         .step:nth-child(3n) { animation: floaty 10s ease-in-out infinite; }
     </style>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit" async defer></script>
 </head>
 <body>
     <header>
@@ -610,6 +611,10 @@
                     >
                     <button type="submit" class="button" id="beta-submit-btn">Join Beta</button>
                 </div>
+                <!-- Honeypot: hidden from humans, bots fill it in -->
+                <input type="text" name="company" id="beta-company" tabindex="-1" autocomplete="off"
+                    style="position:absolute;left:-9999px;height:0;overflow:hidden;" aria-hidden="true">
+                <div id="turnstile-container"></div>
                 <div id="beta-message" class="beta-message" style="display: none;"></div>
             </form>
             <div class="vst-features">
@@ -641,13 +646,25 @@
     <script>
         // Beta signup form handler
         (function() {
-            const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-                ? 'http://localhost:3000' 
+            const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                ? 'http://localhost:3000'
                 : 'https://arreglo.vercel.app';
+            // Set to the Cloudflare Turnstile sitekey (public) to enable the
+            // captcha; empty string keeps the form working without it
+            const TURNSTILE_SITEKEY = '';
             const form = document.getElementById('beta-signup');
             const emailInput = document.getElementById('beta-email');
             const submitBtn = document.getElementById('beta-submit-btn');
             const messageDiv = document.getElementById('beta-message');
+
+            // Turnstile renders only when a sitekey is configured (explicit
+            // render mode), so the form keeps working before it's set up
+            const turnstileEnabled = !!TURNSTILE_SITEKEY;
+            window.onTurnstileLoad = function() {
+                if (turnstileEnabled) {
+                    turnstile.render('#turnstile-container', { sitekey: TURNSTILE_SITEKEY, theme: 'dark' });
+                }
+            };
 
             function showMessage(text, type) {
                 messageDiv.textContent = text;
@@ -665,6 +682,15 @@
                 const email = emailInput.value.trim();
                 if (!email) return;
 
+                let turnstileToken = '';
+                if (turnstileEnabled) {
+                    turnstileToken = form.querySelector('[name="cf-turnstile-response"]')?.value || '';
+                    if (!turnstileToken) {
+                        showMessage('Please complete the verification challenge.', 'error');
+                        return;
+                    }
+                }
+
                 // Disable form during submission
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Signing up...';
@@ -679,11 +705,15 @@
                         },
                         body: JSON.stringify({
                             email: email,
-                            source: 'website'
+                            source: 'website',
+                            turnstileToken: turnstileToken,
+                            company: document.getElementById('beta-company').value
                         })
                     });
 
                     const data = await response.json();
+
+                    if (window.turnstile) window.turnstile.reset();
 
                     if (response.ok && data.success) {
                         showMessage(data.message || 'Thanks for signing up! We\'ll be in touch soon.', 'success');

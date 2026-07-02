@@ -1,0 +1,65 @@
+<!-- Supabase Auth email template: "Confirm signup" (sent to NEW users signing in via the plugin)
+     Paste into: Supabase dashboard -> Authentication -> Email Templates -> Confirm signup
+     Suggested subject: Your Arreglo sign-in code
+     Note: uses the live arreglo.ai icon; swap to images/arreglo-logo.png (wordmark) after pushing it -->
+<html>
+<body style="margin:0;padding:0;background-color:#0c0c0c;">
+  <!-- preheader (hidden preview text) -->
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">Your Arreglo sign-in code is {{ .Token }} &mdash; welcome aboard, you have 25 free credits.</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#0c0c0c" style="background-color:#0c0c0c;">
+    <tr>
+      <td align="center" style="padding:40px 16px;">
+        <table role="presentation" width="480" cellpadding="0" cellspacing="0" border="0" bgcolor="#000000" style="background-color:#000000;border:1px solid #2a2a2a;border-radius:8px;max-width:480px;width:100%;">
+          <tr>
+            <td align="center" style="padding:36px 40px 0;">
+              <img src="https://arreglo.ai/images/arreglo-icon.png" alt="Arreglo" width="56" style="display:block;width:56px;height:auto;border:0;">
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:28px 40px 0;font-family:Helvetica,Arial,sans-serif;">
+              <h1 style="margin:0;font-size:20px;font-weight:500;color:#E7D494;">welcome.</h1>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:12px 40px 0;font-family:Helvetica,Arial,sans-serif;">
+              <p style="margin:0;font-size:14px;line-height:22px;color:#cccccc;">
+                Your account is ready, and <span style="color:#E7D494;font-weight:600;">25 free credits</span> are waiting.
+                Enter this code in the Arreglo plugin to finish signing in:
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:24px 40px 0;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" bgcolor="#141414" style="background-color:#141414;border:1px solid #E7D494;border-radius:8px;padding:16px 32px;">
+                    <span style="font-family:'Courier New',Courier,monospace;font-size:32px;letter-spacing:8px;color:#E7D494;font-weight:bold;">{{ .Token }}</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:24px 40px 36px;font-family:Helvetica,Arial,sans-serif;">
+              <p style="margin:0;font-size:12px;line-height:19px;color:#777777;">
+                This code expires in 1 hour.<br>
+                Didn't request it? You can safely ignore this email.
+              </p>
+            </td>
+          </tr>
+        </table>
+        <table role="presentation" width="480" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;width:100%;">
+          <tr>
+            <td align="center" style="padding:20px 16px;font-family:Helvetica,Arial,sans-serif;">
+              <p style="margin:0;font-size:11px;color:#555555;">
+                <a href="https://arreglo.ai" style="color:#8a8a8a;text-decoration:none;">arreglo.ai</a>
+                &nbsp;&middot;&nbsp; AI song arrangements for your loops
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

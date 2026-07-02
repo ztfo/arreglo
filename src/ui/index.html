@@ -83,6 +83,10 @@
                         </div>
                          <div class="nav-item auth" style="margin-left:auto;display:flex;gap:8px;align-items:center;">
                              <small id="userStatus">Not signed in</small>
+                             <small id="creditBalance" style="display:none;"></small>
+                             <button id="buyCreditsButton" class="nav-button" title="Buy credits" style="display:none;">
+                                 <i class="fa-solid fa-coins"></i>
+                             </button>
                              <button id="signOutButton" class="nav-button" title="Sign out" style="display:none;">
                                  <i class="fa-solid fa-right-from-bracket"></i>
                              </button>
@@ -317,6 +321,23 @@
                         </div>
                     </div>
                     <button class="btn primary-button" id="saveSettings">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buy Credits Modal -->
+        <input type="checkbox" id="credits-toggle" class="modal-toggle">
+        <div class="modal credits-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>buy credits.</h3>
+                    <label for="credits-toggle" class="close-modal">&times;</label>
+                </div>
+                <div class="modal-body">
+                    <p>Each arrangement generation uses 1 credit. Checkout opens in your browser.</p>
+                    <div id="creditPacksList" class="form-group" style="display:flex;flex-direction:column;gap:8px;">
+                        <small>Loading packs&hellip;</small>
+                    </div>
                 </div>
             </div>
         </div>
