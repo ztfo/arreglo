@@ -18,7 +18,8 @@ export async function generateArrangementWithOpenAI(prompt: string): Promise<str
 
 export async function analyzeImageWithOpenAI(base64Image: string): Promise<string[]> {
   const res = await client.chat.completions.create({
-    model: 'gpt-5-mini',
+    // gpt-5-mini shuts down Dec 11, 2026; gpt-6.1-terra is OpenAI's listed replacement
+    model: 'gpt-6.1-terra',
     messages: [
       {
         role: 'user',
